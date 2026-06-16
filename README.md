@@ -270,6 +270,36 @@ données** (`sr-only`) ; l'humeur est portée par le libellé, pas seulement la
 couleur. Animations neutralisées sous `prefers-reduced-motion`. État vide
 chaleureux pour un compte sans donnée.
 
+## Espace bien-être
+
+Catalogue de ressources éducatives (routes privées
+[`/bien-etre`](./src/app/bien-etre/page.tsx) et
+[`/bien-etre/[id]`](./src/app/bien-etre/[id]/page.tsx)). Code dans
+[`src/features/wellbeing/`](./src/features/wellbeing).
+
+### Filtrage
+
+Catalogue chargé une fois (RLS : `resources` en lecture pour authentifiés), puis
+filtré côté client par **thème ET type** (cumulables) via des helpers purs
+[`filters.ts`](./src/features/wellbeing/filters.ts) (`filterResources`,
+`resourceThemes`, `resourceTypes`). Chips accessibles (`aria-pressed`, clavier) ;
+état « aucun résultat » doux.
+
+### Suggestion selon l'humeur
+
+`suggestByLevel(resources, level)` propose les ressources dont `mood_levels`
+contient le niveau de la **dernière humeur saisie** (rangée « Suggéré pour toi »).
+Mapping bienveillant, jamais prescriptif (humeur basse → contenus d'apaisement
+tagués pour les niveaux bas). Masquée si aucune humeur récente.
+
+### Lecture intégrée
+
+[`ResourceReader`](./src/features/wellbeing/ResourceReader.tsx) : contenu lu
+**dans l'app, sans lien sortant**, en largeur de prose (~680px), hiérarchie de
+titres correcte (h1), mention « rédigé et validé par des professionnels de
+santé » et disclaimer. Icônes Lucide cohérentes (outline). `getResource` valide
+le format UUID (404 propre sur id invalide).
+
 ## Design system câblé
 
 Le design system Kitoo (importé manuellement, cf. [`IMPORT.md`](./IMPORT.md)) est

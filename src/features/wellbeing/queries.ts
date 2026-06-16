@@ -19,7 +19,13 @@ export async function listResources(theme?: string): Promise<Resource[]> {
 }
 
 /** Une ressource par id, ou `null`. */
+// Format UUID v4 attendu pour un id de ressource — évite une erreur SQL
+// (« invalid input syntax for uuid ») sur un id arbitraire dans l'URL.
+const UUID_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 export async function getResource(id: string): Promise<Resource | null> {
+  if (!UUID_RE.test(id)) return null;
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("resources")
