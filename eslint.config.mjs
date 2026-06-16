@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Source de fusion du design system uniquement — hors build/lint.
+    "design-system/**",
   ]),
 ]);
 

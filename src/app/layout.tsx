@@ -1,19 +1,34 @@
 import type { Metadata } from "next";
-// TODO (design system): remplacer les polices Geist par défaut par les polices
-// Kitoo (ex. goodly-medium.otf) une fois `design-system/fonts/` importé.
-// Le câblage des polices/tokens se fait à l'étape suivante (cf. IMPORT.md).
-import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
+import { Nunito, Atkinson_Hyperlegible } from "next/font/google";
 import "./globals.css";
 import { siteConfig } from "@/lib/site-config";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+/**
+ * Police d'affichage Kitoo : Goodly Medium (locale, .otf).
+ * Repli Poppins si la police échoue/charge mal (cf. stack `font-display`).
+ */
+const goodly = localFont({
+  src: "../../design-system/fonts/goodly-medium.otf",
+  variable: "--font-display",
+  display: "swap",
+  weight: "500",
+  fallback: ["Poppins", "system-ui", "sans-serif"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+/** Police de corps : Nunito (douce, arrondie). */
+const nunito = Nunito({
+  variable: "--font-body",
   subsets: ["latin"],
+  display: "swap",
+});
+
+/** Police dyslexie : Atkinson Hyperlegible (activée via data-font="dyslexia"). */
+const atkinson = Atkinson_Hyperlegible({
+  variable: "--font-dyslexia",
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -29,9 +44,9 @@ export default function RootLayout({
   return (
     <html
       lang="fr"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${goodly.variable} ${nunito.variable} ${atkinson.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col">{children}</body>
+      <body className="font-body flex min-h-full flex-col">{children}</body>
     </html>
   );
 }

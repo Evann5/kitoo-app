@@ -14,29 +14,32 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.5.1",
+    "@supabase/supabase-js": "^2.45.0",
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.40.0",
     "next": "16.2.9",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "@supabase/supabase-js": "^2.45.0",
-    "@supabase/ssr": "^0.5.1"
+    "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.47.0",
     "@tailwindcss/postcss": "^4",
+    "@testing-library/jest-dom": "^6.5.0",
+    "@testing-library/react": "^16.0.1",
+    "@testing-library/user-event": "^14.5.2",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitejs/plugin-react": "^4.3.0",
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
-    "tailwindcss": "^4",
-    "typescript": "^5",
+    "jsdom": "^25.0.0",
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.8",
-    "vitest": "^2.1.0",
-    "@vitejs/plugin-react": "^4.3.0",
-    "jsdom": "^25.0.0",
-    "@testing-library/react": "^16.0.1",
-    "@testing-library/jest-dom": "^6.5.0",
-    "@testing-library/user-event": "^14.5.2",
-    "@playwright/test": "^1.47.0"
+    "tailwindcss": "^4",
+    "typescript": "^5",
+    "vitest": "^2.1.0"
   }
 }
