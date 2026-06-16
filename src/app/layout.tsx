@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import { Nunito, Atkinson_Hyperlegible } from "next/font/google";
 import "./globals.css";
 import { siteConfig } from "@/lib/site-config";
+import { ANTI_FLASH_SCRIPT } from "@/features/accessibility";
 
 /**
  * Police d'affichage Kitoo : Goodly Medium (locale, .otf).
@@ -47,6 +48,10 @@ export default function RootLayout({
       data-scroll-behavior="smooth"
       className={`${goodly.variable} ${nunito.variable} ${atkinson.variable} h-full antialiased`}
     >
+      <head>
+        {/* Anti-flash : applique les préférences d'accessibilité avant le rendu. */}
+        <script dangerouslySetInnerHTML={{ __html: ANTI_FLASH_SCRIPT }} />
+      </head>
       <body className="font-body flex min-h-full flex-col">{children}</body>
     </html>
   );

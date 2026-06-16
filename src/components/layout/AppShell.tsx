@@ -1,4 +1,8 @@
 import { Container } from "@/components/ui";
+import {
+  AccessibilitySync,
+  getAccessibilityPrefs,
+} from "@/features/accessibility";
 import { TabBar } from "./TabBar";
 
 export type AppShellProps = {
@@ -8,12 +12,15 @@ export type AppShellProps = {
 };
 
 /**
- * Coquille des pages privées : contenu centré + barre d'onglets fixe en bas
- * (avec le padding bas nécessaire pour ne pas masquer le contenu).
+ * Coquille des pages privées : synchronise les préférences d'accessibilité
+ * (profil → document, inter-appareils), centre le contenu et affiche la barre
+ * d'onglets fixe en bas.
  */
-export function AppShell({ children, width = "prose" }: AppShellProps) {
+export async function AppShell({ children, width = "prose" }: AppShellProps) {
+  const prefs = await getAccessibilityPrefs();
   return (
     <>
+      <AccessibilitySync prefs={prefs} />
       <Container width={width} className="pt-6 pb-28">
         {children}
       </Container>

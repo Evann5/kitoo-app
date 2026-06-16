@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { listEntries, getTodayEntry } from "@/features/mood/queries";
 import { poseForMood } from "@/features/mood";
 import { suggestResourcesForLevel } from "@/features/wellbeing/queries";
+import { hasActiveConsent, ConsentGate } from "@/features/gdpr";
 import {
   Greeting,
   StreakBadge,
@@ -46,6 +47,16 @@ function companionMessage(todayLevel: number | null): string {
 
 export default async function DashboardPage() {
   const user = await requireUser("/tableau-de-bord");
+
+  // Consentement RGPD requis avant tout usage : sinon, écran de consentement.
+  if (!(await hasActiveConsent())) {
+    return (
+      <AppShell>
+        <ConsentGate />
+      </AppShell>
+    );
+  }
+
   const supabase = await createClient();
 
   const today = new Date().toISOString().slice(0, 10);

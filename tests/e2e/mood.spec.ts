@@ -19,6 +19,9 @@ test("inscription → saisie d'humeur → réouverture préchargée", async ({
   await page.getByRole("button", { name: "Créer mon compte" }).click();
   await expect(page).toHaveURL(/\/tableau-de-bord/, { timeout: 15000 });
 
+  // Consentement RGPD requis au premier accès.
+  await page.getByRole("button", { name: /j'accepte/i }).click();
+
   // Tableau de bord : salutation + CTA « Noter » (aucune entrée encore).
   await expect(
     page.getByRole("heading", {

@@ -300,6 +300,59 @@ titres correcte (h1), mention « rédigé et validé par des professionnels de
 santé » et disclaimer. Icônes Lucide cohérentes (outline). `getResource` valide
 le format UUID (404 propre sur id invalide).
 
+## RGPD & accessibilité
+
+Les humeurs sont des **données de santé sensibles** : l'app intègre consentement,
+export, effacement et des modes d'accessibilité persistés. Code dans
+[`src/features/gdpr/`](./src/features/gdpr) et
+[`src/features/accessibility/`](./src/features/accessibility).
+
+### Consentement
+
+Consentement **explicite** au traitement, recueilli avant tout usage via une
+porte de consentement ([`ConsentGate`](./src/features/gdpr/ConsentGate.tsx))
+sur le tableau de bord, enregistré dans la table `consents`. Consultable et
+**révocable** depuis le profil (section Confidentialité).
+
+### Droit d'accès / portabilité
+
+Export des données depuis le profil via [`/api/export`](./src/app/api/export/route.ts)
+(JSON ou CSV) : profil + humeurs + tags + consentements. Authentifié et soumis à
+la RLS → **uniquement les données de l'utilisateur**.
+
+### Droit à l'effacement
+
+Suppression du compte avec **confirmation explicite** (saisie d'un mot)
+([`DeleteAccountDialog`](./src/features/gdpr/DeleteAccountDialog.tsx)). La server
+action appelle la fonction Postgres `delete_current_user` (SECURITY DEFINER, ne
+supprime que `auth.uid()`), dont la suppression **cascade** vers
+`profiles`/`mood_entries`/`consents`. Aucune clé `service_role` n'est utilisée
+côté app. L'utilisateur est ensuite déconnecté.
+
+### Pages légales
+
+[`/confidentialite`](./src/app/confidentialite/page.tsx),
+[`/mentions-legales`](./src/app/mentions-legales/page.tsx),
+[`/cgu`](./src/app/cgu/page.tsx) — contenu de base adapté à un **projet
+étudiant** (sans fausse caution d'organismes), avec le disclaimer médical.
+Liées depuis le profil et le footer.
+
+### Modes d'accessibilité
+
+**Dyslexie** (police Atkinson Hyperlegible) et **daltonisme** (palette d'humeur
+Okabe-Ito) togglables depuis le profil
+([`AccessibilityToggle`](./src/features/accessibility/AccessibilityToggle.tsx)),
+persistés dans `profiles.accessibility_prefs` (**synchronisés entre appareils**)
+avec repli `localStorage` et **script anti-flash** dans `<head>`. Les attributs
+`data-font` / `data-contrast` sont lus par `globals.css`.
+
+### Conformité WCAG AA visée
+
+Focus pervenche visible, landmarks (`header`/`nav`/`main`/`footer`), hiérarchie
+de titres, alternatives textuelles, info jamais portée par la couleur seule,
+`prefers-reduced-motion`, corps ≥ 16px, cibles ≥ 44px. Audit **axe-core**
+automatisé (Playwright) sur les pages clés : **0 violation critique**.
+
 ## Design system câblé
 
 Le design system Kitoo (importé manuellement, cf. [`IMPORT.md`](./IMPORT.md)) est
