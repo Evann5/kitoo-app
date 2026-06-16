@@ -129,6 +129,60 @@ rate-limit géré par Supabase. Formulaires accessibles (labels liés,
 visible pervenche), corps ≥ 16px, cibles ≥ 44px. Disclaimer « Kitoo ne remplace
 pas un suivi médical professionnel » sur les écrans d'auth.
 
+## Modèle de données & RLS
+
+Schéma défini par migrations versionnées dans
+[`supabase/migrations/`](./supabase/migrations) (appliquées sur le projet
+Supabase `kitoo-app`). Données de santé = sensibles RGPD → **Row-Level Security
+stricte, default-deny**.
+
+### Tables
+
+| Table             | Contenu                                                                                                                                                                              |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `profiles`        | 1/utilisateur : `prenom`, `notif_prefs`, `accessibility_prefs` (jsonb). Pas de donnée sensible superflue. Créée automatiquement à l'inscription (trigger `auth.users` → `profiles`). |
+| `mood_entries`    | humeurs : `level` (1–5, `check`), `comment` (optionnel), `entry_date`. **1 entrée/jour/utilisateur** (`unique (user_id, entry_date)`).                                               |
+| `mood_tags`       | tags prédéfinis (`slug`, `label`), seedés. Référence en lecture seule.                                                                                                               |
+| `mood_entry_tags` | liaison N-N entre une entrée et ses tags.                                                                                                                                            |
+| `resources`       | contenus bien-être (`theme`, `type`, `summary`, `content`, `mood_levels int[]`). 8 ressources seedées. Lecture seule.                                                                |
+| `consents`        | consentements RGPD (`type`, `granted_at`, `revoked_at`).                                                                                                                             |
+
+### Choix « tags » : table de liaison (pas `text[]`)
+
+`mood_tags` + `mood_entry_tags` plutôt qu'une colonne `text[]` : tags prédéfinis
+réutilisables (libellés FR centralisés), stats par tag faciles par jointure, et
+intégrité référentielle. Le surcoût RLS (vérifier l'appartenance via l'entrée
+parente) est assumé.
+
+### Policies RLS
+
+- **Données perso** (`profiles`, `mood_entries`, `consents`) : `select/insert/
+update/delete` autorisés uniquement si `auth.uid() = user_id` (`id` pour
+  `profiles`).
+- **`mood_entry_tags`** : autorisé seulement si l'entrée parente appartient à
+  l'utilisateur (`exists (… where me.user_id = auth.uid())`).
+- **`resources` & `mood_tags`** : `select` pour tout utilisateur authentifié,
+  aucune écriture côté app.
+- `handle_new_user` (SECURITY DEFINER) : `search_path` figé + `execute` révoqué
+  (anon/authenticated) — sert uniquement de trigger. Advisor sécurité Supabase
+  sans alerte.
+
+### Régénérer les types TypeScript
+
+Les types générés sont dans
+[`src/lib/supabase/types.ts`](./src/lib/supabase/types.ts) et branchés sur les
+clients (`createBrowserClient<Database>` / `createServerClient<Database>`).
+Après une migration, régénérer :
+
+```bash
+supabase gen types typescript --project-id binxcboxxrycjsqincbn > src/lib/supabase/types.ts
+# (ou via l'outil MCP Supabase generate_typescript_types)
+```
+
+Helpers d'accès typés (server-only) :
+[`src/features/mood/queries.ts`](./src/features/mood/queries.ts) et
+[`src/features/wellbeing/queries.ts`](./src/features/wellbeing/queries.ts).
+
 ## Design system câblé
 
 Le design system Kitoo (importé manuellement, cf. [`IMPORT.md`](./IMPORT.md)) est

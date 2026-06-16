@@ -1,4 +1,5 @@
 import { createBrowserClient } from "@supabase/ssr";
+import type { Database } from "./types";
 
 /**
  * Browser-side Supabase client (Client Components).
@@ -18,7 +19,7 @@ export function createClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL || PLACEHOLDER_URL;
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || PLACEHOLDER_KEY;
 
-  return createBrowserClient(url, anonKey);
+  return createBrowserClient<Database>(url, anonKey);
 }
 
 /** True when both public Supabase env vars are present. */

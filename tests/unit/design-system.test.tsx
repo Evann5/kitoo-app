@@ -34,16 +34,20 @@ describe("Illustration / Mascot — résolution + fallback", () => {
 });
 
 describe("Accessibilité — tokens", () => {
+  // Le type Config rend `theme.extend.*` en `ResolvableTo<...>` ; on accède aux
+  // valeurs littérales via un cast loose (ce sont des objets simples ici).
+  const extend = tailwindConfig.theme?.extend as Record<
+    string,
+    Record<string, unknown>
+  >;
+
   it("le corps de texte est défini à 16px (jamais sous le seuil WCAG)", () => {
-    const body = tailwindConfig.theme?.extend?.fontSize?.body as [
-      string,
-      unknown,
-    ];
+    const body = extend.fontSize.body as [string, unknown];
     expect(body[0]).toBe("16px");
   });
 
   it("expose un anneau de focus pervenche", () => {
-    const focus = tailwindConfig.theme?.extend?.boxShadow?.focus as string;
+    const focus = extend.boxShadow.focus as string;
     expect(focus).toContain("rgba(155,157,240,0.40)");
   });
 });
