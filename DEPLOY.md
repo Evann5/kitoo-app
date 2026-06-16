@@ -36,35 +36,49 @@ vercel --prod --yes
 
 ## Variables d'environnement
 
-Actuellement renseignées en **placeholders** (clairement factices, non secrètes) :
+Renseignées avec les **vraies valeurs** du projet Supabase `kitoo-app`
+(`binxcboxxrycjsqincbn`, région `eu-west-3`) sur les 3 environnements :
 
-| Variable                        | Valeur actuelle (placeholder)     | Environnements                     |
-| ------------------------------- | --------------------------------- | ---------------------------------- |
-| `NEXT_PUBLIC_SUPABASE_URL`      | `https://placeholder.supabase.co` | production / preview / development |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | `placeholder-anon-key`            | production / preview / development |
+| Variable                        | Source                                  | Environnements                     |
+| ------------------------------- | --------------------------------------- | ---------------------------------- |
+| `NEXT_PUBLIC_SUPABASE_URL`      | Supabase → Settings → API (Project URL) | production / preview / development |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase → Settings → API (anon public) | production / preview / development |
 
-> Aucun secret n'est commité. La clé `service_role` de Supabase ne doit **jamais**
-> être ajoutée ici ni commitée (clé serveur uniquement, hors `NEXT_PUBLIC_*`).
+> La clé `anon` est **publique par conception** (préfixe `NEXT_PUBLIC_`, exposée
+> au navigateur) ; la sécurité repose sur les Row Level Security policies, pas sur
+> son secret. La clé `service_role` ne doit **jamais** être ajoutée ici ni
+> commitée (clé serveur d'administration uniquement).
 
-### Renseigner Supabase en A2
+En local : copier `.env.local.example` → `.env.local` et y mettre ces valeurs
+(`.env.local` est git-ignoré). `vercel env pull .env.local` les récupère depuis
+Vercel.
 
-Une fois le projet Supabase créé :
+### Mettre à jour une variable
 
 ```bash
-# Remplacer les placeholders par les vraies valeurs (--force pour écraser)
+# Via la CLI (production)
 vercel env rm NEXT_PUBLIC_SUPABASE_URL production --yes
 vercel env add NEXT_PUBLIC_SUPABASE_URL production --value "https://<projet>.supabase.co" --yes
-vercel env rm NEXT_PUBLIC_SUPABASE_ANON_KEY production --yes
-vercel env add NEXT_PUBLIC_SUPABASE_ANON_KEY production --value "<clé anon>" --yes
-# (répéter pour preview / development)
-
-# Redéployer pour prendre en compte les nouvelles valeurs
+# (répéter pour preview / development) puis redéployer :
 vercel --prod --yes
 ```
 
-En local, copier `.env.local.example` → `.env.local` et y mettre les vraies
-valeurs (`.env.local` est git-ignoré). `vercel env pull .env.local` récupère aussi
-les variables depuis Vercel.
+## Authentification — réglage Supabase à faire (manuel)
+
+Le code gère **les deux cas** de confirmation email. Le comportement choisi pour
+Kitoo est **confirmation désactivée** (inscription → connexion directe). Pour
+l'activer côté Supabase :
+
+> Dashboard Supabase → **Authentication → Sign In / Providers → Email** →
+> décocher **« Confirm email »** (équivaut à `mailer_autoconfirm = true`).
+
+Tant que « Confirm email » est coché (réglage par défaut d'un nouveau projet),
+l'inscription affiche l'écran « vérifie ta boîte mail » au lieu de connecter
+directement — c'est normal et géré par le code.
+
+Penser aussi à **Authentication → URL Configuration** : ajouter
+`https://kitoo-app.vercel.app` (Site URL) et les URLs de redirection
+(`http://localhost:3000/**`, `https://kitoo-app.vercel.app/**`) pour le callback.
 
 ## Redéploiement
 

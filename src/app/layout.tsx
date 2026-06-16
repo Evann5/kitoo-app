@@ -44,6 +44,7 @@ export default function RootLayout({
   return (
     <html
       lang="fr"
+      data-scroll-behavior="smooth"
       className={`${goodly.variable} ${nunito.variable} ${atkinson.variable} h-full antialiased`}
     >
       <body className="font-body flex min-h-full flex-col">{children}</body>

@@ -82,6 +82,53 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=""
 
 `.env.local` est ignoré par git ; `.env.local.example` est versionné.
 
+## Authentification
+
+Auth email / mot de passe via **Supabase Auth** (`@supabase/ssr`), avec gestion
+des sessions par cookies côté serveur et client (App Router).
+
+### Configuration
+
+- Projet Supabase `kitoo-app` en région `eu-west-3` (RGPD).
+- Variables : `NEXT_PUBLIC_SUPABASE_URL` et `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+  (locales dans `.env.local`, et sur les 3 environnements Vercel). La clé `anon`
+  est publique par conception ; `service_role` n'est jamais utilisée ni commitée.
+
+### Confirmation email
+
+Le code gère **les deux cas** :
+
+- **désactivée** (choix retenu pour Kitoo) → inscription = connexion directe ;
+- **activée** → écran « vérifie ta boîte mail » + route `/auth/callback` qui
+  échange le code contre une session.
+
+Le réglage se fait dans le dashboard Supabase (Authentication → Email →
+« Confirm email »). Détails dans [`DEPLOY.md`](./DEPLOY.md).
+
+### Routes
+
+| Route              | Accès  | Rôle                                               |
+| ------------------ | ------ | -------------------------------------------------- |
+| `/inscription`     | public | création de compte (email, mot de passe + confirm) |
+| `/connexion`       | public | connexion                                          |
+| `/auth/callback`   | public | échange du code de confirmation (si activée)       |
+| `/profil`          | privé  | email + déconnexion                                |
+| `/tableau-de-bord` | privé  | (réservé, à venir)                                 |
+
+La protection est assurée par [`middleware.ts`](./middleware.ts) (rafraîchit la
+session et redirige : non connecté → `/connexion`, déjà connecté hors des écrans
+d'auth → `/profil`), doublée du helper serveur
+[`requireUser()`](./src/lib/auth.ts) sur les pages privées.
+
+### Sécurité & accessibilité
+
+Validation des entrées (email, mot de passe ≥ 8), messages d'erreur français
+bienveillants et **génériques** sur les identifiants (pas de fuite d'info),
+rate-limit géré par Supabase. Formulaires accessibles (labels liés,
+`aria-invalid`, erreurs reliées via `aria-describedby`, `autocomplete`, focus
+visible pervenche), corps ≥ 16px, cibles ≥ 44px. Disclaimer « Kitoo ne remplace
+pas un suivi médical professionnel » sur les écrans d'auth.
+
 ## Design system câblé
 
 Le design system Kitoo (importé manuellement, cf. [`IMPORT.md`](./IMPORT.md)) est

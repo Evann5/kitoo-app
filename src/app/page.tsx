@@ -28,8 +28,16 @@ export default function Home() {
         Ton compagnon bien-être, pour suivre ton humeur en douceur.
       </p>
 
-      <div className="mt-8">
-        <Button size="lg">Commencer</Button>
+      <div className="mt-8 flex flex-col items-center gap-3">
+        <Button as="a" href="/inscription" size="lg">
+          Commencer
+        </Button>
+        <a
+          href="/connexion"
+          className="text-body text-brand-700 rounded font-bold underline underline-offset-4"
+        >
+          J&apos;ai déjà un compte
+        </a>
       </div>
     </main>
   );
