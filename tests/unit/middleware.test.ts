@@ -36,10 +36,10 @@ describe("middleware — protection des routes", () => {
     expect(res.headers.get("location")).toBeNull();
   });
 
-  it("redirige un utilisateur connecté hors de /connexion vers /profil", async () => {
+  it("redirige un utilisateur connecté hors de /connexion vers le tableau de bord", async () => {
     mockUser = { id: "user-1" };
     const res = await updateSession(request("/connexion"));
     expect(res.status).toBe(307);
-    expect(res.headers.get("location")).toContain("/profil");
+    expect(res.headers.get("location")).toContain("/tableau-de-bord");
   });
 });

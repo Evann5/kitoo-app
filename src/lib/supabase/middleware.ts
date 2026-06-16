@@ -70,10 +70,10 @@ export async function updateSession(
     return copyCookies(NextResponse.redirect(redirectUrl), supabaseResponse);
   }
 
-  // Déjà connecté sur une route d'auth → vers /profil.
+  // Déjà connecté sur une route d'auth → vers le tableau de bord.
   if (user && isAuthRoute) {
     const redirectUrl = request.nextUrl.clone();
-    redirectUrl.pathname = "/profil";
+    redirectUrl.pathname = "/tableau-de-bord";
     redirectUrl.search = "";
     return copyCookies(NextResponse.redirect(redirectUrl), supabaseResponse);
   }

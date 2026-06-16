@@ -225,6 +225,51 @@ seule), navigation clavier (flèches / Home / End, roving tabindex,
 `aria-checked`), chips de tags `aria-pressed`, formulaire labelisé, corps ≥ 16px,
 cibles ≥ 44px, focus pervenche.
 
+## Tableau de bord & stats
+
+Page d'accueil de l'app connectée (route privée
+[`/tableau-de-bord`](./src/app/tableau-de-bord/page.tsx), destination après
+connexion). Code dans [`src/features/dashboard/`](./src/features/dashboard) ;
+navigation par tab bar ([`TabBar`](./src/components/layout/TabBar.tsx) :
+Accueil / Humeur / Bien-être / Profil).
+
+### Contenu
+
+Salutation contextuelle + date, carte koala compagnon avec bulle, CTA dominant
+**« Noter »** ou **« Modifier mon humeur »** (selon l'entrée du jour), ressource
+suggérée (« Pour toi aujourd'hui »), badge de série, indicateurs (humeur
+moyenne, nombre d'entrées) et graphique de tendance hebdo/mensuel.
+
+### Calculs (helpers purs & testables)
+
+[`stats.ts`](./src/features/dashboard/stats.ts) opère sur des points
+`{ entry_date, level }` (lecture sous RLS faite dans la page) :
+
+- **série** (`computeStreak`) : jours consécutifs avec saisie en remontant
+  depuis aujourd'hui ; non cassée si rien n'est noté aujourd'hui mais que la
+  veille l'est ;
+- **moyenne / nombre** (`computeStats`) sur 30 jours ;
+- **séries de graphe** (`buildDailySeries`) avec trous `null` ;
+- **alerte 3 jours** (`shouldShowSupportNudge`) : ≥ 3 jours « très négatif »
+  (niveau 1) consécutifs récents.
+
+### Gamification & alerte de soutien
+
+Encouragements **positifs uniquement** (jamais de culpabilisation quand la série
+est à 0). Après 3 jours « très négatif » consécutifs, une invitation **douce et
+soutenante** ([`SupportNudge`](./src/features/dashboard/SupportNudge.tsx)) à
+parler à un professionnel s'affiche — ton chaleureux, **aucun langage de
+diagnostic**, avec le disclaimer « Kitoo ne remplace pas un suivi médical
+professionnel ».
+
+### Accessibilité des graphes
+
+Le graphe SVG ([`MoodTrendChart`](./src/features/dashboard/MoodTrendChart.tsx),
+recharts) est `aria-hidden`, **doublé d'un résumé textuel et d'une table de
+données** (`sr-only`) ; l'humeur est portée par le libellé, pas seulement la
+couleur. Animations neutralisées sous `prefers-reduced-motion`. État vide
+chaleureux pour un compte sans donnée.
+
 ## Design system câblé
 
 Le design system Kitoo (importé manuellement, cf. [`IMPORT.md`](./IMPORT.md)) est

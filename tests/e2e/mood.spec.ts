@@ -17,7 +17,17 @@ test("inscription → saisie d'humeur → réouverture préchargée", async ({
   await page.getByLabel("Mot de passe", { exact: true }).fill(password);
   await page.getByLabel("Confirme ton mot de passe").fill(password);
   await page.getByRole("button", { name: "Créer mon compte" }).click();
-  await expect(page).toHaveURL(/\/profil/, { timeout: 15000 });
+  await expect(page).toHaveURL(/\/tableau-de-bord/, { timeout: 15000 });
+
+  // Tableau de bord : salutation + CTA « Noter » (aucune entrée encore).
+  await expect(
+    page.getByRole("heading", {
+      name: /bonjour|bon après-midi|bonsoir|bonne nuit/i,
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Noter mon humeur" }),
+  ).toBeVisible();
 
   // Saisie d'humeur.
   await page.goto("/humeur");
@@ -42,4 +52,11 @@ test("inscription → saisie d'humeur → réouverture préchargée", async ({
   await expect(page.getByLabel(/envie d'en dire plus/i)).toHaveValue(
     "Journée e2e tranquille.",
   );
+
+  // Le tableau de bord reflète l'entrée du jour : CTA « Modifier » + série.
+  await page.goto("/tableau-de-bord");
+  await expect(
+    page.getByRole("link", { name: "Modifier mon humeur" }),
+  ).toBeVisible();
+  await expect(page.getByText(/série de 1 jour/i)).toBeVisible();
 });

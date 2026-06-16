@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Container } from "@/components/ui";
+import { AppShell } from "@/components/layout/AppShell";
 import { requireUser } from "@/lib/auth";
 import { MoodEntryForm, RecentMoods, type MoodValue } from "@/features/mood";
 import {
@@ -38,9 +38,11 @@ export default async function HumeurPage() {
     : null;
 
   return (
-    <Container width="prose" className="flex flex-col gap-10 py-10">
-      <MoodEntryForm tags={tags} initial={initial} />
-      <RecentMoods entries={recent} today={today} />
-    </Container>
+    <AppShell>
+      <div className="flex flex-col gap-10">
+        <MoodEntryForm tags={tags} initial={initial} />
+        <RecentMoods entries={recent} today={today} />
+      </div>
+    </AppShell>
   );
 }

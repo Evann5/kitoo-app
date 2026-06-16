@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { Button, Card, Container } from "@/components/ui";
+import { Button, Card } from "@/components/ui";
 import { Mascot } from "@/components/illustrations";
+import { AppShell } from "@/components/layout/AppShell";
 import { requireUser } from "@/lib/auth";
 import { signOut } from "@/features/auth";
 
@@ -13,7 +14,7 @@ export default async function ProfilPage() {
   const user = await requireUser("/profil");
 
   return (
-    <Container width="prose" className="py-12">
+    <AppShell>
       <div className="mb-8 flex flex-col items-center text-center">
         <Mascot pose="sunglasses" className="mb-4 w-28" />
         <h1 className="font-display text-title text-ink-900">Mon profil</h1>
@@ -42,6 +43,6 @@ export default async function ProfilPage() {
       <p className="text-small text-ink-500 mt-8 text-center">
         Kitoo ne remplace pas un suivi médical professionnel.
       </p>
-    </Container>
+    </AppShell>
   );
 }

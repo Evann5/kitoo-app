@@ -40,7 +40,10 @@ function mapAuthError(message: string): string {
   return "Une erreur est survenue. Réessaie dans un instant.";
 }
 
-export function AuthForm({ mode, redirectTo = "/profil" }: AuthFormProps) {
+export function AuthForm({
+  mode,
+  redirectTo = "/tableau-de-bord",
+}: AuthFormProps) {
   const router = useRouter();
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
