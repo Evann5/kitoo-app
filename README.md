@@ -3,6 +3,10 @@
 Application **Kitoo** : suivi d'humeur (Mood Tracker), statistiques et espace
 bien-être, avec authentification email / mot de passe.
 
+**Production** : https://kitoo-app.vercel.app — déployée en continu sur Vercel
+(chaque `git push` sur `main` redéploie automatiquement). Détails et procédure :
+[`DEPLOY.md`](./DEPLOY.md).
+
 > Dépôt **séparé** du site vitrine. Cette base correspond à l'étape **A0**
 > (scaffold d'architecture). Le design system est **importé manuellement** —
 > voir [`IMPORT.md`](./IMPORT.md). Aucun câblage du design system ni logique
