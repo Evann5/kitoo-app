@@ -183,6 +183,48 @@ Helpers d'accès typés (server-only) :
 [`src/features/mood/queries.ts`](./src/features/mood/queries.ts) et
 [`src/features/wellbeing/queries.ts`](./src/features/wellbeing/queries.ts).
 
+## Mood Tracker
+
+Saisie d'humeur quotidienne (route privée [`/humeur`](./src/app/humeur/page.tsx)),
+expérience « compagnon » douce. Code dans
+[`src/features/mood/`](./src/features/mood).
+
+### Règles métier
+
+- **1 entrée par jour** par utilisateur (upsert sur `(user_id, entry_date)`),
+  modifiable jusqu'à 23h59 le jour même. Les jours passés sont consultables mais
+  non modifiables (seul le jour courant a un formulaire).
+- La **date et l'`user_id` sont fixés côté serveur** (jamais le client) ;
+  niveau validé en 1–5 avant écriture, via la server action
+  [`saveMood`](./src/features/mood/actions.ts).
+
+### Échelle d'humeur (fixe, design system)
+
+5 Très positif `#FFD93D` · 4 Positif `#A8E6CF` · 3 Neutre `#E0E0E0` ·
+2 Négatif `#FF8C42` · 1 Très négatif `#FF595E`. Visages dessinés (`MoodFace`),
+jamais d'emoji comme affordance.
+
+### Réaction du compagnon (humeur → mascotte)
+
+| Niveau | Pose koala                                          |
+| ------ | --------------------------------------------------- |
+| 5      | `kitoo-sunglasses`                                  |
+| 4      | `kitoo-soda`                                        |
+| 3      | `kitoo-classic`                                     |
+| 2      | `kitoo-classic` _(TODO pose « légèrement triste »)_ |
+| 1      | `kitoo-crying`                                      |
+
+Au choix de l'humeur, la mascotte change de pose et le fond prend la teinte
+douce correspondante (transition `motion-reduce:transition-none` → neutralisée
+sous `prefers-reduced-motion`).
+
+### Accessibilité
+
+Sélecteur en `radiogroup` (libellés textuels + visages, jamais la couleur
+seule), navigation clavier (flèches / Home / End, roving tabindex,
+`aria-checked`), chips de tags `aria-pressed`, formulaire labelisé, corps ≥ 16px,
+cibles ≥ 44px, focus pervenche.
+
 ## Design system câblé
 
 Le design system Kitoo (importé manuellement, cf. [`IMPORT.md`](./IMPORT.md)) est

@@ -80,6 +80,17 @@ export async function upsertTodayEntry(input: {
   return data;
 }
 
+/** Ids des tags associés à une entrée d'humeur. */
+export async function getEntryTagIds(moodEntryId: string): Promise<string[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("mood_entry_tags")
+    .select("tag_id")
+    .eq("mood_entry_id", moodEntryId);
+  if (error) throw error;
+  return (data ?? []).map((row) => row.tag_id);
+}
+
 /** Remplace l'ensemble des tags associés à une entrée d'humeur. */
 export async function setEntryTags(
   moodEntryId: string,

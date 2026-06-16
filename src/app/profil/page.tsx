@@ -28,6 +28,10 @@ export default async function ProfilPage() {
           <span className="text-body text-ink-900">{user.email}</span>
         </div>
 
+        <Button as="a" href="/humeur" fullWidth>
+          Noter mon humeur
+        </Button>
+
         <form action={signOut}>
           <Button type="submit" variant="outline" fullWidth>
             Me déconnecter

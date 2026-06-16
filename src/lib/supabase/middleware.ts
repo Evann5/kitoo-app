@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 /** Préfixes de routes privées : accès réservé aux personnes connectées. */
-const PROTECTED_PREFIXES = ["/profil", "/tableau-de-bord"];
+const PROTECTED_PREFIXES = ["/profil", "/tableau-de-bord", "/humeur"];
 
 /** Routes d'auth : une personne déjà connectée n'a rien à y faire. */
 const AUTH_ROUTES = ["/connexion", "/inscription"];

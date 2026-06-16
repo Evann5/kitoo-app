@@ -1,0 +1,46 @@
+import type { Metadata } from "next";
+import { Container } from "@/components/ui";
+import { requireUser } from "@/lib/auth";
+import { MoodEntryForm, RecentMoods, type MoodValue } from "@/features/mood";
+import {
+  getTodayEntry,
+  getEntryTagIds,
+  listEntries,
+  listMoodTags,
+} from "@/features/mood/queries";
+
+export const metadata: Metadata = {
+  title: "Mon humeur — Kitoo",
+};
+
+// Route privée : pas de cache statique (données par utilisateur).
+export const dynamic = "force-dynamic";
+
+export default async function HumeurPage() {
+  await requireUser("/humeur");
+
+  // Date du jour en UTC (cohérent avec `current_date` côté Postgres et avec
+  // `getTodayEntry`), pour distinguer aujourd'hui des jours passés.
+  const today = new Date().toISOString().slice(0, 10);
+
+  const [tags, todayEntry, recent] = await Promise.all([
+    listMoodTags(),
+    getTodayEntry(),
+    listEntries(14),
+  ]);
+
+  const initial = todayEntry
+    ? {
+        level: todayEntry.level as MoodValue,
+        comment: todayEntry.comment ?? "",
+        tagIds: await getEntryTagIds(todayEntry.id),
+      }
+    : null;
+
+  return (
+    <Container width="prose" className="flex flex-col gap-10 py-10">
+      <MoodEntryForm tags={tags} initial={initial} />
+      <RecentMoods entries={recent} today={today} />
+    </Container>
+  );
+}
