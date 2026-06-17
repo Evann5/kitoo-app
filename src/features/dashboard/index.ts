@@ -11,6 +11,7 @@ export { QuickActions } from "./QuickActions";
 export { SuggestionsList, type Suggestion } from "./SuggestionsList";
 export { WeeklyRecap } from "./WeeklyRecap";
 export { DailyEncouragement } from "./DailyEncouragement";
+export { DailyInspiration } from "./DailyInspiration";
 export { setCompanionName } from "./actions";
 export { COMPANION_NAME_MAX } from "./companion";
 export {

@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { listEntries, getTodayEntry } from "@/features/mood/queries";
 import { poseForMood, moodOption } from "@/features/mood";
 import { suggestResourcesForLevel } from "@/features/wellbeing/queries";
+import { getDailyInspiration } from "@/lib/daily-inspiration";
 import {
   listExercises,
   listMySessions,
@@ -17,6 +18,7 @@ import {
   CompanionCard,
   PrimaryMoodCta,
   SupportNudge,
+  DailyInspiration,
   WeekOverview,
   QuickActions,
   SuggestionsList,
@@ -151,6 +153,8 @@ export default async function DashboardPage() {
           />
           <StreakPill streak={streak} />
         </div>
+
+        <DailyInspiration {...getDailyInspiration(now)} />
 
         <CompanionCard
           name={profile?.companion_name ?? "Kitoo"}

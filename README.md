@@ -364,6 +364,21 @@ Accueil / Humeur / Bien-être / Profil).
   `encouragementOfDay`). Chaque module a un **état vide chaleureux** pour un
   nouvel utilisateur.
 
+### Inspiration du jour
+
+Un bloc en tête d'accueil ([`DailyInspiration`](./src/features/dashboard/DailyInspiration.tsx))
+affiche chaque jour une **phrase encourageante** sur un fond apaisant :
+
+- **Phrases originales** (jeu de ~30, voix Kitoo) dans
+  [`daily-inspiration.ts`](./src/lib/daily-inspiration.ts) — aucune citation
+  d'auteur ni texte protégé.
+- **Rotation déterministe par date** (`getDailyInspiration(date)`, pur et
+  testable) : phrase et fond stables sur la journée, changent le lendemain.
+- **Fonds** : un set de **dégradés SVG générés** (`public/inspiration/`),
+  **œuvre propre / libre de droits** (aucune image tierce). Le fond est
+  **décoratif** (`aria-hidden`) avec un **voile sombre** garantissant le
+  contraste du texte (WCAG AA). Texte ≥ 16px, responsive, sans animation.
+
 **Pas de jauge punitive** (type « faim/bonheur » qui se vide) : un compagnon qui
 se dégrade créerait de la culpabilité, à rebours du message « pas de pression »
 et risqué pour un public santé mentale. On n'affiche que des **indicateurs

@@ -25,6 +25,7 @@ export default defineConfig({
         "src/lib/moods.ts",
         "src/features/dashboard/stats.ts",
         "src/features/dashboard/home.ts",
+        "src/lib/daily-inspiration.ts",
         "src/features/mood/mood-config.ts",
         "src/features/wellbeing/filters.ts",
         "src/features/journal/aggregate.ts",

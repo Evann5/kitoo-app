@@ -4,6 +4,16 @@ Toutes les évolutions notables de l'application Kitoo.
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/) ;
 versionnage [SemVer](https://semver.org/lang/fr/).
 
+## [1.10.0] — 2026-06-17
+
+### Ajouté
+
+- **Inspiration du jour** sur l'accueil : phrase encourageante originale (jeu de
+  ~30, voix Kitoo, aucune citation protégée) sur un fond apaisant (dégradés SVG
+  générés, libres de droits) avec voile pour le contraste (WCAG AA). Sélection
+  **déterministe par date** via `getDailyInspiration` (pur, testable) ; fond
+  décoratif `aria-hidden`, responsive, sans animation.
+
 ## [1.9.0] — 2026-06-17
 
 ### Ajouté
