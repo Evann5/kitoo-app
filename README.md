@@ -162,6 +162,7 @@ Le réglage se fait dans le dashboard Supabase (Authentication → Email →
 | `/ressources`      | privé  | contenus à lire (+ lecture `/ressources/[id]`)        |
 | `/exercices`       | privé  | exercices interactifs (+ lecteur `/exercices/[slug]`) |
 | `/tests`           | privé  | tests standardisés (+ passation `/tests/[scale]`)     |
+| `/suivi`           | privé  | journal unifié : timeline + filtres + évolution       |
 
 La protection est assurée par [`middleware.ts`](./middleware.ts) (rafraîchit la
 session et redirige : non connecté → `/connexion`, déjà connecté hors des écrans
@@ -447,6 +448,34 @@ Résultats dans `assessment_results` (**RLS stricte** : chacun ne lit que les
 siens), écriture via server action authentifiée. Questionnaires en
 `fieldset`/`legend` + radios (clavier), progression annoncée (`aria-live`),
 possibilité de quitter sans enregistrer, corps ≥ 16px.
+
+## Journal / Suivi
+
+L'onglet **Suivi** (`/suivi`) réunit en une **timeline unifiée** les trois
+sources d'événements de l'utilisateur. Code dans
+[`src/features/journal/`](./src/features/journal).
+
+- **Sources agrégées** : humeurs (`mood_entries`), sessions d'exercices
+  (`exercise_sessions`) et résultats de tests (`assessment_results`), fusionnées
+  et triées du plus récent au plus ancien par
+  [`mergeAndSort`](./src/features/journal/aggregate.ts) (fonctions **pures et
+  testables**). Lecture **sous RLS** dans
+  [`queries.ts`](./src/features/journal/queries.ts) — chacun ne voit que ses
+  données — avec un visuel distinct par type.
+- **Confidentialité du score d'humeur** : le score continu **0–100 reste caché**
+  — une entrée d'humeur ne porte que son **libellé qualitatif** (« Très bien »…),
+  jamais le nombre. Les résultats de tests, eux, sont assumés (libellé de
+  sévérité + score officiel), présentés en **orientation** (pas de diagnostic)
+  avec disclaimer ; une entrée « sensible » (item 9 du PHQ-9, cf. A13) reste
+  discrète et soutenante, avec ressources d'aide dans le détail.
+- **Filtres** : par type (humeur / exercice / test) et par période
+  (semaine / mois / tout), au clavier (`aria-pressed`) ; état vide chaleureux
+  par filtre et à l'ouverture (nouvel utilisateur).
+- **Évolution** : aperçu qualitatif — courbe d'humeur (réutilise
+  `MoodTrendChart`, avec alternative textuelle), récap d'exercices, évolution
+  des scores de tests. Pagination progressive (« Voir plus ») de la timeline.
+- **Export RGPD** : l'export (A7, `/api/export`) inclut désormais aussi
+  `exercise_sessions` et `assessment_results` dans le JSON de portabilité.
 
 ## RGPD & accessibilité
 

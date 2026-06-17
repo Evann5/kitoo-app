@@ -3,7 +3,8 @@ import { createClient } from "@/lib/supabase/server";
 
 /**
  * Droit d'accès / portabilité (RGPD) : exporte les données de l'utilisateur
- * connecté (profil + humeurs + tags + consentements) en JSON ou CSV.
+ * connecté (profil + humeurs + tags + sessions d'exercices + résultats de
+ * tests + consentements) en JSON ou CSV.
  *
  * Authentifié et soumis à la RLS : on ne renvoie que les données de l'appelant
  * (toutes les requêtes passent par sa session). Jamais de clé service_role.
@@ -17,20 +18,35 @@ export async function GET(request: NextRequest) {
     return new NextResponse("Non authentifié", { status: 401 });
   }
 
-  const [{ data: profile }, { data: entries }, { data: consents }] =
-    await Promise.all([
-      supabase.from("profiles").select("*").eq("id", user.id).maybeSingle(),
-      supabase
-        .from("mood_entries")
-        .select(
-          "entry_date, level, comment, created_at, mood_entry_tags(mood_tags(slug,label))",
-        )
-        .order("entry_date", { ascending: true }),
-      supabase
-        .from("consents")
-        .select("type, granted_at, revoked_at")
-        .order("granted_at", { ascending: true }),
-    ]);
+  const [
+    { data: profile },
+    { data: entries },
+    { data: sessions },
+    { data: assessments },
+    { data: consents },
+  ] = await Promise.all([
+    supabase.from("profiles").select("*").eq("id", user.id).maybeSingle(),
+    supabase
+      .from("mood_entries")
+      .select(
+        "entry_date, level, comment, created_at, mood_entry_tags(mood_tags(slug,label))",
+      )
+      .order("entry_date", { ascending: true }),
+    supabase
+      .from("exercise_sessions")
+      .select(
+        "started_at, completed_at, duration_sec, completed, exercises(slug, title, category)",
+      )
+      .order("started_at", { ascending: true }),
+    supabase
+      .from("assessment_results")
+      .select("scale, score, severity, flagged, answers, taken_at")
+      .order("taken_at", { ascending: true }),
+    supabase
+      .from("consents")
+      .select("type, granted_at, revoked_at")
+      .order("granted_at", { ascending: true }),
+  ]);
 
   type EntryRow = {
     entry_date: string;
@@ -40,6 +56,15 @@ export async function GET(request: NextRequest) {
     mood_entry_tags: { mood_tags: { slug: string; label: string } | null }[];
   };
   const rows = (entries ?? []) as unknown as EntryRow[];
+
+  type SessionRow = {
+    started_at: string;
+    completed_at: string | null;
+    duration_sec: number;
+    completed: boolean;
+    exercises: { slug: string; title: string; category: string } | null;
+  };
+  const sessionRows = (sessions ?? []) as unknown as SessionRow[];
 
   const format = request.nextUrl.searchParams.get("format");
 
@@ -73,6 +98,20 @@ export async function GET(request: NextRequest) {
       created_at: e.created_at,
       tags: e.mood_entry_tags.map((t) => t.mood_tags?.slug).filter(Boolean),
     })),
+    exercise_sessions: sessionRows.map((s) => ({
+      started_at: s.started_at,
+      completed_at: s.completed_at,
+      duration_sec: s.duration_sec,
+      completed: s.completed,
+      exercise: s.exercises
+        ? {
+            slug: s.exercises.slug,
+            title: s.exercises.title,
+            category: s.exercises.category,
+          }
+        : null,
+    })),
+    assessment_results: assessments ?? [],
     consents,
   };
 

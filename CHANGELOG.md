@@ -4,6 +4,22 @@ Toutes les évolutions notables de l'application Kitoo.
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/) ;
 versionnage [SemVer](https://semver.org/lang/fr/).
 
+## [1.5.0] — 2026-06-17
+
+### Ajouté
+
+- **Journal unifié** (onglet Suivi, `/suivi`) : timeline chronologique
+  agrégeant humeurs, sessions d'exercices et résultats de tests (visuel distinct
+  par type), filtres par type/période, détail par entrée, aperçu d'évolution
+  qualitatif. Agrégation via fonctions pures testables + pagination progressive.
+- Le **score d'humeur 0–100 reste caché** (libellé qualitatif seul) ; tests en
+  orientation avec disclaimer, entrées sensibles discrètes et soutenantes.
+
+### Modifié
+
+- **Export RGPD** (`/api/export`) complété avec `exercise_sessions` et
+  `assessment_results`.
+
 ## [1.4.0] — 2026-06-17
 
 ### Ajouté

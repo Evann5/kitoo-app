@@ -37,6 +37,7 @@ test("aucune violation a11y critique sur les pages privées", async ({
   for (const path of [
     "/tableau-de-bord",
     "/humeur",
+    "/suivi",
     "/ressources",
     "/exercices",
     "/tests",

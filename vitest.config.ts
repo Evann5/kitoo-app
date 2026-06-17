@@ -26,6 +26,7 @@ export default defineConfig({
         "src/features/dashboard/stats.ts",
         "src/features/mood/mood-config.ts",
         "src/features/wellbeing/filters.ts",
+        "src/features/journal/aggregate.ts",
         "src/features/accessibility/prefs.ts",
         "src/features/auth/index.ts",
       ],
