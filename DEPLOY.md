@@ -98,6 +98,16 @@ strict-origin-when-cross-origin` et une `Permissions-Policy` restrictive (appliq
 - **Durcissement optionnel** (dashboard Supabase → Authentication → Passwords) :
   activer _Leaked password protection_ (HaveIBeenPwned). Non bloquant.
 
+## Ressources d'aide (donnée de santé sensible)
+
+Les tests standardisés affichent un message de soutien si l'item sensible du
+PHQ-9 (idées noires) est positif, avec des **ressources d'aide à maintenir à
+jour** : **3114** (ligne nationale de prévention du suicide, 24h/24), 15/112 en
+urgence. À **vérifier périodiquement** (numéros, disponibilité) dans
+[`SupportMessage.tsx`](./src/features/assessments/SupportMessage.tsx) — un
+commentaire dans le fichier le rappelle. Aucune variable d'environnement n'est
+nécessaire pour cette fonctionnalité.
+
 ## Région & conformité
 
 Projet Supabase `kitoo-app` en région **`eu-west-3`** (Union européenne, RGPD).

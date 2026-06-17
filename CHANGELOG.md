@@ -4,6 +4,24 @@ Toutes les évolutions notables de l'application Kitoo.
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/) ;
 versionnage [SemVer](https://semver.org/lang/fr/).
 
+## [1.1.0] — 2026-06-17 — Jalon « V1.1 »
+
+Lot livrable consolidant les évolutions des versions internes 1.2 → 1.5 :
+**nouvelle navigation + menu « + »**, **séparation Ressources / Exercices** avec
+exercices interactifs, **tests standardisés** (PHQ-9, GAD-7, PSS-10, WHO-5) et
+**journal unifié** (`/suivi`). Marqué par le tag `v1.1.0`.
+
+### Qualité
+
+- Couverture de tests consolidée : unitaires (scoring des 4 échelles dont PSS-10
+  inversés et WHO-5 ×4, message de soutien PHQ-9 item 9, minuteur + session
+  d'exercice, agrégation / filtres du journal, score d'humeur 0–100 jamais
+  exposé) et e2e des nouveaux parcours (menu « + », tests, exercices, journal).
+- Audit axe-core (0 violation critique) étendu aux nouvelles pages, y compris
+  les détails dynamiques `/exercices/[slug]` et `/ressources/[id]`.
+- Isolation RLS vérifiée par e2e pour `exercise_sessions` et `assessment_results`
+  (aucun accès croisé entre comptes) ; export RGPD complété.
+
 ## [1.5.0] — 2026-06-17
 
 ### Ajouté

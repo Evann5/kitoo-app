@@ -3,7 +3,9 @@ import { test, expect, type Page } from "@playwright/test";
 /**
  * Isolation RLS : un utilisateur ne peut pas accéder aux données d'un autre.
  * Deux comptes distincts (contextes navigateur séparés) ; on vérifie via
- * l'export que chacun ne récupère QUE ses propres humeurs.
+ * l'export que chacun ne récupère QUE ses propres données — humeurs, mais
+ * aussi sessions d'exercices (`exercise_sessions`) et résultats de tests
+ * (`assessment_results`), les tables introduites en A12/A13.
  */
 
 const PASSWORD = "motdepasse-e2e-1";
@@ -30,6 +32,26 @@ async function signupConsentAddMood(
   await expect(page.getByText(/noté, prends soin de toi/i)).toBeVisible();
 }
 
+/** A passe un test (WHO-5) et lance/arrête un exercice → données privées. */
+async function addAssessmentAndExercise(page: Page) {
+  await page.goto("/tests/who5");
+  const groups = page.getByRole("group");
+  const count = await groups.count();
+  for (let i = 0; i < count; i++) {
+    await groups.nth(i).getByRole("radio").first().check();
+  }
+  await page.getByRole("button", { name: "Voir mon résultat" }).click();
+  await expect(
+    page.getByRole("link", { name: "Revenir aux tests" }),
+  ).toBeVisible();
+
+  await page.goto("/exercices");
+  await page.locator("a[href^='/exercices/']").first().click();
+  await page.getByRole("button", { name: "Commencer" }).click();
+  await page.waitForTimeout(1300);
+  await page.getByRole("button", { name: "Arrêter" }).click();
+}
+
 test("isolation RLS : aucun accès croisé entre deux comptes", async ({
   browser,
 }) => {
@@ -37,10 +59,11 @@ test("isolation RLS : aucun accès croisé entre deux comptes", async ({
   const emailB = testEmail("rlsB");
   const secretA = "DONNEE-PRIVEE-DE-A";
 
-  // Compte A : crée une humeur avec un commentaire secret.
+  // Compte A : crée une humeur secrète, un résultat de test et une session.
   const ctxA = await browser.newContext();
   const pageA = await ctxA.newPage();
   await signupConsentAddMood(pageA, emailA, secretA);
+  await addAssessmentAndExercise(pageA);
 
   // Compte B : crée sa propre humeur.
   const ctxB = await browser.newContext();
@@ -54,12 +77,17 @@ test("isolation RLS : aucun accès croisé entre deux comptes", async ({
   expect(JSON.stringify(dataB)).not.toContain(secretA);
   expect(dataB.mood_entries).toHaveLength(1);
   expect(dataB.mood_entries[0].comment).toBe("donnee de B");
+  // B n'a passé aucun test ni exercice : isolation des nouvelles tables.
+  expect(dataB.assessment_results).toHaveLength(0);
+  expect(dataB.exercise_sessions).toHaveLength(0);
 
-  // L'export de A contient bien SES données (et son commentaire).
+  // L'export de A contient bien SES données (humeur + test + exercice).
   const exportA = await pageA.request.get("/api/export");
   const dataA = await exportA.json();
   expect(dataA.user.email).toBe(emailA);
   expect(dataA.mood_entries[0].comment).toBe(secretA);
+  expect(dataA.assessment_results.length).toBeGreaterThanOrEqual(1);
+  expect(dataA.exercise_sessions.length).toBeGreaterThanOrEqual(1);
 
   await ctxA.close();
   await ctxB.close();

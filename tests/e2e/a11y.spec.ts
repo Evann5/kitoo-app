@@ -51,4 +51,22 @@ test("aucune violation a11y critique sur les pages privées", async ({
       `${path}: ${critical.map((v) => v.id).join(", ")}`,
     ).toEqual([]);
   }
+
+  // Pages de détail dynamiques (slug / id) atteintes par clic.
+  await page.goto("/exercices");
+  await page.locator("a[href^='/exercices/']").first().click();
+  await expect(page).toHaveURL(/\/exercices\/.+/);
+  let critical = await criticalViolations(page);
+  expect(critical, `exercice: ${critical.map((v) => v.id).join(", ")}`).toEqual(
+    [],
+  );
+
+  await page.goto("/ressources");
+  await page.locator("a[href^='/ressources/']").first().click();
+  await expect(page).toHaveURL(/\/ressources\/.+/);
+  critical = await criticalViolations(page);
+  expect(
+    critical,
+    `ressource: ${critical.map((v) => v.id).join(", ")}`,
+  ).toEqual([]);
 });

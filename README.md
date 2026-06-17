@@ -7,11 +7,14 @@ bien-être, avec authentification email / mot de passe.
 (chaque `git push` sur `main` redéploie automatiquement). Détails et procédure :
 [`DEPLOY.md`](./DEPLOY.md).
 
-Le **MVP (v1)** couvre : authentification (email/mot de passe), saisie
-quotidienne d'humeur « compagnon », tableau de bord avec tendances et badges,
-espace bien-être filtrable, et conformité RGPD + accessibilité (modes dyslexie /
-daltonisme). **Hors MVP** (à venir) : le compagnon conversationnel scénarisé
-(chat), les rappels/notifications. Historique : [`CHANGELOG.md`](./CHANGELOG.md).
+Le périmètre actuel (**v1.1**) couvre : authentification (email/mot de passe),
+saisie quotidienne d'humeur « compagnon », tableau de bord avec tendances et
+badges, navigation par tab bar + menu « + », **ressources** à lire et
+**exercices** interactifs (minuteur guidé), **tests standardisés** (PHQ-9,
+GAD-7, PSS-10, WHO-5) en orientation, **journal unifié** (`/suivi`), et
+conformité RGPD + accessibilité (modes dyslexie / daltonisme). **À venir** : le
+compagnon conversationnel scénarisé (chat), les rappels / notifications.
+Historique : [`CHANGELOG.md`](./CHANGELOG.md).
 Dépôt **séparé** du site vitrine ; le design system Kitoo a été importé puis
 câblé (cf. [`IMPORT.md`](./IMPORT.md)).
 
