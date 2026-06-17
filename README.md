@@ -542,6 +542,31 @@ sources d'événements de l'utilisateur. Code dans
 - **Export RGPD** : l'export (A7, `/api/export`) inclut désormais aussi
   `exercise_sessions` et `assessment_results` dans le JSON de portabilité.
 
+## Chat de soutien (simulé)
+
+Un espace d'échange doux accessible via une bulle sur l'accueil
+([`ChatLauncher`](./src/features/chat/ChatLauncher.tsx)) ouvrant `/chat`. Code
+dans [`src/features/chat/`](./src/features/chat).
+
+- **Nature simulée, étiquetée** : les réponses du « pro » sont
+  **scénarisées/de démonstration** — ce n'est **pas** un·e clinicien·ne réel·le
+  ni un service d'urgence. Un bandeau permanent + le disclaimer « Kitoo ne
+  remplace pas un suivi médical professionnel » sont toujours visibles ; aucun
+  langage de diagnostic.
+- **Logique pure & testable** ([`auto-reply.ts`](./src/features/chat/auto-reply.ts))
+  : règles douces par thème + repli encourageant ; **détection de détresse**
+  (idées noires…) → message de soutien et **ressources d'aide** (3114, 15/112).
+  La réponse et le flag `flagged` sont **recalculés côté serveur** (server
+  action), jamais fournis par le client.
+- **Données & RLS** : tables `conversations` et `messages` en **RLS stricte**
+  (chacun n'accède qu'à sa conversation). Messages inclus dans l'**export RGPD**
+  (A7).
+- **Accessibilité** : fil annoncé (`aria-live`), champ labelisé, bulles
+  `ChatBubble`, focus visible, cibles ≥ 44px.
+
+> Ressources d'aide (3114 / 15 / 112) à **vérifier/maintenir à jour** — cf. le
+> commentaire dans `auto-reply.ts` et `DEPLOY.md`.
+
 ## RGPD & accessibilité
 
 Les humeurs sont des **données de santé sensibles** : l'app intègre consentement,

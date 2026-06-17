@@ -6,6 +6,7 @@ import { listEntries, getTodayEntry } from "@/features/mood/queries";
 import { poseForMood, moodOption } from "@/features/mood";
 import { suggestResourcesForLevel } from "@/features/wellbeing/queries";
 import { getDailyInspiration } from "@/lib/daily-inspiration";
+import { ChatLauncher } from "@/features/chat";
 import {
   listExercises,
   listMySessions,
@@ -168,6 +169,7 @@ export default async function DashboardPage() {
 
         {showNudge ? <SupportNudge /> : null}
 
+        <ChatLauncher />
         <WeekOverview days={weekDays} />
         <QuickActions breathingHref={breathingHref} />
         <SuggestionsList suggestions={suggestions} />

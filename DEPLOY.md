@@ -108,6 +108,10 @@ urgence. À **vérifier périodiquement** (numéros, disponibilité) dans
 commentaire dans le fichier le rappelle. Aucune variable d'environnement n'est
 nécessaire pour cette fonctionnalité.
 
+Le **chat de soutien simulé** ([`auto-reply.ts`](./src/features/chat/auto-reply.ts))
+affiche les mêmes ressources en cas de détresse — à maintenir à jour au même
+endroit.
+
 ## Région & conformité
 
 Projet Supabase `kitoo-app` en région **`eu-west-3`** (Union européenne, RGPD).

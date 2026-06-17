@@ -4,6 +4,20 @@ Toutes les évolutions notables de l'application Kitoo.
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/) ;
 versionnage [SemVer](https://semver.org/lang/fr/).
 
+## [1.11.0] — 2026-06-17
+
+### Ajouté
+
+- **Chat de soutien simulé** (`/chat`, accès via une bulle sur l'accueil) :
+  conversation persistante (tables `conversations` / `messages` en **RLS
+  stricte**), réponses du « pro » **simulées/scénarisées** clairement étiquetées
+  (pas un·e clinicien·ne réel·le ni un service d'urgence) + disclaimer médical.
+  **Détection douce de détresse** → message de soutien + ressources d'aide
+  (3114, 15/112), sans diagnostic. Logique de réponse **pure et testable**
+  (`auto-reply.ts`), server action authentifiée recalculant `flagged`. Fil
+  accessible (`aria-live`), champ labelisé, clavier. Messages inclus dans
+  l'export RGPD. security-review sans alerte critique.
+
 ## [1.10.0] — 2026-06-17
 
 ### Ajouté

@@ -23,6 +23,7 @@ export async function GET(request: NextRequest) {
     { data: entries },
     { data: sessions },
     { data: assessments },
+    { data: chatMessages },
     { data: consents },
   ] = await Promise.all([
     supabase.from("profiles").select("*").eq("id", user.id).maybeSingle(),
@@ -42,6 +43,10 @@ export async function GET(request: NextRequest) {
       .from("assessment_results")
       .select("scale, score, severity, flagged, answers, taken_at")
       .order("taken_at", { ascending: true }),
+    supabase
+      .from("messages")
+      .select("sender, content, flagged, created_at")
+      .order("created_at", { ascending: true }),
     supabase
       .from("consents")
       .select("type, granted_at, revoked_at")
@@ -112,6 +117,7 @@ export async function GET(request: NextRequest) {
         : null,
     })),
     assessment_results: assessments ?? [],
+    chat_messages: chatMessages ?? [],
     consents,
   };
 

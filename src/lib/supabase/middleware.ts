@@ -10,6 +10,7 @@ const PROTECTED_PREFIXES = [
   "/suivi",
   "/tests",
   "/exercices",
+  "/chat",
 ];
 
 /** Routes d'auth : une personne déjà connectée n'a rien à y faire. */

@@ -51,6 +51,12 @@ async function addAssessmentAndExercise(page: Page) {
   await page.getByRole("button", { name: "Commencer" }).click();
   await page.waitForTimeout(1300);
   await page.getByRole("button", { name: "Arrêter" }).click();
+
+  // Un message de chat de soutien (donnée privée).
+  await page.goto("/chat");
+  await page.getByLabel(/écris ton message/i).fill("coucou Kitoo");
+  await page.getByRole("button", { name: "Envoyer" }).click();
+  await expect(page.getByText("coucou Kitoo")).toBeVisible();
 }
 
 test("isolation RLS : aucun accès croisé entre deux comptes", async ({
@@ -78,9 +84,10 @@ test("isolation RLS : aucun accès croisé entre deux comptes", async ({
   expect(JSON.stringify(dataB)).not.toContain(secretA);
   expect(dataB.mood_entries).toHaveLength(1);
   expect(dataB.mood_entries[0].comment).toBe("donnee de B");
-  // B n'a passé aucun test ni exercice : isolation des nouvelles tables.
+  // B n'a passé aucun test, exercice ni chat : isolation des nouvelles tables.
   expect(dataB.assessment_results).toHaveLength(0);
   expect(dataB.exercise_sessions).toHaveLength(0);
+  expect(dataB.chat_messages).toHaveLength(0);
 
   // L'export de A contient bien SES données (humeur + test + exercice).
   const exportA = await pageA.request.get("/api/export");
@@ -89,6 +96,8 @@ test("isolation RLS : aucun accès croisé entre deux comptes", async ({
   expect(dataA.mood_entries[0].comment).toBe(secretA);
   expect(dataA.assessment_results.length).toBeGreaterThanOrEqual(1);
   expect(dataA.exercise_sessions.length).toBeGreaterThanOrEqual(1);
+  expect(dataA.chat_messages.length).toBeGreaterThanOrEqual(1);
+  expect(JSON.stringify(dataB)).not.toContain("coucou Kitoo");
 
   await ctxA.close();
   await ctxB.close();
