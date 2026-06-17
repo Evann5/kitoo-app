@@ -24,7 +24,7 @@ export function Footer() {
           </Link>
         ))}
       </nav>
-      <p className="text-small text-ink-500 mt-3">
+      <p className="text-small text-ink-600 mt-3">
         Kitoo ne remplace pas un suivi médical professionnel.
       </p>
     </footer>

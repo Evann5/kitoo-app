@@ -16,7 +16,7 @@ export function Greeting({ greeting, name, dateLabel }: GreetingProps) {
         {greeting}
         {name ? `, ${name}` : ""}
       </h1>
-      <p className="text-small text-ink-500 capitalize">{dateLabel}</p>
+      <p className="text-small text-ink-600 capitalize">{dateLabel}</p>
     </header>
   );
 }

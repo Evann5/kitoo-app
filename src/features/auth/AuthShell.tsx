@@ -48,7 +48,7 @@ export function AuthShell({
           </Link>
         </p>
 
-        <p className="text-small text-ink-500 mt-8 text-center">
+        <p className="text-small text-ink-600 mt-8 text-center">
           Kitoo ne remplace pas un suivi médical professionnel.
         </p>
       </div>

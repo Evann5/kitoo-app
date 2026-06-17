@@ -25,7 +25,7 @@ export function LegalShell({ title, updatedAt, children }: LegalShellProps) {
       </Link>
       <article className="flex flex-col gap-4">
         <h1 className="font-display text-display text-ink-900">{title}</h1>
-        <p className="text-small text-ink-500">
+        <p className="text-small text-ink-600">
           Dernière mise à jour : {updatedAt}
         </p>
         <div className="text-body text-ink-800 [&_h2]:font-display [&_h2]:text-title [&_h2]:text-ink-900 [&_a]:text-brand-700 flex flex-col gap-4 leading-relaxed [&_a]:font-bold [&_a]:underline [&_h2]:mt-4 [&_strong]:font-bold [&_ul]:list-disc [&_ul]:pl-5">

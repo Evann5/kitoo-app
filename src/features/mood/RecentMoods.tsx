@@ -63,7 +63,7 @@ export function RecentMoods({ entries, today }: RecentMoodsProps) {
                       </span>
                     ) : null}
                   </span>
-                  <span className="text-small text-ink-500 capitalize">
+                  <span className="text-small text-ink-600 capitalize">
                     {formatDay(entry.entry_date)}
                   </span>
                   {entry.comment ? (
@@ -77,7 +77,7 @@ export function RecentMoods({ entries, today }: RecentMoodsProps) {
           );
         })}
       </ul>
-      <p className="text-small text-ink-500">
+      <p className="text-small text-ink-600">
         Les jours passés sont consultables, mais seule l&apos;humeur
         d&apos;aujourd&apos;hui peut être modifiée.
       </p>

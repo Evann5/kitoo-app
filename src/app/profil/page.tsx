@@ -48,7 +48,7 @@ export default async function ProfilPage() {
         {/* Compte */}
         <Card className="flex flex-col gap-3">
           <div className="flex flex-col gap-1">
-            <span className="text-small text-ink-500 font-bold">
+            <span className="text-small text-ink-600 font-bold">
               Adresse email
             </span>
             <span className="text-body text-ink-900">{user.email}</span>
@@ -68,7 +68,7 @@ export default async function ProfilPage() {
           <SectionTitle>Confidentialité</SectionTitle>
           <Card className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
-              <span className="text-small text-ink-500 font-bold">
+              <span className="text-small text-ink-600 font-bold">
                 Consentement au traitement des données de santé
               </span>
               {consent ? (
@@ -106,7 +106,7 @@ export default async function ProfilPage() {
             )}
 
             <div className="border-ink-200 flex flex-col gap-2 border-t pt-4">
-              <span className="text-small text-ink-500 font-bold">
+              <span className="text-small text-ink-600 font-bold">
                 Exporter mes données
               </span>
               <div className="flex flex-col gap-2 sm:flex-row">
@@ -165,7 +165,7 @@ export default async function ProfilPage() {
           </Button>
         </form>
 
-        <p className="text-small text-ink-500 text-center">
+        <p className="text-small text-ink-600 text-center">
           Kitoo ne remplace pas un suivi médical professionnel.
         </p>
       </div>

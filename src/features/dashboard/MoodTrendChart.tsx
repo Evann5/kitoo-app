@@ -103,7 +103,7 @@ export function MoodTrendChart({ weekly, monthly }: MoodTrendChartProps) {
         </table>
 
         {noted.length === 0 ? (
-          <p className="text-body text-ink-500 py-8 text-center">
+          <p className="text-body text-ink-600 py-8 text-center">
             Note ton humeur pour voir tes tendances apparaître ici.
           </p>
         ) : (

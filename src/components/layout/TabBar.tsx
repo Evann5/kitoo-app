@@ -97,7 +97,7 @@ export function TabBar() {
                 className={cn(
                   "flex min-h-[56px] flex-col items-center justify-center gap-0.5 py-2",
                   "text-small font-bold",
-                  active ? "text-brand-700" : "text-ink-500",
+                  active ? "text-brand-700" : "text-ink-600",
                 )}
               >
                 {item.icon(active)}

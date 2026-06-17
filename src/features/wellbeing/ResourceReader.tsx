@@ -45,7 +45,7 @@ export function ResourceReader({ resource }: ResourceReaderProps) {
         {resource.title}
       </h1>
 
-      <p className="text-small text-ink-500 inline-flex items-center gap-1.5">
+      <p className="text-small text-ink-600 inline-flex items-center gap-1.5">
         <ShieldCheck aria-hidden size={16} strokeWidth={1.8} />
         Rédigé et validé par des professionnels de santé
       </p>
@@ -55,7 +55,7 @@ export function ResourceReader({ resource }: ResourceReaderProps) {
         {resource.content}
       </div>
 
-      <p className="text-small border-ink-200 text-ink-500 mt-2 border-t pt-4">
+      <p className="text-small border-ink-200 text-ink-600 mt-2 border-t pt-4">
         Kitoo ne remplace pas un suivi médical professionnel. Si tu traverses
         une période difficile, parles-en à un professionnel de santé.
       </p>

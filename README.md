@@ -7,11 +7,13 @@ bien-être, avec authentification email / mot de passe.
 (chaque `git push` sur `main` redéploie automatiquement). Détails et procédure :
 [`DEPLOY.md`](./DEPLOY.md).
 
-Le MVP couvre : authentification (email/mot de passe), saisie quotidienne
-d'humeur « compagnon », tableau de bord avec tendances et badges, espace
-bien-être filtrable, et conformité RGPD + accessibilité (modes dyslexie /
-daltonisme). Dépôt **séparé** du site vitrine ; le design system Kitoo a été
-importé puis câblé (cf. [`IMPORT.md`](./IMPORT.md)).
+Le **MVP (v1)** couvre : authentification (email/mot de passe), saisie
+quotidienne d'humeur « compagnon », tableau de bord avec tendances et badges,
+espace bien-être filtrable, et conformité RGPD + accessibilité (modes dyslexie /
+daltonisme). **Hors MVP** (à venir) : le compagnon conversationnel scénarisé
+(chat), les rappels/notifications. Historique : [`CHANGELOG.md`](./CHANGELOG.md).
+Dépôt **séparé** du site vitrine ; le design system Kitoo a été importé puis
+câblé (cf. [`IMPORT.md`](./IMPORT.md)).
 
 ## Stack
 
@@ -75,6 +77,9 @@ pnpm build
 > Les e2e créent des **comptes de test éphémères** (emails `+e2e-…`, nettoyés).
 > Ils utilisent le Supabase de `.env.local` ; ne committe jamais de secret ni de
 > compte réel. La confirmation email doit être désactivée côté Supabase.
+
+**Audit Lighthouse** (prod, page d'accueil) : Performance 99 · Accessibilité 95 ·
+Best Practices 100 · SEO 100.
 
 ## Intégration continue
 
@@ -444,13 +449,6 @@ placeholder doux. Le manifeste des assets présents est
 [`src/lib/illustration-assets.ts`](./src/lib/illustration-assets.ts) (à mettre à
 jour après ajout/suppression d'un fichier). Le logo sert de favicon via
 [`src/app/icon.png`](./src/app/icon.png).
-
-### Page de validation
-
-[`/styleguide`](http://localhost:3000/styleguide) (dev uniquement, **404 en
-production**) : couleurs, primitives (tous variants), visages d'humeur et poses de
-la mascotte. La page d'accueil `/` est une entrée minimale stylée Kitoo (logo,
-titre Goodly, mascotte, `Button`).
 
 ### `design-system/reference/` — hors build
 

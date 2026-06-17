@@ -85,3 +85,19 @@ Penser aussi à **Authentication → URL Configuration** : ajouter
 - **Automatique** : `git push` sur `main` → build + déploiement production.
 - **Manuel** : `vercel --prod --yes`.
 - **Inspecter** : `vercel inspect <url>` ou l'onglet _Deployments_ du dashboard.
+
+## Sécurité
+
+- **En-têtes HTTP** : [`vercel.json`](./vercel.json) ajoute `X-Content-Type-Options:
+nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy:
+strict-origin-when-cross-origin` et une `Permissions-Policy` restrictive (appliqués
+  par Vercel en production).
+- **RLS active** sur toutes les tables de données utilisateur ; clé `service_role`
+  **jamais** utilisée côté app (la suppression de compte passe par une fonction
+  Postgres `SECURITY DEFINER` limitée à `auth.uid()`).
+- **Durcissement optionnel** (dashboard Supabase → Authentication → Passwords) :
+  activer _Leaked password protection_ (HaveIBeenPwned). Non bloquant.
+
+## Région & conformité
+
+Projet Supabase `kitoo-app` en région **`eu-west-3`** (Union européenne, RGPD).

@@ -34,7 +34,7 @@ export function SupportNudge() {
       >
         Trouver du soutien
       </Link>
-      <p className="text-small text-ink-500">
+      <p className="text-small text-ink-600">
         Kitoo ne remplace pas un suivi médical professionnel.
       </p>
     </Card>

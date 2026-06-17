@@ -95,7 +95,7 @@ export function MoodEntryForm({ tags, initial }: MoodEntryFormProps) {
         <div className="flex flex-col gap-2">
           <span className="text-small text-ink-800 font-bold">
             Qu&apos;est-ce qui a marqué ta journée ?{" "}
-            <span className="text-ink-500 font-normal">(facultatif)</span>
+            <span className="text-ink-600 font-normal">(facultatif)</span>
           </span>
           <TagChips
             tags={tags}
@@ -111,7 +111,7 @@ export function MoodEntryForm({ tags, initial }: MoodEntryFormProps) {
             className="text-small text-ink-800 font-bold"
           >
             Envie d&apos;en dire plus ?{" "}
-            <span className="text-ink-500 font-normal">(facultatif)</span>
+            <span className="text-ink-600 font-normal">(facultatif)</span>
           </label>
           <textarea
             id="comment"
