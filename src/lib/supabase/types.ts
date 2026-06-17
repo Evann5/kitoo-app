@@ -232,6 +232,7 @@ export type Database = {
       profiles: {
         Row: {
           accessibility_prefs: Json;
+          companion_name: string | null;
           created_at: string;
           id: string;
           notif_prefs: Json;
@@ -240,6 +241,7 @@ export type Database = {
         };
         Insert: {
           accessibility_prefs?: Json;
+          companion_name?: string | null;
           created_at?: string;
           id: string;
           notif_prefs?: Json;
@@ -248,6 +250,7 @@ export type Database = {
         };
         Update: {
           accessibility_prefs?: Json;
+          companion_name?: string | null;
           created_at?: string;
           id?: string;
           notif_prefs?: Json;

@@ -1,31 +1,162 @@
+"use client";
+
+import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { Check, Pencil, X } from "lucide-react";
 import { Card } from "@/components/ui";
 import { Mascot } from "@/components/illustrations";
 import type { MascotPose } from "@/lib/illustrations";
+import { setCompanionName } from "./actions";
+import { COMPANION_NAME_MAX } from "./companion";
 
 export type CompanionCardProps = {
-  pose: MascotPose;
+  /** Nom du compagnon (défaut « Kitoo »). */
+  name: string;
   /** Message de la bulle (ton chaleureux, encourageant). */
   message: string;
+  /** Pose de la mascotte (reflète l'humeur du jour, ou `classic`). */
+  pose: MascotPose;
+  /** Série en cours (jours), indicateur positif. */
+  streak: number;
+  /** Ressenti qualitatif de la semaine (libellé, JAMAIS le score 0–100). */
+  weekLabel: string | null;
 };
 
-/**
- * Carte « compagnon » : le koala Kitoo avec une bulle de message. La pose
- * reflète l'humeur du jour (ou `classic` par défaut).
- */
-export function CompanionCard({ pose, message }: CompanionCardProps) {
+/** Petit indicateur **positif** (jamais une jauge qui se vide). */
+function Indicator({ label, value }: { label: string; value: string }) {
   return (
-    <Card className="flex items-center gap-4">
-      <Mascot pose={pose} priority className="w-24 shrink-0 max-[360px]:w-20" />
-      <div className="relative flex-1">
-        {/* Bulle de dialogue. */}
-        <div className="rounded-card bg-brand-100 text-body text-ink-800 relative px-4 py-3">
-          {message}
-          {/* Pointe de la bulle vers la mascotte. */}
-          <span
-            aria-hidden
-            className="bg-brand-100 absolute top-1/2 -left-1.5 h-3 w-3 -translate-y-1/2 rotate-45"
-          />
-        </div>
+    <div className="rounded-control flex flex-col gap-0.5 bg-white px-4 py-3 text-center">
+      <span className="text-small text-ink-600">{label}</span>
+      <span className="text-body text-ink-900 font-bold">{value}</span>
+    </div>
+  );
+}
+
+/**
+ * Carte « compagnon » centrale : nom éditable, bulle de dialogue contextuelle,
+ * koala (avec étincelles douces, neutralisées sous `prefers-reduced-motion`) et
+ * **deux indicateurs positifs** (série + ressenti de la semaine). Aucune jauge
+ * punitive type « faim/bonheur », et **jamais le score d'humeur 0–100 caché**.
+ */
+export function CompanionCard({
+  name,
+  message,
+  pose,
+  streak,
+  weekLabel,
+}: CompanionCardProps) {
+  const router = useRouter();
+  const [pending, startTransition] = useTransition();
+  const [displayName, setDisplayName] = useState(name);
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(name);
+
+  function save() {
+    startTransition(async () => {
+      const res = await setCompanionName(draft);
+      if (res.ok) {
+        setDisplayName(res.name);
+        setEditing(false);
+        router.refresh();
+      }
+    });
+  }
+
+  return (
+    <Card soft className="flex flex-col gap-4">
+      {/* Nom du compagnon + édition. */}
+      <div className="flex items-center justify-center gap-2">
+        {editing ? (
+          <>
+            <label htmlFor="companion-name" className="sr-only">
+              Nom du compagnon
+            </label>
+            <input
+              id="companion-name"
+              value={draft}
+              maxLength={COMPANION_NAME_MAX}
+              disabled={pending}
+              autoFocus
+              onChange={(e) => setDraft(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  save();
+                }
+                if (e.key === "Escape") setEditing(false);
+              }}
+              className="rounded-control border-ink-300 focus-visible:border-brand-400 text-body text-ink-900 w-40 border bg-white px-3 py-1 text-center font-bold"
+            />
+            <button
+              type="button"
+              aria-label="Valider le nom"
+              onClick={save}
+              disabled={pending}
+              className="text-brand-700 grid h-9 w-9 place-items-center rounded-full"
+            >
+              <Check aria-hidden size={18} strokeWidth={2.4} />
+            </button>
+            <button
+              type="button"
+              aria-label="Annuler"
+              onClick={() => {
+                setDraft(displayName);
+                setEditing(false);
+              }}
+              className="text-ink-500 grid h-9 w-9 place-items-center rounded-full"
+            >
+              <X aria-hidden size={18} strokeWidth={2.4} />
+            </button>
+          </>
+        ) : (
+          <>
+            <span className="font-display text-title text-ink-900">
+              {displayName}
+            </span>
+            <button
+              type="button"
+              aria-label="Renommer le compagnon"
+              onClick={() => {
+                setDraft(displayName);
+                setEditing(true);
+              }}
+              className="text-ink-500 hover:text-ink-800 grid h-9 w-9 place-items-center rounded-full"
+            >
+              <Pencil aria-hidden size={16} strokeWidth={2} />
+            </button>
+          </>
+        )}
+      </div>
+
+      {/* Bulle de dialogue contextuelle. */}
+      <p className="rounded-card text-body text-ink-800 bg-white px-4 py-3 text-center">
+        {message}
+      </p>
+
+      {/* Koala + étincelles décoratives. */}
+      <div className="relative mx-auto w-40 max-[360px]:w-32">
+        <Mascot pose={pose} priority className="w-full" />
+        <span
+          aria-hidden
+          className="bg-brand-400 absolute -top-1 right-4 h-2.5 w-2.5 rounded-full motion-safe:animate-pulse motion-reduce:hidden"
+        />
+        <span
+          aria-hidden
+          className="bg-brand-300 absolute top-6 -left-1 h-2 w-2 rounded-full motion-safe:animate-pulse motion-reduce:hidden"
+        />
+        <span
+          aria-hidden
+          className="bg-brand-500 absolute right-0 bottom-6 h-1.5 w-1.5 rounded-full motion-safe:animate-pulse motion-reduce:hidden"
+        />
+      </div>
+
+      {/* Indicateurs positifs (jamais le score 0–100). */}
+      <div className="grid grid-cols-2 gap-3">
+        <Indicator
+          label="Série"
+          value={`${streak} ${streak > 1 ? "jours" : "jour"}`}
+        />
+        <Indicator label="Cette semaine" value={weekLabel ?? "À découvrir"} />
       </div>
     </Card>
   );

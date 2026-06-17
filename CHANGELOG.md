@@ -4,6 +4,25 @@ Toutes les évolutions notables de l'application Kitoo.
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/) ;
 versionnage [SemVer](https://semver.org/lang/fr/).
 
+## [1.8.0] — 2026-06-17
+
+### Modifié
+
+- **Refonte de la page d'accueil** (`/tableau-de-bord`) façon **compagnon** :
+  en-tête salutation + date + pastille série, grande **carte compagnon** (nom
+  éditable via `profiles.companion_name`, bulle de dialogue contextuelle, koala
+  et étincelles, **deux indicateurs positifs** — série et ressenti de la semaine,
+  jamais le score 0–100 caché), **CTA dominant** Noter/Modifier mon humeur,
+  section « Pour toi aujourd'hui », alerte douce 3 jours conservée. **Aucune
+  jauge punitive** (faim/bonheur). Les graphiques de tendance restent dans
+  l'onglet Suivi. Layout en flux normal responsive, accessibilité et
+  `prefers-reduced-motion`.
+
+### Ajouté
+
+- Colonne `profiles.companion_name` (nom du compagnon, défaut « Kitoo ») + server
+  action `setCompanionName` (RLS).
+
 ## [1.7.0] — 2026-06-17
 
 ### Modifié

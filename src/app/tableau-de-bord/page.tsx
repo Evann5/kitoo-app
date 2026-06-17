@@ -1,26 +1,21 @@
 import type { Metadata } from "next";
-import { Button } from "@/components/ui";
 import { AppShell } from "@/components/layout/AppShell";
 import { requireUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { listEntries, getTodayEntry } from "@/features/mood/queries";
-import { poseForMood } from "@/features/mood";
+import { poseForMood, moodOption } from "@/features/mood";
 import { suggestResourcesForLevel } from "@/features/wellbeing/queries";
 import { hasActiveConsent, ConsentGate } from "@/features/gdpr";
 import {
   Greeting,
-  StreakBadge,
+  StreakPill,
   CompanionCard,
-  StatCards,
-  MoodTrendChart,
+  PrimaryMoodCta,
   SupportNudge,
-  SuggestedResource,
-  buildDailySeries,
-  computeStats,
+  TodaySuggestion,
   computeStreak,
   shouldShowSupportNudge,
   getGreeting,
-  moodCtaLabel,
   addDays,
   type MoodPoint,
 } from "@/features/dashboard";
@@ -37,9 +32,9 @@ const dateFmt = new Intl.DateTimeFormat("fr-FR", {
 /** Message chaleureux de la bulle du compagnon, selon l'humeur du jour. */
 function companionMessage(todayLevel: number | null): string {
   if (todayLevel === null) {
-    return "Comment tu te sens aujourd'hui ? Prends un instant pour toi.";
+    return "Salut ! Tu n'as pas encore noté ton humeur aujourd'hui.";
   }
-  if (todayLevel >= 4) return "Ravi de te voir en forme — savoure ce moment.";
+  if (todayLevel >= 4) return "Content de te revoir 🌱 Savoure ce moment.";
   if (todayLevel === 3)
     return "Merci d'avoir pris ce temps pour toi aujourd'hui.";
   return "Je suis là, prends soin de toi. Un jour à la fois.";
@@ -63,7 +58,11 @@ export default async function DashboardPage() {
   const now = new Date();
 
   const [{ data: profile }, entries, todayEntry] = await Promise.all([
-    supabase.from("profiles").select("prenom").eq("id", user.id).maybeSingle(),
+    supabase
+      .from("profiles")
+      .select("prenom, companion_name")
+      .eq("id", user.id)
+      .maybeSingle(),
     listEntries(60),
     getTodayEntry(),
   ]);
@@ -73,63 +72,52 @@ export default async function DashboardPage() {
     level: e.level,
   }));
 
-  // Stats sur les 30 derniers jours ; série sur tout l'historique chargé.
-  const since30 = addDays(today, -29);
-  const stats = {
-    ...computeStats(
-      points.filter((p) => p.entry_date >= since30),
-      today,
-    ),
-    streak: computeStreak(points, today),
-  };
-
-  const weekly = buildDailySeries(points, today, 7);
-  const monthly = buildDailySeries(points, today, 30);
+  const streak = computeStreak(points, today);
   const showNudge = shouldShowSupportNudge(points, today);
-
   const hasToday = todayEntry !== null;
-  const pose = poseForMood(todayEntry?.level ?? 3);
-  const isEmpty = points.length === 0;
 
-  // Ressource suggérée selon l'humeur du jour (sinon moyenne, sinon neutre).
-  const suggestLevel = todayEntry?.level ?? Math.round(stats.average ?? 3);
+  // Ressenti **qualitatif** de la semaine (7 derniers jours) — jamais le score.
+  const week = points.filter((p) => p.entry_date >= addDays(today, -6));
+  const weekAvg = week.length
+    ? Math.round(week.reduce((s, p) => s + p.level, 0) / week.length)
+    : null;
+  const weekLabel =
+    weekAvg !== null ? (moodOption(weekAvg)?.label ?? null) : null;
+
+  // Pose : reflète l'humeur du jour, sinon koala accueillant.
+  const pose = hasToday ? poseForMood(todayEntry.level) : "classic";
+
+  // Suggestion selon l'humeur du jour (sinon moyenne semaine, sinon neutre).
+  const suggestLevel = todayEntry?.level ?? weekAvg ?? 3;
   const suggested =
     (await suggestResourcesForLevel(suggestLevel, 1))[0] ?? null;
 
   return (
     <AppShell>
       <div className="flex flex-col gap-6">
-        <Greeting
-          greeting={getGreeting(now.getHours())}
-          name={profile?.prenom ?? null}
-          dateLabel={dateFmt.format(now)}
-        />
+        {/* En-tête : salutation + date (gauche), pastille série (droite). */}
+        <div className="flex items-start justify-between gap-3">
+          <Greeting
+            greeting={getGreeting(now.getHours())}
+            name={profile?.prenom ?? null}
+            dateLabel={dateFmt.format(now)}
+          />
+          <StreakPill streak={streak} />
+        </div>
 
         <CompanionCard
-          pose={pose}
+          name={profile?.companion_name ?? "Kitoo"}
           message={companionMessage(todayEntry?.level ?? null)}
+          pose={pose}
+          streak={streak}
+          weekLabel={weekLabel}
         />
 
-        <Button as="a" href="/humeur" size="lg" fullWidth>
-          {moodCtaLabel(hasToday)}
-        </Button>
+        <PrimaryMoodCta hasToday={hasToday} />
 
         {showNudge ? <SupportNudge /> : null}
 
-        {isEmpty ? (
-          <p className="text-body rounded-card bg-brand-50 text-ink-600 px-4 py-6 text-center">
-            Commence par noter ton humeur — c&apos;est quand tu veux, sans
-            pression. Tes tendances apparaîtront ici au fil des jours.
-          </p>
-        ) : (
-          <>
-            <StreakBadge streak={stats.streak} />
-            <StatCards stats={stats} periodLabel="30 derniers jours" />
-            <MoodTrendChart weekly={weekly} monthly={monthly} />
-          </>
-        )}
-
-        <SuggestedResource resource={suggested} />
+        <TodaySuggestion resource={suggested} />
       </div>
     </AppShell>
   );

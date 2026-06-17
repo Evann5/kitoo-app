@@ -72,5 +72,5 @@ test("inscription → saisie d'humeur → réouverture préchargée", async ({
   await expect(
     page.getByRole("link", { name: "Modifier mon humeur" }),
   ).toBeVisible();
-  await expect(page.getByText(/série de 1 jour/i)).toBeVisible();
+  await expect(page.getByLabel(/série de 1 jour/i)).toBeVisible();
 });

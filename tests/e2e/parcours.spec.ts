@@ -56,7 +56,7 @@ test("parcours complet : inscription → humeur → dashboard → bien-être →
   await expect(
     page.getByRole("link", { name: "Modifier mon humeur" }),
   ).toBeVisible();
-  await expect(page.getByText(/série de 1 jour/i)).toBeVisible();
+  await expect(page.getByLabel(/série de 1 jour/i)).toBeVisible();
 
   // Espace bien-être : filtre + lecture interne.
   await page.goto("/ressources");

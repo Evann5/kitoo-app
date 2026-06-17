@@ -2,23 +2,33 @@ import Link from "next/link";
 import { Badge, Card } from "@/components/ui";
 import type { Resource } from "@/features/wellbeing/queries";
 
-export type SuggestedResourceProps = {
+export type TodaySuggestionProps = {
   resource: Resource | null;
 };
 
 /**
- * Bloc « Pour toi aujourd'hui » : suggère une ressource bien-être adaptée à
- * l'humeur récente. Lien vers l'espace bien-être (A6).
+ * Section « Pour toi aujourd'hui » : un titre, un lien « Voir tout » vers
+ * l'espace bien-être, et une ressource suggérée selon l'humeur récente (ou un
+ * repli chaleureux). Le détail s'ouvre dans `/ressources`.
  */
-export function SuggestedResource({ resource }: SuggestedResourceProps) {
+export function TodaySuggestion({ resource }: TodaySuggestionProps) {
   return (
     <section aria-labelledby="suggestion-title" className="flex flex-col gap-3">
-      <h2
-        id="suggestion-title"
-        className="font-display text-title text-ink-900"
-      >
-        Pour toi aujourd&apos;hui
-      </h2>
+      <div className="flex items-center justify-between gap-2">
+        <h2
+          id="suggestion-title"
+          className="font-display text-title text-ink-900"
+        >
+          Pour toi aujourd&apos;hui
+        </h2>
+        <Link
+          href="/ressources"
+          className="text-small text-brand-700 shrink-0 font-bold"
+        >
+          Voir tout
+        </Link>
+      </div>
+
       {resource ? (
         <Link
           href="/ressources"
@@ -46,4 +56,4 @@ export function SuggestedResource({ resource }: SuggestedResourceProps) {
   );
 }
 
-export default SuggestedResource;
+export default TodaySuggestion;

@@ -332,12 +332,28 @@ connexion). Code dans [`src/features/dashboard/`](./src/features/dashboard) ;
 navigation par tab bar ([`TabBar`](./src/components/layout/TabBar.tsx) :
 Accueil / Humeur / Bien-être / Profil).
 
-### Contenu
+### Contenu — disposition « compagnon »
 
-Salutation contextuelle + date, carte koala compagnon avec bulle, CTA dominant
-**« Noter »** ou **« Modifier mon humeur »** (selon l'entrée du jour), ressource
-suggérée (« Pour toi aujourd'hui »), badge de série, indicateurs (humeur
-moyenne, nombre d'entrées) et graphique de tendance hebdo/mensuel.
+- **En-tête** : salutation contextuelle + date (gauche), **pastille de série**
+  ([`StreakPill`](./src/features/dashboard/StreakPill.tsx)) à droite.
+- **Carte compagnon** ([`CompanionCard`](./src/features/dashboard/CompanionCard.tsx))
+  centrale : **nom éditable** (défaut « Kitoo », stocké dans
+  `profiles.companion_name`), **bulle de dialogue contextuelle**, koala
+  (`kitoo-classic` ou pose du jour) avec étincelles douces, et **deux
+  indicateurs positifs** — « Série · N jours » et « Cette semaine · <ressenti
+  qualitatif> ».
+- **CTA dominant** ([`PrimaryMoodCta`](./src/features/dashboard/PrimaryMoodCta.tsx))
+  **« Noter »** / **« Modifier mon humeur »** (selon l'entrée du jour) + sous-titre
+  « 30 secondes · pas de pression ».
+- **Section « Pour toi aujourd'hui »** ([`TodaySuggestion`](./src/features/dashboard/TodaySuggestion.tsx))
+  : ressource suggérée + lien « Voir tout ».
+
+**Pas de jauge punitive** (type « faim/bonheur » qui se vide) : un compagnon qui
+se dégrade créerait de la culpabilité, à rebours du message « pas de pression »
+et risqué pour un public santé mentale. On n'affiche que des **indicateurs
+positifs**, et **jamais le score d'humeur 0–100 caché** (libellé qualitatif
+seulement). Les tendances chiffrées et graphiques vivent dans l'onglet **Suivi**
+(`/suivi`).
 
 ### Calculs (helpers purs & testables)
 
