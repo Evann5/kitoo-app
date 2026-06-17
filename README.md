@@ -234,41 +234,46 @@ Saisie d'humeur quotidienne (route privée [`/humeur`](./src/app/humeur/page.tsx
 expérience « compagnon » douce. Code dans
 [`src/features/mood/`](./src/features/mood).
 
+### Saisie en molette (score 0–100 caché)
+
+La saisie se fait via une **molette rotative**
+([`MoodDial`](./src/features/mood/MoodDial.tsx)) que l'on tourne (pointeur,
+tactile ou clavier). Elle produit un **score continu 0–100** qui est
+**caché à l'utilisateur** (jamais affiché, ni dans `aria-valuetext`) : il sert à
+affiner l'analyse et les retours. Seul le **ressenti qualitatif** est montré —
+libellé d'humeur, couleur d'ambiance et pose du koala, en réaction continue à la
+rotation.
+
+Le `score` est stocké dans `mood_entries.score` (`smallint` 0–100) ; le `level`
+(1–5) en est **dérivé** côté serveur (`scoreToLevel`) pour les stats/graphes :
+
+| Score  | Niveau | Humeur       | Couleur   | Pose koala         |
+| ------ | ------ | ------------ | --------- | ------------------ |
+| 0–19   | 1      | Très négatif | `#FF595E` | `kitoo-crying`     |
+| 20–39  | 2      | Négatif      | `#FF8C42` | `kitoo-classic`\*  |
+| 40–59  | 3      | Neutre       | `#E0E0E0` | `kitoo-classic`    |
+| 60–79  | 4      | Positif      | `#A8E6CF` | `kitoo-soda`       |
+| 80–100 | 5      | Très positif | `#FFD93D` | `kitoo-sunglasses` |
+
+\* `TODO` pose « légèrement triste » quand l'asset existera.
+
 ### Règles métier
 
 - **1 entrée par jour** par utilisateur (upsert sur `(user_id, entry_date)`),
   modifiable jusqu'à 23h59 le jour même. Les jours passés sont consultables mais
-  non modifiables (seul le jour courant a un formulaire).
-- La **date et l'`user_id` sont fixés côté serveur** (jamais le client) ;
-  niveau validé en 1–5 avant écriture, via la server action
-  [`saveMood`](./src/features/mood/actions.ts).
-
-### Échelle d'humeur (fixe, design system)
-
-5 Très positif `#FFD93D` · 4 Positif `#A8E6CF` · 3 Neutre `#E0E0E0` ·
-2 Négatif `#FF8C42` · 1 Très négatif `#FF595E`. Visages dessinés (`MoodFace`),
-jamais d'emoji comme affordance.
-
-### Réaction du compagnon (humeur → mascotte)
-
-| Niveau | Pose koala                                          |
-| ------ | --------------------------------------------------- |
-| 5      | `kitoo-sunglasses`                                  |
-| 4      | `kitoo-soda`                                        |
-| 3      | `kitoo-classic`                                     |
-| 2      | `kitoo-classic` _(TODO pose « légèrement triste »)_ |
-| 1      | `kitoo-crying`                                      |
-
-Au choix de l'humeur, la mascotte change de pose et le fond prend la teinte
-douce correspondante (transition `motion-reduce:transition-none` → neutralisée
-sous `prefers-reduced-motion`).
+  non modifiables.
+- La **date, l'`user_id` et le `level` sont calculés côté serveur** (jamais le
+  client) ; le **score est validé en 0–100** avant écriture, via la server
+  action [`saveMood`](./src/features/mood/actions.ts).
+- Historique existant **back-fillé** (score au centre du bucket du `level`).
 
 ### Accessibilité
 
-Sélecteur en `radiogroup` (libellés textuels + visages, jamais la couleur
-seule), navigation clavier (flèches / Home / End, roving tabindex,
-`aria-checked`), chips de tags `aria-pressed`, formulaire labelisé, corps ≥ 16px,
-cibles ≥ 44px, focus pervenche.
+Molette = `role="slider"` opérable au **clavier** (flèches, Home/End,
+PageUp/Down) et au pointeur/tactile ; `aria-valuetext` = **libellé d'humeur**
+(jamais le nombre) ; focus pervenche visible. Chips de tags `aria-pressed`,
+formulaire labelisé, corps ≥ 16px. Transitions neutralisées sous
+`prefers-reduced-motion`.
 
 ## Tableau de bord & stats
 

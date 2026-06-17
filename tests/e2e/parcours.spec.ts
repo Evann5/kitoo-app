@@ -39,14 +39,15 @@ test("parcours complet : inscription → humeur → dashboard → bien-être →
 
   // Saisie d'humeur.
   await page.goto("/humeur");
-  await page.getByRole("radio", { name: "Bien", exact: true }).click();
+  // Molette : Home → humeur minimale au départ. Score caché.
+  await page.getByRole("slider", { name: "Règle ton humeur" }).press("Home");
   await page.getByLabel(/envie d'en dire plus/i).fill("Première note e2e.");
   await page.getByRole("button", { name: "Enregistrer mon humeur" }).click();
   await expect(page.getByText(/noté, prends soin de toi/i)).toBeVisible();
 
-  // Modification le même jour (1 entrée/jour, pas de doublon).
+  // Modification le même jour (1 entrée/jour, pas de doublon) : End → max.
   await page.reload();
-  await page.getByRole("radio", { name: "Très bien", exact: true }).click();
+  await page.getByRole("slider").press("End");
   await page.getByRole("button", { name: "Mettre à jour mon humeur" }).click();
   await expect(page.getByText(/noté, prends soin de toi/i)).toBeVisible();
 

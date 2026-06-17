@@ -63,3 +63,41 @@ export function isValidMoodValue(value: unknown): value is MoodValue {
     value <= 5
   );
 }
+
+/** Bornes du score continu (caché à l'utilisateur). */
+export const SCORE_MIN = 0;
+export const SCORE_MAX = 100;
+
+/**
+ * Projette le score continu (0–100, saisi à la molette) sur le niveau
+ * qualitatif (1–5) de l'échelle du design system.
+ * Seuils : 0–19 → 1 · 20–39 → 2 · 40–59 → 3 · 60–79 → 4 · 80–100 → 5.
+ */
+export function scoreToLevel(score: number): MoodValue {
+  const s = Math.max(SCORE_MIN, Math.min(SCORE_MAX, score));
+  if (s < 20) return 1;
+  if (s < 40) return 2;
+  if (s < 60) return 3;
+  if (s < 80) return 4;
+  return 5;
+}
+
+/** Option d'humeur (libellé, couleur, pose) correspondant à un score. */
+export function scoreToOption(score: number): MoodOption {
+  return moodOption(scoreToLevel(score))!;
+}
+
+/** Pose de la mascotte pour un score (0–100). */
+export function poseForScore(score: number): MascotPose {
+  return scoreToOption(score).pose;
+}
+
+/** Vrai si la valeur est un score d'humeur valide (entier 0–100). */
+export function isValidScore(value: unknown): value is number {
+  return (
+    typeof value === "number" &&
+    Number.isInteger(value) &&
+    value >= SCORE_MIN &&
+    value <= SCORE_MAX
+  );
+}

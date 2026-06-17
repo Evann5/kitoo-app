@@ -37,18 +37,20 @@ test("inscription → saisie d'humeur → réouverture préchargée", async ({
   await expect(
     page.getByRole("heading", { name: /comment tu te sens/i }),
   ).toBeVisible();
-  await page.getByRole("radio", { name: "Bien", exact: true }).click();
+  // Molette : End → humeur maximale (« Très bien »). Le score reste caché.
+  await page.getByRole("slider", { name: "Règle ton humeur" }).press("End");
   await page
     .getByLabel(/envie d'en dire plus/i)
     .fill("Journée e2e tranquille.");
   await page.getByRole("button", { name: "Enregistrer mon humeur" }).click();
   await expect(page.getByText(/noté, prends soin de toi/i)).toBeVisible();
 
-  // Réouverture : l'entrée du jour est préchargée.
+  // Réouverture : l'entrée du jour est préchargée (libellé, pas de nombre).
   await page.goto("/humeur");
-  await expect(
-    page.getByRole("radio", { name: "Bien", exact: true }),
-  ).toHaveAttribute("aria-checked", "true");
+  await expect(page.getByRole("slider")).toHaveAttribute(
+    "aria-valuetext",
+    "Très bien",
+  );
   await expect(
     page.getByRole("button", { name: "Mettre à jour mon humeur" }),
   ).toBeVisible();

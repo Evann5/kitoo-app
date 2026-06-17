@@ -4,6 +4,17 @@ Toutes les évolutions notables de l'application Kitoo.
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/) ;
 versionnage [SemVer](https://semver.org/lang/fr/).
 
+## [1.1.0] — 2026-06-17
+
+### Modifié
+
+- **Saisie d'humeur en molette rotative** (`MoodDial`) en remplacement du
+  sélecteur à 5 boutons : rotation pointeur/tactile/clavier produisant un
+  **score continu 0–100 caché** (jamais affiché ni annoncé). Le niveau 1–5 est
+  désormais **dérivé** du score (colonne `mood_entries.score`, historique
+  back-fillé). Ressenti qualitatif live (libellé, couleur, pose) ; `role="slider"`
+  avec `aria-valuetext` = libellé d'humeur.
+
 ## [1.0.0] — 2026-06-17
 
 Première version livrable (**MVP**).

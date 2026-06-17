@@ -63,13 +63,18 @@ describe("mood queries", () => {
     expect(findCall("maybeSingle")).toBeTruthy();
   });
 
-  it("upsertTodayEntry upsert avec user_id et onConflict 1/jour", async () => {
-    // single() doit résoudre un objet : on ajuste le result le temps du test.
+  it("upsertTodayEntry upsert avec score + level dérivé et onConflict 1/jour", async () => {
     proxy = makeQueryBuilder();
-    await upsertTodayEntry({ level: 3, comment: "ok" }).catch(() => {});
+    await upsertTodayEntry({ score: 73, level: 4, comment: "ok" }).catch(
+      () => {},
+    );
     const upsert = findCall("upsert");
     expect(upsert?.[0]).toBe("upsert");
-    expect(upsert?.[1]).toMatchObject({ user_id: "user-1", level: 3 });
+    expect(upsert?.[1]).toMatchObject({
+      user_id: "user-1",
+      score: 73,
+      level: 4,
+    });
     expect(upsert?.[2]).toEqual({ onConflict: "user_id,entry_date" });
   });
 });

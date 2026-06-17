@@ -45,6 +45,7 @@ export type Database = {
           entry_date: string;
           id: string;
           level: number;
+          score: number | null;
           updated_at: string;
           user_id: string;
         };
@@ -54,6 +55,7 @@ export type Database = {
           entry_date?: string;
           id?: string;
           level: number;
+          score?: number | null;
           updated_at?: string;
           user_id: string;
         };
@@ -63,6 +65,7 @@ export type Database = {
           entry_date?: string;
           id?: string;
           level?: number;
+          score?: number | null;
           updated_at?: string;
           user_id?: string;
         };

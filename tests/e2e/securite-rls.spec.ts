@@ -24,7 +24,7 @@ async function signupConsentAddMood(
   await expect(page).toHaveURL(/\/tableau-de-bord/, { timeout: 15000 });
   await page.getByRole("button", { name: /j'accepte/i }).click();
   await page.goto("/humeur");
-  await page.getByRole("radio", { name: "Bien", exact: true }).click();
+  await page.getByRole("slider", { name: "Règle ton humeur" }).press("End");
   await page.getByLabel(/envie d'en dire plus/i).fill(comment);
   await page.getByRole("button", { name: "Enregistrer mon humeur" }).click();
   await expect(page.getByText(/noté, prends soin de toi/i)).toBeVisible();

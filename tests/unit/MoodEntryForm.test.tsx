@@ -11,44 +11,49 @@ vi.mock("@/features/mood/actions", () => ({
 
 import { MoodEntryForm } from "@/features/mood/MoodEntryForm";
 
-describe("MoodEntryForm — réaction compagnon", () => {
-  it("change la pose de la mascotte selon l'humeur choisie", async () => {
+describe("MoodEntryForm — molette", () => {
+  it("réagit à la molette : pose + libellé changent, sans afficher de nombre", async () => {
     const user = userEvent.setup();
-    render(<MoodEntryForm tags={[]} initial={null} />);
+    const { container } = render(<MoodEntryForm tags={[]} initial={null} />);
 
-    // Par défaut (aucune humeur) : pose classic.
-    expect(screen.getByRole("img").getAttribute("src")).toContain(
-      "kitoo-classic",
-    );
+    const mascotSrc = () =>
+      container.querySelector("img")?.getAttribute("src") ?? "";
 
-    await user.click(screen.getByRole("radio", { name: "Très bien" }));
-    expect(screen.getByRole("img").getAttribute("src")).toContain(
-      "kitoo-sunglasses",
-    );
+    // Au départ : invite + pose neutre.
+    expect(screen.getByText("Règle ton humeur")).toBeInTheDocument();
+    expect(mascotSrc()).toContain("kitoo-classic");
 
-    await user.click(screen.getByRole("radio", { name: "Difficile" }));
-    expect(screen.getByRole("img").getAttribute("src")).toContain(
-      "kitoo-crying",
-    );
+    const slider = screen.getByRole("slider");
+    await user.tab();
+    await user.keyboard("{End}"); // → Très positif
+    expect(slider).toHaveAttribute("aria-valuetext", "Très bien");
+    expect(mascotSrc()).toContain("kitoo-sunglasses");
+
+    await user.keyboard("{Home}"); // → Très négatif
+    expect(mascotSrc()).toContain("kitoo-crying");
+
+    // Aucun chiffre de score dans le texte visible du formulaire.
+    expect(container.textContent ?? "").not.toMatch(/\b\d{1,3}\b/);
   });
 
-  it("neutralise la transition sous prefers-reduced-motion (classe motion-reduce)", () => {
+  it("neutralise la transition sous prefers-reduced-motion", () => {
     const { container } = render(<MoodEntryForm tags={[]} initial={null} />);
     expect(
       container.querySelector('[class*="motion-reduce:transition-none"]'),
     ).not.toBeNull();
   });
 
-  it("précharge l'entrée existante (édition)", () => {
+  it("précharge l'entrée existante (score → libellé) en mode édition", () => {
     render(
       <MoodEntryForm
         tags={[]}
-        initial={{ level: 4, comment: "ça va", tagIds: [] }}
+        initial={{ score: 73, comment: "ça va", tagIds: [] }}
       />,
     );
-    expect(screen.getByRole("radio", { name: "Bien" })).toHaveAttribute(
-      "aria-checked",
-      "true",
+    // score 73 → niveau 4 → « Bien ».
+    expect(screen.getByRole("slider")).toHaveAttribute(
+      "aria-valuetext",
+      "Bien",
     );
     expect(screen.getByDisplayValue("ça va")).toBeInTheDocument();
     expect(

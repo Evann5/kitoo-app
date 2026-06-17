@@ -4,28 +4,29 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Card } from "@/components/ui";
 import { Mascot } from "@/components/illustrations";
-import { MoodPicker } from "./MoodPicker";
+import { MoodDial } from "./MoodDial";
 import { TagChips } from "./TagChips";
 import { saveMood } from "./actions";
-import { moodOption, poseForMood, type MoodValue } from "./mood-config";
+import { scoreToOption, poseForScore } from "./mood-config";
 import type { MoodTag } from "./queries";
 
 export type MoodEntryFormProps = {
   tags: MoodTag[];
   /** Entrée du jour préchargée (édition), ou `null` (création). */
-  initial: { level: MoodValue; comment: string; tagIds: string[] } | null;
+  initial: { score: number; comment: string; tagIds: string[] } | null;
 };
 
 /**
- * Formulaire de saisie d'humeur du jour, avec réaction du koala compagnon
- * (pose + teinte de fond selon l'humeur, transition douce neutralisée sous
- * `prefers-reduced-motion`). Précharge l'entrée existante si elle existe.
+ * Formulaire de saisie d'humeur du jour via la **molette rotative**
+ * (`MoodDial`). Le score 0–100 reste interne et caché ; seul le ressenti
+ * qualitatif (libellé, couleur, pose du koala) est montré, en réaction continue
+ * à la rotation. Transitions neutralisées sous `prefers-reduced-motion`.
  */
 export function MoodEntryForm({ tags, initial }: MoodEntryFormProps) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
 
-  const [level, setLevel] = useState<MoodValue | null>(initial?.level ?? null);
+  const [score, setScore] = useState<number | null>(initial?.score ?? null);
   const [comment, setComment] = useState(initial?.comment ?? "");
   const [selectedTags, setSelectedTags] = useState<string[]>(
     initial?.tagIds ?? [],
@@ -33,12 +34,18 @@ export function MoodEntryForm({ tags, initial }: MoodEntryFormProps) {
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
 
-  const option = level ? moodOption(level) : undefined;
-  const pose = poseForMood(level ?? 3);
-  // Teinte de fond compagne : couleur d'humeur très adoucie (sinon lavande neutre).
+  const option = score !== null ? scoreToOption(score) : undefined;
+  const pose = score !== null ? poseForScore(score) : "classic";
+  const moodLabel = option?.label ?? "Règle ton humeur";
+  // Teinte d'ambiance : couleur d'humeur adoucie (sinon lavande neutre).
   const tint = option
     ? `color-mix(in srgb, ${option.color} 22%, white)`
     : "var(--brand-100)";
+
+  function updateScore(next: number) {
+    setSaved(false);
+    setScore(next);
+  }
 
   function toggleTag(id: string) {
     setSaved(false);
@@ -51,12 +58,12 @@ export function MoodEntryForm({ tags, initial }: MoodEntryFormProps) {
     event.preventDefault();
     setError(null);
     setSaved(false);
-    if (!level) {
-      setError("Choisis d'abord comment tu te sens.");
+    if (score === null) {
+      setError("Tourne la molette pour régler ton humeur.");
       return;
     }
     startTransition(async () => {
-      const result = await saveMood({ level, comment, tagIds: selectedTags });
+      const result = await saveMood({ score, comment, tagIds: selectedTags });
       if (result.ok) {
         setSaved(true);
         router.refresh();
@@ -68,28 +75,32 @@ export function MoodEntryForm({ tags, initial }: MoodEntryFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-      {/* Compagnon : pose + teinte réagissent à l'humeur. */}
-      <div
-        className="rounded-panel duration-kitoo ease-kitoo flex flex-col items-center gap-2 p-6 text-center transition-colors motion-reduce:transition-none"
-        style={{ backgroundColor: tint }}
-      >
-        <Mascot pose={pose} priority className="w-40 max-w-[55vw]" />
+      <div className="flex flex-col items-center gap-2 text-center">
         <h1 className="font-display text-title text-ink-900">
           Comment tu te sens aujourd&apos;hui ?
         </h1>
         <p className="text-body text-ink-600">
-          Pas de pression — note ce qui te vient.
+          Tourne la molette, à ton rythme — pas de pression.
         </p>
       </div>
 
-      <MoodPicker
-        value={level}
-        onChange={(v) => {
-          setSaved(false);
-          setLevel(v);
-        }}
-        disabled={pending}
-      />
+      {/* Molette : ambiance teintée par l'humeur. Score caché. */}
+      <div
+        className="rounded-panel duration-kitoo ease-kitoo flex justify-center p-4 transition-colors motion-reduce:transition-none sm:p-6"
+        style={{ backgroundColor: tint }}
+      >
+        <MoodDial
+          value={score}
+          onChange={updateScore}
+          ariaValueText={moodLabel}
+          disabled={pending}
+        >
+          <Mascot pose={pose} priority animate={false} className="w-24" />
+          <span className="font-display text-title text-ink-900">
+            {moodLabel}
+          </span>
+        </MoodDial>
+      </div>
 
       <Card className="flex flex-col gap-5">
         <div className="flex flex-col gap-2">

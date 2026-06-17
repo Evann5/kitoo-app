@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { upsertTodayEntry, setEntryTags } from "./queries";
-import { isValidMoodValue } from "./mood-config";
+import { isValidScore, scoreToLevel } from "./mood-config";
 
 export type SaveMoodResult = { ok: true } | { ok: false; error: string };
 
@@ -13,22 +13,30 @@ export type SaveMoodResult = { ok: true } | { ok: false; error: string };
  * La **date est calculée côté serveur** (`upsertTodayEntry` → `current_date`)
  * et l'`user_id` vient de la session — on ne fait pas confiance au client. La
  * RLS et la contrainte `unique (user_id, entry_date)` garantissent 1 entrée/jour
- * et l'isolation. On valide le niveau (entier 1–5) avant toute écriture.
+ * et l'isolation. On valide le **score** (entier 0–100) avant toute écriture ;
+ * le `level` (1–5) en est dérivé.
  */
 export async function saveMood(input: {
-  level: number;
+  score: number;
   comment: string;
   tagIds: string[];
 }): Promise<SaveMoodResult> {
-  if (!isValidMoodValue(input.level)) {
-    return { ok: false, error: "Niveau d'humeur invalide." };
+  // Validation serveur du score continu (caché) ; le niveau qualitatif en est
+  // dérivé pour les stats/graphes.
+  if (!isValidScore(input.score)) {
+    return { ok: false, error: "Humeur invalide." };
   }
+  const level = scoreToLevel(input.score);
 
   const comment = (input.comment ?? "").trim().slice(0, 1000) || null;
   const tagIds = Array.isArray(input.tagIds) ? input.tagIds.slice(0, 20) : [];
 
   try {
-    const entry = await upsertTodayEntry({ level: input.level, comment });
+    const entry = await upsertTodayEntry({
+      score: input.score,
+      level,
+      comment,
+    });
     await setEntryTags(entry.id, tagIds);
     revalidatePath("/humeur");
     return { ok: true };

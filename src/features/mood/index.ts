@@ -1,5 +1,5 @@
-export { MoodPicker } from "./MoodPicker";
-export type { MoodPickerProps } from "./MoodPicker";
+export { MoodDial } from "./MoodDial";
+export type { MoodDialProps } from "./MoodDial";
 export { TagChips } from "./TagChips";
 export type { TagChipsProps } from "./TagChips";
 export { MoodEntryForm } from "./MoodEntryForm";
@@ -13,6 +13,12 @@ export {
   moodOption,
   poseForMood,
   isValidMoodValue,
+  scoreToLevel,
+  scoreToOption,
+  poseForScore,
+  isValidScore,
+  SCORE_MIN,
+  SCORE_MAX,
   type MoodValue,
   type MoodOption,
 } from "./mood-config";

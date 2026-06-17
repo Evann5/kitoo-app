@@ -52,9 +52,11 @@ export async function listEntries(limit = 30): Promise<MoodEntry[]> {
 
 /**
  * Crée ou met à jour l'entrée d'humeur du jour (1 par jour, contrainte
- * `unique (user_id, entry_date)`) via upsert sur ce couple.
+ * `unique (user_id, entry_date)`) via upsert sur ce couple. On stocke le
+ * `score` continu (caché) et le `level` qualitatif DÉRIVÉ via `scoreToLevel`.
  */
 export async function upsertTodayEntry(input: {
+  score: number;
   level: MoodLevelValue;
   comment?: string | null;
 }): Promise<MoodEntry> {
@@ -68,6 +70,7 @@ export async function upsertTodayEntry(input: {
   const payload: TablesInsert<"mood_entries"> = {
     user_id: user.id,
     entry_date: today,
+    score: input.score,
     level: input.level,
     comment: input.comment ?? null,
   };

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { AppShell } from "@/components/layout/AppShell";
 import { requireUser } from "@/lib/auth";
-import { MoodEntryForm, RecentMoods, type MoodValue } from "@/features/mood";
+import { MoodEntryForm, RecentMoods } from "@/features/mood";
 import {
   getTodayEntry,
   getEntryTagIds,
@@ -31,7 +31,8 @@ export default async function HumeurPage() {
 
   const initial = todayEntry
     ? {
-        level: todayEntry.level as MoodValue,
+        // `score` est back-fillé pour toute ligne existante ; fallback neutre.
+        score: todayEntry.score ?? 50,
         comment: todayEntry.comment ?? "",
         tagIds: await getEntryTagIds(todayEntry.id),
       }
