@@ -7,10 +7,11 @@ bien-être, avec authentification email / mot de passe.
 (chaque `git push` sur `main` redéploie automatiquement). Détails et procédure :
 [`DEPLOY.md`](./DEPLOY.md).
 
-> Dépôt **séparé** du site vitrine. Cette base correspond à l'étape **A0**
-> (scaffold d'architecture). Le design system est **importé manuellement** —
-> voir [`IMPORT.md`](./IMPORT.md). Aucun câblage du design system ni logique
-> métier à ce stade.
+Le MVP couvre : authentification (email/mot de passe), saisie quotidienne
+d'humeur « compagnon », tableau de bord avec tendances et badges, espace
+bien-être filtrable, et conformité RGPD + accessibilité (modes dyslexie /
+daltonisme). Dépôt **séparé** du site vitrine ; le design system Kitoo a été
+importé puis câblé (cf. [`IMPORT.md`](./IMPORT.md)).
 
 ## Stack
 
@@ -25,50 +26,87 @@ bien-être, avec authentification email / mot de passe.
 
 ```bash
 pnpm install
-cp .env.local.example .env.local   # renseigner les clés Supabase (optionnel au build)
+cp .env.local.example .env.local   # renseigner les clés Supabase (cf. ci-dessous)
 pnpm dev                           # http://localhost:3000
 ```
 
 Les clients Supabase sont **tolérants à l'absence de variables d'env** : le build
-et le rendu du placeholder fonctionnent sans `.env.local`.
+fonctionne sans `.env.local` (les vraies clés sont nécessaires pour l'auth et les
+données).
 
 ## Scripts
 
-| Script              | Description                         |
-| ------------------- | ----------------------------------- |
-| `pnpm dev`          | Serveur de développement            |
-| `pnpm build`        | Build de production                 |
-| `pnpm start`        | Sert le build de production         |
-| `pnpm lint`         | ESLint                              |
-| `pnpm format`       | Prettier (écriture)                 |
-| `pnpm format:check` | Prettier (vérification)             |
-| `pnpm test`         | Tests unitaires/composants (Vitest) |
-| `pnpm test:e2e`     | Tests end-to-end (Playwright)       |
+| Script               | Description                         |
+| -------------------- | ----------------------------------- |
+| `pnpm dev`           | Serveur de développement            |
+| `pnpm build`         | Build de production                 |
+| `pnpm start`         | Sert le build de production         |
+| `pnpm lint`          | ESLint                              |
+| `pnpm format`        | Prettier (écriture)                 |
+| `pnpm format:check`  | Prettier (vérification)             |
+| `pnpm test`          | Tests unitaires/composants (Vitest) |
+| `pnpm test:coverage` | Tests + rapport de couverture       |
+| `pnpm test:e2e`      | Tests end-to-end (Playwright)       |
+
+## Tests & qualité
+
+```bash
+pnpm lint
+pnpm test:coverage   # unitaires + couverture (seuils ci-dessous)
+pnpm test:e2e        # parcours réels (nécessite .env.local Supabase)
+pnpm build
+```
+
+- **Unitaires (Vitest + Testing Library)** : logique métier (série, alerte
+  3 jours, 1 entrée/jour, suggestion selon humeur, filtres bien-être,
+  validation, `safeRedirect`, préférences a11y) et composants clés (MoodPicker,
+  formulaires, graphe, consentement, suppression de compte).
+- **Couverture** : mesurée sur la **logique métier pure** (cf. `coverage.include`
+  dans [`vitest.config.ts`](./vitest.config.ts)), seuils **lignes 80 % /
+  fonctions 80 % / branches 75 %** (actuellement ~96 % lignes). Rapport HTML dans
+  `coverage/`.
+- **End-to-end (Playwright)** : parcours complet
+  ([`parcours.spec.ts`](./tests/e2e/parcours.spec.ts)), protection des routes,
+  modes d'accessibilité ([`gdpr.spec.ts`](./tests/e2e/gdpr.spec.ts)), **isolation
+  RLS entre deux comptes** ([`securite-rls.spec.ts`](./tests/e2e/securite-rls.spec.ts))
+  et **audit axe-core** (0 violation critique,
+  [`a11y.spec.ts`](./tests/e2e/a11y.spec.ts)).
+
+> Les e2e créent des **comptes de test éphémères** (emails `+e2e-…`, nettoyés).
+> Ils utilisent le Supabase de `.env.local` ; ne committe jamais de secret ni de
+> compte réel. La confirmation email doit être désactivée côté Supabase.
+
+## Intégration continue
+
+[GitHub Actions](./.github/workflows/ci.yml) sur chaque push / PR vers `main` :
+`install → lint → test:coverage → build`. Les e2e (Supabase requis, comptes
+éphémères) se lancent **en local** ; pour les activer en CI, fournir
+`NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` en _GitHub Actions
+secrets_.
 
 ## Arborescence
 
 ```
 src/
-  app/                  layout, page (placeholder), globals.css
+  app/                  routes (App Router) : auth, humeur, tableau-de-bord,
+                        bien-etre, profil, pages légales, api/export, layout
   components/
-    ui/                 ← primitives (Button, Card, Badge, Tag, Container…)
-    illustrations/      ← Illustration, Mascot, Blob
-    motion/             ← Reveal, Stagger
-    layout/
-  features/
-    auth/  mood/  dashboard/  wellbeing/
+    ui/                 primitives (Button, Card, Badge, Tag, Container…)
+    illustrations/      Illustration, Mascot, Blob
+    motion/             Reveal, Stagger
+    layout/             AppShell, TabBar, Footer, LegalShell
+  features/             logique + UI par domaine
+    auth/  mood/  dashboard/  wellbeing/  gdpr/  accessibility/
   lib/
-    supabase/           client.ts (browser) + server.ts (server)
-    site-config.ts      ← en place
-    illustrations.ts    ← à déposer
-    motion.ts           ← à déposer
-public/
-  illustrations/        ← émotions kitoo-* + décors
-design-system/
-  tokens/ fonts/ assets/ guidelines/ reference/
+    supabase/           client.ts (browser) + server.ts + types.ts
+    auth.ts  validation.ts  moods.ts  cn.ts  illustrations.ts  motion.ts
+  hooks/                useReducedMotion
+middleware.ts           rafraîchissement de session + protection des routes
+supabase/migrations/    schéma + RLS + seeds (SQL versionné)
+design-system/          tokens, fonts, assets, guidelines, reference (hors build)
 tests/
   unit/                 tests Vitest
-  e2e/                  tests Playwright
+  e2e/                  tests Playwright (+ axe-core)
 ```
 
 ## Variables d'environnement
@@ -107,17 +145,19 @@ Le réglage se fait dans le dashboard Supabase (Authentication → Email →
 
 ### Routes
 
-| Route              | Accès  | Rôle                                               |
-| ------------------ | ------ | -------------------------------------------------- |
-| `/inscription`     | public | création de compte (email, mot de passe + confirm) |
-| `/connexion`       | public | connexion                                          |
-| `/auth/callback`   | public | échange du code de confirmation (si activée)       |
-| `/profil`          | privé  | email + déconnexion                                |
-| `/tableau-de-bord` | privé  | (réservé, à venir)                                 |
+| Route              | Accès  | Rôle                                                  |
+| ------------------ | ------ | ----------------------------------------------------- |
+| `/inscription`     | public | création de compte (email, mot de passe + confirm)    |
+| `/connexion`       | public | connexion                                             |
+| `/auth/callback`   | public | échange du code de confirmation (si activée)          |
+| `/profil`          | privé  | compte, confidentialité (RGPD), accessibilité         |
+| `/tableau-de-bord` | privé  | accueil : humeur du jour, série, tendances            |
+| `/humeur`          | privé  | saisie / modification de l'humeur du jour             |
+| `/bien-etre`       | privé  | catalogue de ressources (+ lecture `/bien-etre/[id]`) |
 
 La protection est assurée par [`middleware.ts`](./middleware.ts) (rafraîchit la
 session et redirige : non connecté → `/connexion`, déjà connecté hors des écrans
-d'auth → `/profil`), doublée du helper serveur
+d'auth → `/tableau-de-bord`), doublée du helper serveur
 [`requireUser()`](./src/lib/auth.ts) sur les pages privées.
 
 ### Sécurité & accessibilité

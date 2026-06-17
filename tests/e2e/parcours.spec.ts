@@ -1,0 +1,82 @@
+import { test, expect, type Page } from "@playwright/test";
+
+/**
+ * Parcours utilisateur complet (compte de test créé à la volée) :
+ * inscription → consentement → saisie d'humeur → modification → tableau de bord
+ * → espace bien-être (filtre + lecture) → export → déconnexion + protection des
+ * routes. Le compte de test est nettoyé séparément (voir README / scripts).
+ */
+
+const PASSWORD = "motdepasse-e2e-1";
+const testEmail = () =>
+  `evanelbaz.2005+e2e-${Date.now()}-${Math.floor(Math.random() * 1e6)}@gmail.com`;
+
+async function signupAndConsent(page: Page, email: string) {
+  await page.goto("/inscription");
+  await page.getByLabel("Adresse email").fill(email);
+  await page.getByLabel("Mot de passe", { exact: true }).fill(PASSWORD);
+  await page.getByLabel("Confirme ton mot de passe").fill(PASSWORD);
+  await page.getByRole("button", { name: "Créer mon compte" }).click();
+  await expect(page).toHaveURL(/\/tableau-de-bord/, { timeout: 15000 });
+  await page.getByRole("button", { name: /j'accepte/i }).click();
+}
+
+test("parcours complet : inscription → humeur → dashboard → bien-être → export → déconnexion", async ({
+  page,
+}) => {
+  const email = testEmail();
+  await signupAndConsent(page, email);
+
+  // Tableau de bord (post-consentement).
+  await expect(
+    page.getByRole("heading", {
+      name: /bonjour|bon après-midi|bonsoir|bonne nuit/i,
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Noter mon humeur" }),
+  ).toBeVisible();
+
+  // Saisie d'humeur.
+  await page.goto("/humeur");
+  await page.getByRole("radio", { name: "Bien", exact: true }).click();
+  await page.getByLabel(/envie d'en dire plus/i).fill("Première note e2e.");
+  await page.getByRole("button", { name: "Enregistrer mon humeur" }).click();
+  await expect(page.getByText(/noté, prends soin de toi/i)).toBeVisible();
+
+  // Modification le même jour (1 entrée/jour, pas de doublon).
+  await page.reload();
+  await page.getByRole("radio", { name: "Très bien", exact: true }).click();
+  await page.getByRole("button", { name: "Mettre à jour mon humeur" }).click();
+  await expect(page.getByText(/noté, prends soin de toi/i)).toBeVisible();
+
+  // Dashboard reflète l'entrée : CTA « Modifier » + série.
+  await page.goto("/tableau-de-bord");
+  await expect(
+    page.getByRole("link", { name: "Modifier mon humeur" }),
+  ).toBeVisible();
+  await expect(page.getByText(/série de 1 jour/i)).toBeVisible();
+
+  // Espace bien-être : filtre + lecture interne.
+  await page.goto("/bien-etre");
+  await page.getByRole("button", { name: "Stress" }).click();
+  await page.getByRole("link", { name: /Respirer en carré/ }).click();
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Respirer en carré" }),
+  ).toBeVisible();
+
+  // Export authentifié de ses données.
+  const res = await page.request.get("/api/export");
+  expect(res.ok()).toBeTruthy();
+  const data = await res.json();
+  expect(data.user.email).toBe(email);
+  expect(data.mood_entries.length).toBe(1);
+  expect(data.mood_entries[0].level).toBe(5);
+
+  // Déconnexion + protection des routes.
+  await page.goto("/profil");
+  await page.getByRole("button", { name: "Me déconnecter" }).click();
+  await expect(page).toHaveURL(/\/connexion/, { timeout: 15000 });
+  await page.goto("/tableau-de-bord");
+  await expect(page).toHaveURL(/\/connexion/);
+});

@@ -14,6 +14,28 @@ export default defineConfig({
       "tests/unit/**/*.{test,spec}.{ts,tsx}",
     ],
     exclude: ["tests/e2e/**", "node_modules/**", ".next/**"],
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "html"],
+      // Couverture mesurée sur la LOGIQUE MÉTIER pure (calculs, règles,
+      // validation) — c'est là que la couverture est significative. Les
+      // composants UI sont couverts par les tests RTL + e2e.
+      include: [
+        "src/lib/validation.ts",
+        "src/lib/moods.ts",
+        "src/features/dashboard/stats.ts",
+        "src/features/mood/mood-config.ts",
+        "src/features/wellbeing/filters.ts",
+        "src/features/accessibility/prefs.ts",
+        "src/features/auth/index.ts",
+      ],
+      thresholds: {
+        lines: 80,
+        functions: 80,
+        statements: 80,
+        branches: 75,
+      },
+    },
   },
   resolve: {
     alias: {
