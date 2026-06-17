@@ -128,25 +128,31 @@ export function CompanionCard({
         )}
       </div>
 
-      {/* Bulle de dialogue contextuelle. */}
-      <p className="rounded-card text-body text-ink-800 bg-white px-4 py-3 text-center">
-        {message}
-      </p>
+      {/* Bulle de dialogue façon « message de chat », pointe vers le koala. */}
+      <div className="relative mx-auto max-w-[18rem]">
+        <p className="rounded-3xl rounded-bl-md text-body text-ink-800 bg-white px-4 py-3 shadow-sm">
+          {message}
+        </p>
+        <span
+          aria-hidden
+          className="absolute -bottom-1.5 left-6 h-3.5 w-3.5 rotate-45 rounded-[3px] bg-white"
+        />
+      </div>
 
-      {/* Koala + étincelles décoratives. */}
-      <div className="relative mx-auto w-40 max-[360px]:w-32">
+      {/* Grand koala + étincelles décoratives. */}
+      <div className="relative mx-auto w-64 max-w-full max-[360px]:w-52">
         <Mascot pose={pose} priority className="w-full" />
         <span
           aria-hidden
-          className="bg-brand-400 absolute -top-1 right-4 h-2.5 w-2.5 rounded-full motion-safe:animate-pulse motion-reduce:hidden"
+          className="bg-brand-400 absolute top-2 right-6 h-3 w-3 rounded-full motion-safe:animate-pulse motion-reduce:hidden"
         />
         <span
           aria-hidden
-          className="bg-brand-300 absolute top-6 -left-1 h-2 w-2 rounded-full motion-safe:animate-pulse motion-reduce:hidden"
+          className="bg-brand-300 absolute top-10 left-2 h-2.5 w-2.5 rounded-full motion-safe:animate-pulse motion-reduce:hidden"
         />
         <span
           aria-hidden
-          className="bg-brand-500 absolute right-0 bottom-6 h-1.5 w-1.5 rounded-full motion-safe:animate-pulse motion-reduce:hidden"
+          className="bg-brand-500 absolute right-2 bottom-10 h-2 w-2 rounded-full motion-safe:animate-pulse motion-reduce:hidden"
         />
       </div>
 
