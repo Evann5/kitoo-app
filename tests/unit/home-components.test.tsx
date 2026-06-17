@@ -17,7 +17,6 @@ vi.mock("@/features/dashboard/actions", () => ({
 
 import { CompanionCard } from "@/features/dashboard/CompanionCard";
 import { PrimaryMoodCta } from "@/features/dashboard/PrimaryMoodCta";
-import { TodaySuggestion } from "@/features/dashboard/TodaySuggestion";
 
 beforeEach(() => setNameMock.mockClear());
 
@@ -92,33 +91,5 @@ describe("PrimaryMoodCta", () => {
     expect(
       screen.getByRole("link", { name: "Modifier mon humeur" }),
     ).toBeInTheDocument();
-  });
-});
-
-describe("TodaySuggestion", () => {
-  it("propose une ressource + lien « Voir tout »", () => {
-    render(
-      <TodaySuggestion
-        resource={
-          {
-            id: "r1",
-            type: "article",
-            title: "Respirer en carré",
-            summary: "Un exercice court.",
-            // champs non lus par le composant
-          } as never
-        }
-      />,
-    );
-    expect(
-      screen.getByRole("heading", { name: "Pour toi aujourd'hui" }),
-    ).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Voir tout" })).toBeInTheDocument();
-    expect(screen.getByText("Respirer en carré")).toBeInTheDocument();
-  });
-
-  it("repli chaleureux sans ressource", () => {
-    render(<TodaySuggestion resource={null} />);
-    expect(screen.getByText(/espace bien-être/i)).toBeInTheDocument();
   });
 });

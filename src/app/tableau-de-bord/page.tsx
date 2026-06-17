@@ -5,6 +5,11 @@ import { createClient } from "@/lib/supabase/server";
 import { listEntries, getTodayEntry } from "@/features/mood/queries";
 import { poseForMood, moodOption } from "@/features/mood";
 import { suggestResourcesForLevel } from "@/features/wellbeing/queries";
+import {
+  listExercises,
+  listMySessions,
+  suggestExercisesForLevel,
+} from "@/features/exercises/queries";
 import { hasActiveConsent, ConsentGate } from "@/features/gdpr";
 import {
   Greeting,
@@ -12,12 +17,19 @@ import {
   CompanionCard,
   PrimaryMoodCta,
   SupportNudge,
-  TodaySuggestion,
+  WeekOverview,
+  QuickActions,
+  SuggestionsList,
+  WeeklyRecap,
+  DailyEncouragement,
   computeStreak,
   shouldShowSupportNudge,
   getGreeting,
-  addDays,
+  buildDailySeries,
+  buildWeeklyRecap,
+  encouragementOfDay,
   type MoodPoint,
+  type Suggestion,
 } from "@/features/dashboard";
 
 export const metadata: Metadata = { title: "Accueil — Kitoo" };
@@ -57,15 +69,18 @@ export default async function DashboardPage() {
   const today = new Date().toISOString().slice(0, 10);
   const now = new Date();
 
-  const [{ data: profile }, entries, todayEntry] = await Promise.all([
-    supabase
-      .from("profiles")
-      .select("prenom, companion_name")
-      .eq("id", user.id)
-      .maybeSingle(),
-    listEntries(60),
-    getTodayEntry(),
-  ]);
+  const [{ data: profile }, entries, todayEntry, sessions, respirations] =
+    await Promise.all([
+      supabase
+        .from("profiles")
+        .select("prenom, companion_name")
+        .eq("id", user.id)
+        .maybeSingle(),
+      listEntries(60),
+      getTodayEntry(),
+      listMySessions(30),
+      listExercises("respiration"),
+    ]);
 
   const points: MoodPoint[] = entries.map((e) => ({
     entry_date: e.entry_date,
@@ -76,25 +91,57 @@ export default async function DashboardPage() {
   const showNudge = shouldShowSupportNudge(points, today);
   const hasToday = todayEntry !== null;
 
-  // Ressenti **qualitatif** de la semaine (7 derniers jours) — jamais le score.
-  const week = points.filter((p) => p.entry_date >= addDays(today, -6));
-  const weekAvg = week.length
-    ? Math.round(week.reduce((s, p) => s + p.level, 0) / week.length)
-    : null;
+  // Aperçu de la semaine (7 derniers jours) — couleur/libellé, jamais le score.
+  const weekDays = buildDailySeries(points, today, 7);
+
+  // Ressenti **qualitatif** de la semaine + récap doux.
+  const recap = buildWeeklyRecap(
+    points,
+    sessions.map((s) => s.started_at),
+    today,
+  );
   const weekLabel =
-    weekAvg !== null ? (moodOption(weekAvg)?.label ?? null) : null;
+    recap.feelingLevel !== null
+      ? (moodOption(recap.feelingLevel)?.label ?? null)
+      : null;
 
   // Pose : reflète l'humeur du jour, sinon koala accueillant.
   const pose = hasToday ? poseForMood(todayEntry.level) : "classic";
 
-  // Suggestion selon l'humeur du jour (sinon moyenne semaine, sinon neutre).
-  const suggestLevel = todayEntry?.level ?? weekAvg ?? 3;
-  const suggested =
-    (await suggestResourcesForLevel(suggestLevel, 1))[0] ?? null;
+  // Respiration express : l'exercice de respiration le plus court.
+  const breathing = [...respirations].sort(
+    (a, b) => a.duration_sec - b.duration_sec,
+  )[0];
+  const breathingHref = breathing
+    ? `/exercices/${breathing.slug}`
+    : "/exercices";
+
+  // Suggestions élargies (mix ressources + exercices) selon l'humeur récente.
+  const level = todayEntry?.level ?? recap.feelingLevel ?? 3;
+  const [resources, exercises] = await Promise.all([
+    suggestResourcesForLevel(level, 2),
+    suggestExercisesForLevel(level, 1),
+  ]);
+  const suggestions: Suggestion[] = [
+    ...resources.map((r) => ({
+      key: `r-${r.id}`,
+      badge: r.type,
+      title: r.title,
+      summary: r.summary,
+      href: `/ressources/${r.id}`,
+    })),
+    ...exercises.map((e) => ({
+      key: `e-${e.id}`,
+      badge: e.category,
+      title: e.title,
+      summary: e.description,
+      href: `/exercices/${e.slug}`,
+    })),
+  ].slice(0, 3);
 
   return (
     <AppShell>
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-8">
         {/* En-tête : salutation + date (gauche), pastille série (droite). */}
         <div className="flex items-start justify-between gap-3">
           <Greeting
@@ -117,7 +164,11 @@ export default async function DashboardPage() {
 
         {showNudge ? <SupportNudge /> : null}
 
-        <TodaySuggestion resource={suggested} />
+        <WeekOverview days={weekDays} />
+        <QuickActions breathingHref={breathingHref} />
+        <SuggestionsList suggestions={suggestions} />
+        <WeeklyRecap recap={recap} feelingLabel={weekLabel} />
+        <DailyEncouragement message={encouragementOfDay(now.getDate())} />
       </div>
     </AppShell>
   );

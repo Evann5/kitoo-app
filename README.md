@@ -345,8 +345,24 @@ Accueil / Humeur / Bien-être / Profil).
 - **CTA dominant** ([`PrimaryMoodCta`](./src/features/dashboard/PrimaryMoodCta.tsx))
   **« Noter »** / **« Modifier mon humeur »** (selon l'entrée du jour) + sous-titre
   « 30 secondes · pas de pression ».
-- **Section « Pour toi aujourd'hui »** ([`TodaySuggestion`](./src/features/dashboard/TodaySuggestion.tsx))
-  : ressource suggérée + lien « Voir tout ».
+- **Modules enrichis** sous le CTA, aérés et non culpabilisants :
+  - **Aperçu de la semaine** ([`WeekOverview`](./src/features/dashboard/WeekOverview.tsx))
+    : 7 derniers jours en pastilles d'humeur (couleur + **libellé accessible**,
+    jour non noté = contour neutre), lien vers Suivi — jamais le score 0–100.
+  - **Accès rapides** ([`QuickActions`](./src/features/dashboard/QuickActions.tsx))
+    : exercice, test, **respiration express** (lance l'exercice de respiration le
+    plus court).
+  - **« Pour toi aujourd'hui »** ([`SuggestionsList`](./src/features/dashboard/SuggestionsList.tsx))
+    : 2–3 suggestions (mix ressources + exercices) selon l'humeur récente.
+  - **Ton bien-être cette semaine** ([`WeeklyRecap`](./src/features/dashboard/WeeklyRecap.tsx))
+    : récap **qualitatif** (jours notés, exercices, ressenti) + encouragement.
+  - **Mot du jour de Kitoo** ([`DailyEncouragement`](./src/features/dashboard/DailyEncouragement.tsx))
+    : phrase bienveillante en rotation selon le jour.
+
+  Helpers d'agrégation **purs et testables** dans
+  [`home.ts`](./src/features/dashboard/home.ts) (`buildWeeklyRecap`,
+  `encouragementOfDay`). Chaque module a un **état vide chaleureux** pour un
+  nouvel utilisateur.
 
 **Pas de jauge punitive** (type « faim/bonheur » qui se vide) : un compagnon qui
 se dégrade créerait de la culpabilité, à rebours du message « pas de pression »

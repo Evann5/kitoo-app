@@ -130,7 +130,7 @@ export function CompanionCard({
 
       {/* Bulle de dialogue façon « message de chat », pointe vers le koala. */}
       <div className="relative mx-auto max-w-[18rem]">
-        <p className="rounded-3xl rounded-bl-md text-body text-ink-800 bg-white px-4 py-3 shadow-sm">
+        <p className="text-body text-ink-800 rounded-3xl rounded-bl-md bg-white px-4 py-3 shadow-sm">
           {message}
         </p>
         <span

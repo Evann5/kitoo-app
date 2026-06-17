@@ -58,6 +58,17 @@ test("parcours complet : inscription → humeur → dashboard → bien-être →
   ).toBeVisible();
   await expect(page.getByLabel(/série de 1 jour/i)).toBeVisible();
 
+  // Accueil enrichi : aperçu semaine + accès rapides + récap.
+  await expect(
+    page.getByRole("heading", { name: /ta semaine/i }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Passer un test" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: /ton bien-être cette semaine/i }),
+  ).toBeVisible();
+
   // Espace bien-être : filtre + lecture interne.
   await page.goto("/ressources");
   await page.getByRole("button", { name: "Stress" }).click();

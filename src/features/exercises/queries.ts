@@ -28,6 +28,24 @@ export async function getExerciseBySlug(
   return data;
 }
 
+/**
+ * Suggère des exercices adaptés à un niveau d'humeur (1–5) via le tableau
+ * `mood_levels` (`contains`). Lecture seule, RLS authentifié.
+ */
+export async function suggestExercisesForLevel(
+  level: number,
+  limit = 2,
+): Promise<Exercise[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("exercises")
+    .select("*")
+    .contains("mood_levels", [level])
+    .limit(limit);
+  if (error) throw error;
+  return data ?? [];
+}
+
 /** Sessions récentes de l'utilisateur (historique, A14). */
 export async function listMySessions(limit = 30): Promise<ExerciseSession[]> {
   const supabase = await createClient();

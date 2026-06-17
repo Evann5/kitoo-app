@@ -6,9 +6,20 @@ export { PrimaryMoodCta } from "./PrimaryMoodCta";
 export { StatCards } from "./StatCards";
 export { MoodTrendChart } from "./MoodTrendChart";
 export { SupportNudge } from "./SupportNudge";
-export { TodaySuggestion } from "./TodaySuggestion";
+export { WeekOverview } from "./WeekOverview";
+export { QuickActions } from "./QuickActions";
+export { SuggestionsList, type Suggestion } from "./SuggestionsList";
+export { WeeklyRecap } from "./WeeklyRecap";
+export { DailyEncouragement } from "./DailyEncouragement";
 export { setCompanionName } from "./actions";
 export { COMPANION_NAME_MAX } from "./companion";
+export {
+  buildWeeklyRecap,
+  isRecapEmpty,
+  encouragementOfDay,
+  ENCOURAGEMENTS,
+  type WeeklyRecap as WeeklyRecapData,
+} from "./home";
 export {
   addDays,
   computeStreak,

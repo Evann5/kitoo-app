@@ -4,6 +4,19 @@ Toutes les évolutions notables de l'application Kitoo.
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/) ;
 versionnage [SemVer](https://semver.org/lang/fr/).
 
+## [1.9.0] — 2026-06-17
+
+### Ajouté
+
+- **Accueil enrichi** sous la carte compagnon : **aperçu de la semaine**
+  (7 jours en pastilles d'humeur, libellé accessible, jamais le score 0–100),
+  **accès rapides** (exercice, test, respiration express), **suggestions
+  élargies** (2–3, mix ressources + exercices selon l'humeur), **récap bien-être**
+  doux et qualitatif (jours notés, exercices, ressenti — sans jauge punitive), et
+  **mot du jour de Kitoo**. États vides chaleureux par module, helpers
+  d'agrégation purs testables (`home.ts`), layout aéré responsive, accessibilité
+  et `prefers-reduced-motion`. Aucune nouvelle table.
+
 ## [1.8.0] — 2026-06-17
 
 ### Modifié
