@@ -61,8 +61,9 @@ pnpm build
 
 - **Unitaires (Vitest + Testing Library)** : logique métier (série, alerte
   3 jours, 1 entrée/jour, suggestion selon humeur, filtres bien-être,
-  validation, `safeRedirect`, préférences a11y) et composants clés (MoodPicker,
-  formulaires, graphe, consentement, suppression de compte).
+  mapping score→humeur, validation, `safeRedirect`, préférences a11y) et
+  composants clés (molette `MoodDial`, formulaires, graphe, tab bar / menu « + »,
+  consentement, suppression de compte).
 - **Couverture** : mesurée sur la **logique métier pure** (cf. `coverage.include`
   dans [`vitest.config.ts`](./vitest.config.ts)), seuils **lignes 80 % /
   fonctions 80 % / branches 75 %** (actuellement ~96 % lignes). Rapport HTML dans
@@ -227,6 +228,33 @@ supabase gen types typescript --project-id binxcboxxrycjsqincbn > src/lib/supaba
 Helpers d'accès typés (server-only) :
 [`src/features/mood/queries.ts`](./src/features/mood/queries.ts) et
 [`src/features/wellbeing/queries.ts`](./src/features/wellbeing/queries.ts).
+
+## Navigation
+
+Dans l'app connectée (routes privées uniquement), une **tab bar** mobile-first
+([`TabBar`](./src/components/layout/TabBar.tsx)) :
+
+| Zone       | Destination                     |
+| ---------- | ------------------------------- |
+| Accueil    | `/tableau-de-bord`              |
+| Suivi      | `/suivi`                        |
+| **« + »**  | feuille d'actions rapides (FAB) |
+| Ressources | `/bien-etre`                    |
+| Profil     | `/profil` (avatar / initiale)   |
+
+L'onglet actif porte `aria-current="page"`. Le **bouton central « + »** (FAB
+pervenche) ouvre [`AddMenu`](./src/components/layout/AddMenu.tsx), une feuille
+d'actions : **Noter mon humeur** (`/humeur`), **Passer un test** (`/tests`),
+**Faire un exercice** (`/exercices`).
+
+**Accessibilité du menu** : `aria-haspopup`/`aria-expanded` sur le « + » ;
+feuille `role="dialog"` `aria-modal` avec **focus piégé** (Tab cyclique),
+fermeture par **Échap** et **clic extérieur**, et **retour du focus** au « + ».
+Ouverture animée neutralisée sous `prefers-reduced-motion`.
+
+> Les écrans **Suivi**, **Tests** et **Exercices** sont des placeholders
+> « Bientôt » (construits ultérieurement). « Ressources » réutilise le catalogue
+> bien-être existant.
 
 ## Mood Tracker
 

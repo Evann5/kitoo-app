@@ -3,6 +3,7 @@ import {
   AccessibilitySync,
   getAccessibilityPrefs,
 } from "@/features/accessibility";
+import { getUser } from "@/lib/auth";
 import { TabBar } from "./TabBar";
 
 export type AppShellProps = {
@@ -17,14 +18,15 @@ export type AppShellProps = {
  * d'onglets fixe en bas.
  */
 export async function AppShell({ children, width = "prose" }: AppShellProps) {
-  const prefs = await getAccessibilityPrefs();
+  const [prefs, user] = await Promise.all([getAccessibilityPrefs(), getUser()]);
+  const initial = user?.email?.[0]?.toUpperCase();
   return (
     <>
       <AccessibilitySync prefs={prefs} />
       <Container width={width} className="pt-6 pb-28">
         {children}
       </Container>
-      <TabBar />
+      <TabBar userInitial={initial} />
     </>
   );
 }

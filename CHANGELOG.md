@@ -4,6 +4,16 @@ Toutes les évolutions notables de l'application Kitoo.
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/) ;
 versionnage [SemVer](https://semver.org/lang/fr/).
 
+## [1.2.0] — 2026-06-17
+
+### Ajouté
+
+- **Nouvelle navigation** : tab bar Accueil · Suivi · **[ + ]** · Ressources ·
+  Profil. Le bouton central « + » ouvre une feuille d'actions accessible
+  (humeur / test / exercice) avec focus piégé, fermeture Échap + clic extérieur
+  et retour de focus. Écrans placeholder « Bientôt » pour `/suivi`, `/tests`,
+  `/exercices`.
+
 ## [1.1.0] — 2026-06-17
 
 ### Modifié

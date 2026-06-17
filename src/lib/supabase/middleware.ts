@@ -7,6 +7,9 @@ const PROTECTED_PREFIXES = [
   "/tableau-de-bord",
   "/humeur",
   "/bien-etre",
+  "/suivi",
+  "/tests",
+  "/exercices",
 ];
 
 /** Routes d'auth : une personne déjà connectée n'a rien à y faire. */
