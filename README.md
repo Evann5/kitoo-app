@@ -562,7 +562,15 @@ dans [`src/features/chat/`](./src/features/chat).
   (chacun n'accède qu'à sa conversation). Messages inclus dans l'**export RGPD**
   (A7).
 - **Accessibilité** : fil annoncé (`aria-live`), champ labelisé, bulles
-  `ChatBubble`, focus visible, cibles ≥ 44px.
+  `ChatBubble`, focus visible, cibles ≥ 44px. L'historique **persiste** (la
+  conversation est récupérée via un _select-puis-insert_ idempotent, pas
+  d'`upsert` ambigu) ; le fil défile vers le dernier message sans recharger.
+- **Être rappelé·e par un·e professionnel·le** : un bouton sur `/chat`
+  ([`CallbackRequest`](./src/features/chat/CallbackRequest.tsx)) enregistre une
+  demande de rappel (table `callback_requests` en **RLS stricte**, téléphone et
+  note facultatifs). Démo : la demande est stockée mais **aucun appel réel n'est
+  planifié** — l'UI le dit clairement et oriente vers le 3114 / 15 / 112 en cas
+  d'urgence. Inclus dans l'export RGPD.
 
 > Ressources d'aide (3114 / 15 / 112) à **vérifier/maintenir à jour** — cf. le
 > commentaire dans `auto-reply.ts` et `DEPLOY.md`.

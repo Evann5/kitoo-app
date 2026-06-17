@@ -2,13 +2,23 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-const { sendMock } = vi.hoisted(() => ({ sendMock: vi.fn() }));
+const { sendMock, callbackMock } = vi.hoisted(() => ({
+  sendMock: vi.fn(),
+  callbackMock: vi.fn(),
+}));
 vi.mock("@/features/chat/actions", () => ({ sendMessage: sendMock }));
+vi.mock("@/features/chat/callback-actions", () => ({
+  requestCallback: callbackMock,
+}));
 
 import { ChatScreen } from "@/features/chat/ChatScreen";
 import { ChatBubble } from "@/features/chat/ChatBubble";
+import { CallbackRequest } from "@/features/chat/CallbackRequest";
 
-beforeEach(() => sendMock.mockReset());
+beforeEach(() => {
+  sendMock.mockReset();
+  callbackMock.mockReset();
+});
 
 describe("ChatScreen — étiquetage & envoi", () => {
   it("affiche l'étiquetage simulé + disclaimer et un fil annoncé", () => {
@@ -66,5 +76,34 @@ describe("ChatBubble — ressources de détresse", () => {
   it("n'affiche pas de ressource sur une bulle normale", () => {
     render(<ChatBubble sender="pro" content="Coucou" />);
     expect(screen.queryByRole("link", { name: /3114/ })).toBeNull();
+  });
+});
+
+describe("CallbackRequest — rappel par un·e pro", () => {
+  it("enregistre une demande et confirme (mention démo)", async () => {
+    callbackMock.mockResolvedValue({ ok: true });
+    const user = userEvent.setup();
+    render(<CallbackRequest />);
+
+    await user.click(
+      screen.getByRole("button", { name: /demander à être rappel/i }),
+    );
+    await user.type(screen.getByLabelText(/téléphone/i), "0612345678");
+    await user.click(
+      screen.getByRole("button", { name: "Envoyer ma demande" }),
+    );
+
+    expect(callbackMock).toHaveBeenCalledWith({
+      phone: "0612345678",
+      note: "",
+    });
+    expect(await screen.findByText(/demande enregistrée/i)).toBeInTheDocument();
+    // Honnêteté : démo, et orientation urgence.
+    expect(screen.getByText(/aucun appel réel/i)).toBeInTheDocument();
+  });
+
+  it("affiche l'état « déjà demandé » si une demande est en attente", () => {
+    render(<CallbackRequest alreadyRequested />);
+    expect(screen.getByText(/demande enregistrée/i)).toBeInTheDocument();
   });
 });

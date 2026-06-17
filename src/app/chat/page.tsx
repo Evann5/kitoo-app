@@ -1,14 +1,22 @@
 import type { Metadata } from "next";
 import { AppShell } from "@/components/layout/AppShell";
 import { requireUser } from "@/lib/auth";
-import { ChatScreen, getConversation } from "@/features/chat";
+import {
+  ChatScreen,
+  CallbackRequest,
+  getConversation,
+  hasPendingCallback,
+} from "@/features/chat";
 
 export const metadata: Metadata = { title: "Soutien — Kitoo" };
 export const dynamic = "force-dynamic";
 
 export default async function ChatPage() {
   await requireUser("/chat");
-  const conversation = await getConversation();
+  const [conversation, pendingCallback] = await Promise.all([
+    getConversation(),
+    hasPendingCallback(),
+  ]);
 
   return (
     <AppShell width="prose">
@@ -21,6 +29,7 @@ export default async function ChatPage() {
             Un espace doux pour déposer ce que tu ressens.
           </p>
         </header>
+        <CallbackRequest alreadyRequested={pendingCallback} />
         <ChatScreen initialMessages={conversation?.messages ?? []} />
       </div>
     </AppShell>

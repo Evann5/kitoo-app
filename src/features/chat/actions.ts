@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import type { Tables } from "@/lib/supabase/types";
 import { autoReply } from "./auto-reply";
+import { getOrCreateConversationId } from "./queries";
 
 type Message = Tables<"messages">;
 
@@ -31,19 +32,16 @@ export async function sendMessage(input: {
   if (!user) return { ok: false, error: "Tu dois être connecté." };
 
   // Conversation de l'utilisateur (créée si besoin).
-  const { data: conv, error: convErr } = await supabase
-    .from("conversations")
-    .upsert({ user_id: user.id }, { onConflict: "user_id" })
-    .select("id")
-    .single();
-  if (convErr || !conv)
+  const conversationId = await getOrCreateConversationId(supabase, user.id);
+  if (!conversationId) {
     return { ok: false, error: "Conversation indisponible." };
+  }
 
   // Message utilisateur.
   const { data: userMessage, error: userErr } = await supabase
     .from("messages")
     .insert({
-      conversation_id: conv.id,
+      conversation_id: conversationId,
       user_id: user.id,
       sender: "user",
       content,
@@ -59,7 +57,7 @@ export async function sendMessage(input: {
   const { data: proMessage, error: proErr } = await supabase
     .from("messages")
     .insert({
-      conversation_id: conv.id,
+      conversation_id: conversationId,
       user_id: user.id,
       sender: "pro",
       content: reply.content,
@@ -74,7 +72,7 @@ export async function sendMessage(input: {
   await supabase
     .from("conversations")
     .update({ updated_at: new Date().toISOString() })
-    .eq("id", conv.id);
+    .eq("id", conversationId);
 
   return { ok: true, userMessage, proMessage };
 }

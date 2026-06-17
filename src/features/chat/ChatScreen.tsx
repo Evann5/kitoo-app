@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { Info, Send } from "lucide-react";
 import { Card } from "@/components/ui";
 import { ChatBubble } from "./ChatBubble";
@@ -22,6 +22,12 @@ export function ChatScreen({ initialMessages }: ChatScreenProps) {
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const endRef = useRef<HTMLDivElement>(null);
+
+  // Suit le dernier message à l'arrivée d'un nouveau (sans recharger la page).
+  useEffect(() => {
+    endRef.current?.scrollIntoView?.({ block: "end" });
+  }, [messages.length, pending]);
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -88,6 +94,7 @@ export function ChatScreen({ initialMessages }: ChatScreenProps) {
         {pending ? (
           <p className="text-small text-ink-500 pl-11">Kitoo répond…</p>
         ) : null}
+        <div ref={endRef} />
       </div>
 
       {error ? (

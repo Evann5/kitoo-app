@@ -4,6 +4,22 @@ Toutes les évolutions notables de l'application Kitoo.
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/) ;
 versionnage [SemVer](https://semver.org/lang/fr/).
 
+## [1.11.1] — 2026-06-17
+
+### Ajouté
+
+- **Demande d'être rappelé·e par un·e professionnel·le de santé** sur `/chat`
+  (`CallbackRequest` + table `callback_requests` en RLS stricte, téléphone/note
+  facultatifs, incluse dans l'export RGPD). Démo : la demande est enregistrée,
+  aucun appel réel n'est planifié ; orientation vers 3114 / 15 / 112.
+
+### Corrigé
+
+- **Chat qui « se vidait » / se rechargeait** : la conversation est désormais
+  récupérée via un _select-puis-insert_ idempotent (au lieu d'un `upsert`
+  ambigu), l'historique persiste de façon fiable ; le fil défile vers le dernier
+  message sans recharger la page.
+
 ## [1.11.0] — 2026-06-17
 
 ### Ajouté

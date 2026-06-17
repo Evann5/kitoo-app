@@ -24,6 +24,7 @@ export async function GET(request: NextRequest) {
     { data: sessions },
     { data: assessments },
     { data: chatMessages },
+    { data: callbackRequests },
     { data: consents },
   ] = await Promise.all([
     supabase.from("profiles").select("*").eq("id", user.id).maybeSingle(),
@@ -46,6 +47,10 @@ export async function GET(request: NextRequest) {
     supabase
       .from("messages")
       .select("sender, content, flagged, created_at")
+      .order("created_at", { ascending: true }),
+    supabase
+      .from("callback_requests")
+      .select("phone, note, status, created_at")
       .order("created_at", { ascending: true }),
     supabase
       .from("consents")
@@ -118,6 +123,7 @@ export async function GET(request: NextRequest) {
     })),
     assessment_results: assessments ?? [],
     chat_messages: chatMessages ?? [],
+    callback_requests: callbackRequests ?? [],
     consents,
   };
 

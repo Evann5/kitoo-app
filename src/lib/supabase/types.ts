@@ -14,6 +14,33 @@ export type Database = {
   };
   public: {
     Tables: {
+      callback_requests: {
+        Row: {
+          created_at: string;
+          id: string;
+          note: string | null;
+          phone: string | null;
+          status: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          note?: string | null;
+          phone?: string | null;
+          status?: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          note?: string | null;
+          phone?: string | null;
+          status?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       assessment_results: {
         Row: {
           answers: Json;
