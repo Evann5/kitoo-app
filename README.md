@@ -268,24 +268,28 @@ Saisie d'humeur quotidienne (route privée [`/humeur`](./src/app/humeur/page.tsx
 expérience « compagnon » douce. Code dans
 [`src/features/mood/`](./src/features/mood).
 
-### Saisie en arc (score 0–100 caché)
+### Saisie « bol » dans un SVG unique (score 0–100 caché)
 
-La saisie ([`MoodDial`](./src/features/mood/MoodDial.tsx)) suit une disposition
-**en arc** : en-tête (avatar · titre · fermer) et **bandeau de la semaine**
-([`WeekDateStrip`](./src/features/mood/WeekDateStrip.tsx), jour courant en
-évidence), titre Goodly, puis le dial — **5 icônes d'humeur le long de l'arc
-haut** (l'humeur active est agrandie et colorée), une **jauge en arc de cercle
-en bas avec poignée glissable**, le **koala au centre** (pose synchronisée) et un
-**bouton rond de validation** (flèche →). En dessous : chips de tags et
-commentaire facultatif.
+La page `/humeur` est une **colonne en flux normal** (en-tête → bandeau de
+semaine → titre → cadran → bouton rond → tags → commentaire), sans overlay ni
+scroll imbriqué. Le cadran ([`MoodDial`](./src/features/mood/MoodDial.tsx)) est
+un **demi-cercle concave vers le haut (bol ∪)** dessiné **entièrement dans un
+seul `<svg>` responsive** (`viewBox` fixe + `width:100%`, `height:auto`,
+`preserveAspectRatio`). Arc track, graduations pointillées, remplissage
+pervenche, poignée, **5 icônes d'humeur** et **koala + libellé** partagent le
+même système de coordonnées — d'où un **alignement garanti à toutes les tailles**
+(320px → desktop). C'est le motif retenu pour corriger les décalages de la
+version précédente (icônes positionnées en `px` absolus au-dessus du SVG).
 
-La poignée (pointeur, tactile ou clavier) produit un **score continu 0–100**
-**caché à l'utilisateur** (jamais affiché, ni dans `aria-valuetext`) ; cliquer
-une icône place la poignée sur le centre de la zone correspondante. Seul le
-**ressenti qualitatif** est montré — libellé d'humeur, couleur et pose du koala.
-La jauge est un `role="slider"` opérable au clavier (flèches, Home/End), cible
-≥ 44px, focus pervenche visible ; transitions neutralisées sous
-`prefers-reduced-motion`.
+Géométrie : centre du cercle au-dessus, arc = moitié basse ; gauche = très
+négatif (score 0), bas = neutre (~50), droite = très positif (100). La poignée
+(pointeur, tactile ou clavier) produit un **score continu 0–100 caché** (jamais
+affiché, ni dans `aria-valuetext`) ; activer une icône pose la poignée sur le
+centre de sa zone. Seul le **ressenti qualitatif** est montré (libellé, couleur,
+pose du koala). Accessibilité : `role="slider"` clavier (flèches, Home/End),
+icônes `role="button"` activables, focus pervenche, cibles ≥ 44px ; transitions
+neutralisées sous `prefers-reduced-motion`. Le **bouton rond de validation** est
+un élément HTML en flux, sous le SVG.
 
 Le `score` est stocké dans `mood_entries.score` (`smallint` 0–100) ; le `level`
 (1–5) en est **dérivé** côté serveur (`scoreToLevel`) pour les stats/graphes :

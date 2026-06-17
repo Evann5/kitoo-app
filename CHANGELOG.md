@@ -4,6 +4,18 @@ Toutes les évolutions notables de l'application Kitoo.
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/) ;
 versionnage [SemVer](https://semver.org/lang/fr/).
 
+## [1.6.1] — 2026-06-17
+
+### Corrigé
+
+- **Cadran d'humeur** réimplémenté en demi-cercle concave (bol ∪) dans **un seul
+  SVG responsive** (`viewBox` + `width:100%`, `preserveAspectRatio`) contenant
+  arc, graduations pointillées, remplissage, poignée, 5 icônes et koala+libellé :
+  **alignement garanti** à toutes les tailles (fin des décalages dus aux overlays
+  HTML en px de la 1.6.0). Page `/humeur` en flux normal scrollable, sans overlay
+  absolu ni hauteur fixe (corrige le scroll). Score 0–100 toujours caché,
+  accessibilité et `prefers-reduced-motion` conservés ; persistance A10 inchangée.
+
 ## [1.6.0] — 2026-06-17
 
 ### Modifié

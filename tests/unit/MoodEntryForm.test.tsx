@@ -1,6 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { render, screen, fireEvent } from "@testing-library/react";
 
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ refresh: vi.fn(), replace: vi.fn(), push: vi.fn() }),
@@ -15,8 +14,7 @@ const TODAY = "2026-06-17";
 const DIGITS = /\d/;
 
 describe("MoodEntryForm — molette", () => {
-  it("réagit à la molette : pose + libellé changent, sans afficher de nombre", async () => {
-    const user = userEvent.setup();
+  it("réagit à la molette : pose + libellé changent, sans afficher de nombre", () => {
     const { container } = render(
       <MoodEntryForm tags={[]} initial={null} today={TODAY} />,
     );
@@ -29,12 +27,11 @@ describe("MoodEntryForm — molette", () => {
     expect(mascotSrc()).toContain("kitoo-classic");
 
     const slider = screen.getByRole("slider");
-    slider.focus(); // l'en-tête contient un lien « Fermer » avant la jauge
-    await user.keyboard("{End}"); // → Très positif
+    fireEvent.keyDown(slider, { key: "End" }); // → Très positif
     expect(slider).toHaveAttribute("aria-valuetext", "Très bien");
     expect(mascotSrc()).toContain("kitoo-sunglasses");
 
-    await user.keyboard("{Home}"); // → Très négatif
+    fireEvent.keyDown(slider, { key: "Home" }); // → Très négatif
     expect(mascotSrc()).toContain("kitoo-crying");
 
     // Le score 0–100 n'est jamais exposé : ni dans aria-valuetext, ni dans le
