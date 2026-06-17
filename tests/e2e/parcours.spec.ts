@@ -59,7 +59,7 @@ test("parcours complet : inscription → humeur → dashboard → bien-être →
   await expect(page.getByText(/série de 1 jour/i)).toBeVisible();
 
   // Espace bien-être : filtre + lecture interne.
-  await page.goto("/bien-etre");
+  await page.goto("/ressources");
   await page.getByRole("button", { name: "Stress" }).click();
   await page.getByRole("link", { name: /Respirer en carré/ }).click();
   await expect(

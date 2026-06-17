@@ -7,7 +7,11 @@ export default defineConfig({
   testDir: "./tests/e2e",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
+  // 1 retry en local : ces e2e créent des comptes Supabase ; un rate-limit
+  // transitoire ne doit pas faire échouer la suite (un vrai bug échoue 2×).
+  retries: process.env.CI ? 2 : 1,
+  // Concurrence limitée pour ménager les quotas d'inscription Supabase.
+  workers: 3,
   reporter: "html",
   use: {
     baseURL,

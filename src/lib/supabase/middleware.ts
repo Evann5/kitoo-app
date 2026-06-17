@@ -6,7 +6,7 @@ const PROTECTED_PREFIXES = [
   "/profil",
   "/tableau-de-bord",
   "/humeur",
-  "/bien-etre",
+  "/ressources",
   "/suivi",
   "/tests",
   "/exercices",

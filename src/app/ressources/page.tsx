@@ -13,7 +13,7 @@ export const metadata: Metadata = { title: "Bien-être — Kitoo" };
 export const dynamic = "force-dynamic";
 
 export default async function BienEtrePage() {
-  await requireUser("/bien-etre");
+  await requireUser("/ressources");
 
   const [resources, recent] = await Promise.all([
     listResources(),

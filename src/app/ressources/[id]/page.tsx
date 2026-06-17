@@ -23,7 +23,7 @@ export default async function ResourcePage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  await requireUser("/bien-etre");
+  await requireUser("/ressources");
   const { id } = await params;
   const resource = await getResource(id);
   if (!resource) notFound();

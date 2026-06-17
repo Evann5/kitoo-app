@@ -4,6 +4,18 @@ Toutes les évolutions notables de l'application Kitoo.
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/) ;
 versionnage [SemVer](https://semver.org/lang/fr/).
 
+## [1.3.0] — 2026-06-17
+
+### Modifié / Ajouté
+
+- **Séparation Ressources / Exercices**. `resources` recentré sur les contenus à
+  lire (article / avis / conseil ; les anciens « exercice » reclassés). Espace
+  Ressources déplacé sur `/ressources`.
+- **Exercices interactifs** : nouvelles tables `exercises` et `exercise_sessions`
+  (RLS stricte), catalogue `/exercices` et lecteur `/exercices/[slug]` avec
+  minuteur guidé (phases + `aria-live`, reduced-motion, pause/arrêt). Chaque
+  session est historisée (`completed` true/false) via server action.
+
 ## [1.2.0] — 2026-06-17
 
 ### Ajouté

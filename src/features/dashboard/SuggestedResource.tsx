@@ -21,7 +21,7 @@ export function SuggestedResource({ resource }: SuggestedResourceProps) {
       </h2>
       {resource ? (
         <Link
-          href="/bien-etre"
+          href="/ressources"
           className="rounded-card focus-visible:outline-none"
         >
           <Card className="hover:bg-ink-50 flex flex-col gap-2 transition-colors">

@@ -29,7 +29,7 @@ export function SupportNudge() {
         geste de courage.
       </p>
       <Link
-        href="/bien-etre"
+        href="/ressources"
         className="rounded-control bg-brand-700 text-body shadow-btn hover:bg-brand-800 inline-flex h-11 items-center justify-center px-5 font-bold text-white"
       >
         Trouver du soutien

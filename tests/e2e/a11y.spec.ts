@@ -34,7 +34,13 @@ test("aucune violation a11y critique sur les pages privées", async ({
   await expect(page).toHaveURL(/\/tableau-de-bord/, { timeout: 15000 });
   await page.getByRole("button", { name: /j'accepte/i }).click();
 
-  for (const path of ["/tableau-de-bord", "/humeur", "/bien-etre", "/profil"]) {
+  for (const path of [
+    "/tableau-de-bord",
+    "/humeur",
+    "/ressources",
+    "/exercices",
+    "/profil",
+  ]) {
     await page.goto(path);
     const critical = await criticalViolations(page);
     expect(

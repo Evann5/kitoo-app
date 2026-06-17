@@ -22,7 +22,7 @@ export function ResourceCard({ resource }: ResourceCardProps) {
   const Icon = TYPE_ICON[resource.type] ?? BookOpen;
   return (
     <Link
-      href={`/bien-etre/${resource.id}`}
+      href={`/ressources/${resource.id}`}
       className="rounded-card block focus-visible:outline-none"
     >
       <Card className="hover:bg-ink-50 flex h-full flex-col gap-2 transition-colors">

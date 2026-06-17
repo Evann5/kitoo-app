@@ -38,6 +38,83 @@ export type Database = {
         };
         Relationships: [];
       };
+      exercise_sessions: {
+        Row: {
+          completed: boolean;
+          completed_at: string | null;
+          duration_sec: number;
+          exercise_id: string;
+          id: string;
+          started_at: string;
+          user_id: string;
+        };
+        Insert: {
+          completed?: boolean;
+          completed_at?: string | null;
+          duration_sec?: number;
+          exercise_id: string;
+          id?: string;
+          started_at?: string;
+          user_id: string;
+        };
+        Update: {
+          completed?: boolean;
+          completed_at?: string | null;
+          duration_sec?: number;
+          exercise_id?: string;
+          id?: string;
+          started_at?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "exercise_sessions_exercise_id_fkey";
+            columns: ["exercise_id"];
+            isOneToOne: false;
+            referencedRelation: "exercises";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      exercises: {
+        Row: {
+          category: string;
+          created_at: string;
+          description: string;
+          duration_sec: number;
+          id: string;
+          mood_levels: number[];
+          slug: string;
+          steps: Json;
+          theme: string;
+          title: string;
+        };
+        Insert: {
+          category: string;
+          created_at?: string;
+          description: string;
+          duration_sec: number;
+          id?: string;
+          mood_levels?: number[];
+          slug: string;
+          steps?: Json;
+          theme: string;
+          title: string;
+        };
+        Update: {
+          category?: string;
+          created_at?: string;
+          description?: string;
+          duration_sec?: number;
+          id?: string;
+          mood_levels?: number[];
+          slug?: string;
+          steps?: Json;
+          theme?: string;
+          title?: string;
+        };
+        Relationships: [];
+      };
       mood_entries: {
         Row: {
           comment: string | null;

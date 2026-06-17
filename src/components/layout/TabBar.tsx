@@ -15,7 +15,9 @@ const LEFT: Tab[] = [
   { href: "/tableau-de-bord", label: "Accueil", icon: Home },
   { href: "/suivi", label: "Suivi", icon: LineChart },
 ];
-const RIGHT: Tab[] = [{ href: "/bien-etre", label: "Ressources", icon: Heart }];
+const RIGHT: Tab[] = [
+  { href: "/ressources", label: "Ressources", icon: Heart },
+];
 
 export type TabBarProps = {
   /** Initiale affichée dans l'onglet Profil (avatar). */

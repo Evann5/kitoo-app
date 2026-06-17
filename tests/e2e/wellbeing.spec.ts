@@ -13,10 +13,13 @@ test("catalogue → filtre → lecture d'une ressource", async ({ page }) => {
   await expect(page).toHaveURL(/\/tableau-de-bord/, { timeout: 15000 });
 
   // Catalogue.
-  await page.goto("/bien-etre");
+  await page.goto("/ressources");
   await expect(
     page.getByRole("heading", { name: "Espace bien-être" }),
   ).toBeVisible();
+
+  // Les ressources ne contiennent plus de type « exercice ».
+  await expect(page.getByRole("button", { name: "Exercices" })).toHaveCount(0);
 
   // Filtre par thème (Stress).
   await page.getByRole("button", { name: "Stress" }).click();
@@ -25,7 +28,7 @@ test("catalogue → filtre → lecture d'une ressource", async ({ page }) => {
 
   // Lecture interne.
   await card.click();
-  await expect(page).toHaveURL(/\/bien-etre\/[0-9a-f-]+$/);
+  await expect(page).toHaveURL(/\/ressources\/[0-9a-f-]+$/);
   await expect(
     page.getByRole("heading", { level: 1, name: "Respirer en carré" }),
   ).toBeVisible();
@@ -35,5 +38,5 @@ test("catalogue → filtre → lecture d'une ressource", async ({ page }) => {
   await page
     .getByRole("link", { name: /retour à l'espace bien-être/i })
     .click();
-  await expect(page).toHaveURL(/\/bien-etre$/);
+  await expect(page).toHaveURL(/\/ressources$/);
 });

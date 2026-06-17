@@ -27,7 +27,7 @@ export function ResourceReader({ resource }: ResourceReaderProps) {
   return (
     <article className="flex flex-col gap-5">
       <Link
-        href="/bien-etre"
+        href="/ressources"
         className="text-small text-brand-700 inline-flex w-fit items-center gap-1 font-bold"
       >
         <ArrowLeft aria-hidden size={16} strokeWidth={1.8} />

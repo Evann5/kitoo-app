@@ -4,7 +4,7 @@ import { safeRedirect } from "@/features/auth";
 describe("safeRedirect — anti open-redirect", () => {
   it("accepte un chemin interne", () => {
     expect(safeRedirect("/humeur")).toBe("/humeur");
-    expect(safeRedirect("/bien-etre/abc")).toBe("/bien-etre/abc");
+    expect(safeRedirect("/ressources/abc")).toBe("/ressources/abc");
   });
 
   it("rejette les destinations externes vers le fallback", () => {

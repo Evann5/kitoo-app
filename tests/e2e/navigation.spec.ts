@@ -27,7 +27,7 @@ test("le « + » ouvre le menu et mène à un écran d'action", async ({ page })
 
   // Onglet Ressources → catalogue bien-être.
   await page.getByRole("link", { name: "Ressources" }).click();
-  await expect(page).toHaveURL(/\/bien-etre$/);
+  await expect(page).toHaveURL(/\/ressources$/);
   await expect(
     page.getByRole("heading", { name: "Espace bien-être" }),
   ).toBeVisible();

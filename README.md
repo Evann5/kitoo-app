@@ -95,14 +95,14 @@ secrets_.
 ```
 src/
   app/                  routes (App Router) : auth, humeur, tableau-de-bord,
-                        bien-etre, profil, pages légales, api/export, layout
+                        ressources, exercices, suivi, profil, légales, api/export
   components/
     ui/                 primitives (Button, Card, Badge, Tag, Container…)
     illustrations/      Illustration, Mascot, Blob
     motion/             Reveal, Stagger
     layout/             AppShell, TabBar, Footer, LegalShell
   features/             logique + UI par domaine
-    auth/  mood/  dashboard/  wellbeing/  gdpr/  accessibility/
+    auth/  mood/  dashboard/  wellbeing/  exercises/  gdpr/  accessibility/
   lib/
     supabase/           client.ts (browser) + server.ts + types.ts
     auth.ts  validation.ts  moods.ts  cn.ts  illustrations.ts  motion.ts
@@ -159,7 +159,8 @@ Le réglage se fait dans le dashboard Supabase (Authentication → Email →
 | `/profil`          | privé  | compte, confidentialité (RGPD), accessibilité         |
 | `/tableau-de-bord` | privé  | accueil : humeur du jour, série, tendances            |
 | `/humeur`          | privé  | saisie / modification de l'humeur du jour             |
-| `/bien-etre`       | privé  | catalogue de ressources (+ lecture `/bien-etre/[id]`) |
+| `/ressources`      | privé  | contenus à lire (+ lecture `/ressources/[id]`)        |
+| `/exercices`       | privé  | exercices interactifs (+ lecteur `/exercices/[slug]`) |
 
 La protection est assurée par [`middleware.ts`](./middleware.ts) (rafraîchit la
 session et redirige : non connecté → `/connexion`, déjà connecté hors des écrans
@@ -239,7 +240,7 @@ Dans l'app connectée (routes privées uniquement), une **tab bar** mobile-first
 | Accueil    | `/tableau-de-bord`              |
 | Suivi      | `/suivi`                        |
 | **« + »**  | feuille d'actions rapides (FAB) |
-| Ressources | `/bien-etre`                    |
+| Ressources | `/ressources`                   |
 | Profil     | `/profil` (avatar / initiale)   |
 
 L'onglet actif porte `aria-current="page"`. Le **bouton central « + »** (FAB
@@ -348,11 +349,11 @@ données** (`sr-only`) ; l'humeur est portée par le libellé, pas seulement la
 couleur. Animations neutralisées sous `prefers-reduced-motion`. État vide
 chaleureux pour un compte sans donnée.
 
-## Espace bien-être
+## Ressources
 
-Catalogue de ressources éducatives (routes privées
-[`/bien-etre`](./src/app/bien-etre/page.tsx) et
-[`/bien-etre/[id]`](./src/app/bien-etre/[id]/page.tsx)). Code dans
+Contenus **à lire** (article / avis / conseil), séparés des exercices. Routes
+privées [`/ressources`](./src/app/ressources/page.tsx) et
+[`/ressources/[id]`](./src/app/ressources/[id]/page.tsx). Code dans
 [`src/features/wellbeing/`](./src/features/wellbeing).
 
 ### Filtrage
@@ -377,6 +378,36 @@ tagués pour les niveaux bas). Masquée si aucune humeur récente.
 titres correcte (h1), mention « rédigé et validé par des professionnels de
 santé » et disclaimer. Icônes Lucide cohérentes (outline). `getResource` valide
 le format UUID (404 propre sur id invalide).
+
+## Exercices
+
+Exercices **interactifs** (respiration, ancrage…) avec minuteur. Routes privées
+[`/exercices`](./src/app/exercices/page.tsx) (catalogue) et
+[`/exercices/[slug]`](./src/app/exercices/[slug]/page.tsx) (lecteur). Code dans
+[`src/features/exercises/`](./src/features/exercises).
+
+### Modèle de données
+
+- `exercises` (référence, lecture seule) : `slug`, `title`, `category`,
+  `description`, `duration_sec`, `theme`, `mood_levels`, et `steps` (jsonb) qui
+  décrit le minuteur : `{ cycles, phases:[{ label, seconds }] }`.
+- `exercise_sessions` (données perso, **RLS stricte**) : historique des sessions
+  jouées (`started_at`, `completed_at`, `duration_sec`, `completed`).
+
+### Lecteur interactif
+
+[`ExercisePlayer`](./src/features/exercises/ExercisePlayer.tsx) enchaîne les
+phases (cercle de guidage qui se dilate/contracte), avec pause/reprise et arrêt.
+À la **fin** une session `completed=true` est enregistrée ; à l'**arrêt**,
+`completed=false` avec le temps écoulé — via la server action
+[`recordExerciseSession`](./src/features/exercises/actions.ts) (authentifiée,
+RLS).
+
+### Accessibilité
+
+Animation du guidage **neutralisée sous `prefers-reduced-motion`** (le libellé de
+phase + le compte à rebours suffisent) ; phases annoncées via `aria-live` ;
+contrôles au clavier, cibles ≥ 44px.
 
 ## RGPD & accessibilité
 
