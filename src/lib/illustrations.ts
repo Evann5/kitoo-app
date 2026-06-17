@@ -40,61 +40,62 @@ export type IllustrationKey =
   | "wave-divider";
 
 export const illustrations: Record<IllustrationKey, IllustrationMeta> = {
+  // Mascotte : assets carrés 1100×1100 (cf. public/illustrations/).
   "kitoo-classic": {
     file: "kitoo-classic.png",
     alt: "Le koala Kitoo, accueillant",
-    width: 718,
-    height: 431,
+    width: 1100,
+    height: 1100,
     kind: "mascot",
   },
   "kitoo-crying": {
     // Réservé aux contextes de soutien (jamais en décoration gratuite).
     file: "kitoo-crying.png",
     alt: "Le koala Kitoo, ému : Kitoo est là pour t'écouter",
-    width: 1333,
-    height: 800,
+    width: 1100,
+    height: 1100,
     kind: "mascot",
   },
   "kitoo-sleeping": {
     file: "kitoo-sleeping.png",
     alt: "Le koala Kitoo se repose paisiblement",
-    width: 585,
-    height: 369,
+    width: 1100,
+    height: 1100,
     kind: "mascot",
   },
   "kitoo-soda": {
     file: "kitoo-soda.png",
     alt: "Le koala Kitoo, détendu, une boisson à la main",
-    width: 839,
-    height: 794,
+    width: 1100,
+    height: 1100,
     kind: "mascot",
   },
   "kitoo-bubble-tea": {
     file: "kitoo-bubble-tea.png",
     alt: "Le koala Kitoo savoure un bubble tea",
-    width: 440,
-    height: 426,
+    width: 1100,
+    height: 1100,
     kind: "mascot",
   },
   "kitoo-sunglasses": {
     file: "kitoo-sunglasses.png",
     alt: "Le koala Kitoo, fier et de bonne humeur",
-    width: 616,
-    height: 526,
+    width: 1100,
+    height: 1100,
     kind: "mascot",
   },
   "kitoo-skating": {
     file: "kitoo-skating.png",
     alt: "Le koala Kitoo avance avec énergie",
-    width: 649,
-    height: 687,
+    width: 1100,
+    height: 1100,
     kind: "mascot",
   },
   "kitoo-heart": {
     file: "kitoo-heart.png",
     alt: "Le koala Kitoo te tend un cœur, bienveillant",
-    width: 579,
-    height: 612,
+    width: 1100,
+    height: 1100,
     kind: "mascot",
   },
   "blob-soft": {
