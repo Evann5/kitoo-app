@@ -4,6 +4,19 @@ Toutes les évolutions notables de l'application Kitoo.
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/) ;
 versionnage [SemVer](https://semver.org/lang/fr/).
 
+## [1.6.0] — 2026-06-17
+
+### Modifié
+
+- **Refonte de la saisie d'humeur** en disposition « arc » : en-tête + bandeau
+  de dates (`WeekDateStrip`), titre Goodly, **icônes d'humeur en arc** (active
+  mise en avant), **jauge en arc de cercle** avec poignée glissable, koala
+  central synchronisé et **bouton rond de validation**. Le **score 0–100 reste
+  caché** (`aria-valuetext` = libellé) ; cliquer une icône place la poignée sur
+  sa zone. Persistance et logique inchangées (upsert score/level, 1/jour, RLS).
+  Accessibilité (slider clavier, focus, cibles ≥ 44px) et `prefers-reduced-motion`
+  respectés ; responsive 320px+.
+
 ## [1.1.0] — 2026-06-17 — Jalon « V1.1 »
 
 Lot livrable consolidant les évolutions des versions internes 1.2 → 1.5 :

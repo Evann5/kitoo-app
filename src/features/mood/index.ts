@@ -4,6 +4,8 @@ export { TagChips } from "./TagChips";
 export type { TagChipsProps } from "./TagChips";
 export { MoodEntryForm } from "./MoodEntryForm";
 export type { MoodEntryFormProps } from "./MoodEntryForm";
+export { WeekDateStrip } from "./WeekDateStrip";
+export type { WeekDateStripProps } from "./WeekDateStrip";
 export { RecentMoods } from "./RecentMoods";
 export type { RecentMoodsProps } from "./RecentMoods";
 export { saveMood } from "./actions";

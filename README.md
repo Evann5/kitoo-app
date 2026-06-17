@@ -268,15 +268,24 @@ Saisie d'humeur quotidienne (route privée [`/humeur`](./src/app/humeur/page.tsx
 expérience « compagnon » douce. Code dans
 [`src/features/mood/`](./src/features/mood).
 
-### Saisie en molette (score 0–100 caché)
+### Saisie en arc (score 0–100 caché)
 
-La saisie se fait via une **molette rotative**
-([`MoodDial`](./src/features/mood/MoodDial.tsx)) que l'on tourne (pointeur,
-tactile ou clavier). Elle produit un **score continu 0–100** qui est
-**caché à l'utilisateur** (jamais affiché, ni dans `aria-valuetext`) : il sert à
-affiner l'analyse et les retours. Seul le **ressenti qualitatif** est montré —
-libellé d'humeur, couleur d'ambiance et pose du koala, en réaction continue à la
-rotation.
+La saisie ([`MoodDial`](./src/features/mood/MoodDial.tsx)) suit une disposition
+**en arc** : en-tête (avatar · titre · fermer) et **bandeau de la semaine**
+([`WeekDateStrip`](./src/features/mood/WeekDateStrip.tsx), jour courant en
+évidence), titre Goodly, puis le dial — **5 icônes d'humeur le long de l'arc
+haut** (l'humeur active est agrandie et colorée), une **jauge en arc de cercle
+en bas avec poignée glissable**, le **koala au centre** (pose synchronisée) et un
+**bouton rond de validation** (flèche →). En dessous : chips de tags et
+commentaire facultatif.
+
+La poignée (pointeur, tactile ou clavier) produit un **score continu 0–100**
+**caché à l'utilisateur** (jamais affiché, ni dans `aria-valuetext`) ; cliquer
+une icône place la poignée sur le centre de la zone correspondante. Seul le
+**ressenti qualitatif** est montré — libellé d'humeur, couleur et pose du koala.
+La jauge est un `role="slider"` opérable au clavier (flèches, Home/End), cible
+≥ 44px, focus pervenche visible ; transitions neutralisées sous
+`prefers-reduced-motion`.
 
 Le `score` est stocké dans `mood_entries.score` (`smallint` 0–100) ; le `level`
 (1–5) en est **dérivé** côté serveur (`scoreToLevel`) pour les stats/graphes :

@@ -11,10 +11,15 @@ vi.mock("@/features/mood/actions", () => ({
 
 import { MoodEntryForm } from "@/features/mood/MoodEntryForm";
 
+const TODAY = "2026-06-17";
+const DIGITS = /\d/;
+
 describe("MoodEntryForm — molette", () => {
   it("réagit à la molette : pose + libellé changent, sans afficher de nombre", async () => {
     const user = userEvent.setup();
-    const { container } = render(<MoodEntryForm tags={[]} initial={null} />);
+    const { container } = render(
+      <MoodEntryForm tags={[]} initial={null} today={TODAY} />,
+    );
 
     const mascotSrc = () =>
       container.querySelector("img")?.getAttribute("src") ?? "";
@@ -24,7 +29,7 @@ describe("MoodEntryForm — molette", () => {
     expect(mascotSrc()).toContain("kitoo-classic");
 
     const slider = screen.getByRole("slider");
-    await user.tab();
+    slider.focus(); // l'en-tête contient un lien « Fermer » avant la jauge
     await user.keyboard("{End}"); // → Très positif
     expect(slider).toHaveAttribute("aria-valuetext", "Très bien");
     expect(mascotSrc()).toContain("kitoo-sunglasses");
@@ -32,12 +37,17 @@ describe("MoodEntryForm — molette", () => {
     await user.keyboard("{Home}"); // → Très négatif
     expect(mascotSrc()).toContain("kitoo-crying");
 
-    // Aucun chiffre de score dans le texte visible du formulaire.
-    expect(container.textContent ?? "").not.toMatch(/\b\d{1,3}\b/);
+    // Le score 0–100 n'est jamais exposé : ni dans aria-valuetext, ni dans le
+    // libellé d'humeur affiché au centre (le bandeau de dates, lui, a des
+    // numéros de jour — c'est attendu).
+    expect(slider.getAttribute("aria-valuetext")).not.toMatch(DIGITS);
+    expect(screen.getByText("Difficile").textContent).not.toMatch(DIGITS);
   });
 
   it("neutralise la transition sous prefers-reduced-motion", () => {
-    const { container } = render(<MoodEntryForm tags={[]} initial={null} />);
+    const { container } = render(
+      <MoodEntryForm tags={[]} initial={null} today={TODAY} />,
+    );
     expect(
       container.querySelector('[class*="motion-reduce:transition-none"]'),
     ).not.toBeNull();
@@ -48,6 +58,7 @@ describe("MoodEntryForm — molette", () => {
       <MoodEntryForm
         tags={[]}
         initial={{ score: 73, comment: "ça va", tagIds: [] }}
+        today={TODAY}
       />,
     );
     // score 73 → niveau 4 → « Bien ».

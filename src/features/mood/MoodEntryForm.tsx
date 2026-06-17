@@ -2,27 +2,39 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Card } from "@/components/ui";
-import { Mascot } from "@/components/illustrations";
+import Link from "next/link";
+import { ArrowRight, X } from "lucide-react";
+import { Card } from "@/components/ui";
 import { MoodDial } from "./MoodDial";
+import { WeekDateStrip } from "./WeekDateStrip";
 import { TagChips } from "./TagChips";
 import { saveMood } from "./actions";
-import { scoreToOption, poseForScore } from "./mood-config";
+import { scoreToOption } from "./mood-config";
 import type { MoodTag } from "./queries";
 
 export type MoodEntryFormProps = {
   tags: MoodTag[];
   /** Entrée du jour préchargée (édition), ou `null` (création). */
   initial: { score: number; comment: string; tagIds: string[] } | null;
+  /** Jour courant "YYYY-MM-DD" pour le bandeau de dates. */
+  today: string;
+  /** Initiale de l'utilisateur (avatar d'en-tête). */
+  userInitial?: string;
 };
 
 /**
- * Formulaire de saisie d'humeur du jour via la **molette rotative**
- * (`MoodDial`). Le score 0–100 reste interne et caché ; seul le ressenti
- * qualitatif (libellé, couleur, pose du koala) est montré, en réaction continue
- * à la rotation. Transitions neutralisées sous `prefers-reduced-motion`.
+ * Saisie d'humeur du jour — disposition **arc** : en-tête, bandeau de dates,
+ * titre, `MoodDial` (icônes en arc + jauge + koala central) et bouton rond de
+ * validation, puis tags + commentaire. Le score 0–100 reste interne et caché ;
+ * seul le ressenti qualitatif (libellé, couleur, koala) est montré. Transitions
+ * neutralisées sous `prefers-reduced-motion`. Persistance inchangée (A10).
  */
-export function MoodEntryForm({ tags, initial }: MoodEntryFormProps) {
+export function MoodEntryForm({
+  tags,
+  initial,
+  today,
+  userInitial,
+}: MoodEntryFormProps) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
 
@@ -35,12 +47,14 @@ export function MoodEntryForm({ tags, initial }: MoodEntryFormProps) {
   const [saved, setSaved] = useState(false);
 
   const option = score !== null ? scoreToOption(score) : undefined;
-  const pose = score !== null ? poseForScore(score) : "classic";
   const moodLabel = option?.label ?? "Règle ton humeur";
   // Teinte d'ambiance : couleur d'humeur adoucie (sinon lavande neutre).
   const tint = option
     ? `color-mix(in srgb, ${option.color} 22%, white)`
     : "var(--brand-100)";
+  const confirmLabel = initial
+    ? "Mettre à jour mon humeur"
+    : "Enregistrer mon humeur";
 
   function updateScore(next: number) {
     setSaved(false);
@@ -59,7 +73,7 @@ export function MoodEntryForm({ tags, initial }: MoodEntryFormProps) {
     setError(null);
     setSaved(false);
     if (score === null) {
-      setError("Tourne la molette pour régler ton humeur.");
+      setError("Règle la jauge pour indiquer ton humeur.");
       return;
     }
     startTransition(async () => {
@@ -75,18 +89,38 @@ export function MoodEntryForm({ tags, initial }: MoodEntryFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-      <div className="flex flex-col items-center gap-2 text-center">
-        <h1 className="font-display text-title text-ink-900">
+      {/* En-tête : avatar · titre centré · fermer. */}
+      <header className="flex items-center justify-between gap-2">
+        <span
+          aria-hidden
+          className="bg-brand-100 text-brand-700 grid h-10 w-10 place-items-center rounded-full font-bold"
+        >
+          {userInitial ?? "🐨"}
+        </span>
+        <h1 className="font-display text-heading text-ink-900">Mon humeur</h1>
+        <Link
+          href="/tableau-de-bord"
+          aria-label="Fermer"
+          className="text-ink-500 hover:text-ink-800 grid h-10 w-10 place-items-center rounded-full"
+        >
+          <X aria-hidden size={20} strokeWidth={2} />
+        </Link>
+      </header>
+
+      <WeekDateStrip today={today} />
+
+      <div className="flex flex-col items-center gap-1 text-center">
+        <h2 className="font-display text-title text-ink-900">
           Comment tu te sens aujourd&apos;hui ?
-        </h1>
+        </h2>
         <p className="text-body text-ink-600">
           Tourne la molette, à ton rythme — pas de pression.
         </p>
       </div>
 
-      {/* Molette : ambiance teintée par l'humeur. Score caché. */}
+      {/* Dial : ambiance teintée par l'humeur. Score caché. */}
       <div
-        className="rounded-panel duration-kitoo ease-kitoo flex justify-center p-4 transition-colors motion-reduce:transition-none sm:p-6"
+        className="rounded-panel duration-kitoo ease-kitoo flex flex-col items-center gap-2 p-4 transition-colors motion-reduce:transition-none sm:p-6"
         style={{ backgroundColor: tint }}
       >
         <MoodDial
@@ -94,13 +128,36 @@ export function MoodEntryForm({ tags, initial }: MoodEntryFormProps) {
           onChange={updateScore}
           ariaValueText={moodLabel}
           disabled={pending}
+        />
+
+        {/* Bouton rond de validation, sous l'arc. */}
+        <button
+          type="submit"
+          disabled={pending}
+          aria-label={confirmLabel}
+          className="bg-brand-700 shadow-btn hover:bg-brand-800 -mt-2 grid h-16 w-16 place-items-center rounded-full text-white transition-transform disabled:opacity-60 motion-safe:active:scale-95"
         >
-          <Mascot pose={pose} priority animate={false} className="w-24" />
-          <span className="font-display text-title text-ink-900">
-            {moodLabel}
-          </span>
-        </MoodDial>
+          <ArrowRight aria-hidden size={26} strokeWidth={2.4} />
+        </button>
       </div>
+
+      {error ? (
+        <p
+          role="alert"
+          className="rounded-control bg-danger/10 text-small text-danger px-4 py-3"
+        >
+          {error}
+        </p>
+      ) : null}
+
+      {saved ? (
+        <p
+          role="status"
+          className="rounded-control bg-success/10 text-small text-success px-4 py-3 text-center font-bold"
+        >
+          Noté, prends soin de toi 🌱
+        </p>
+      ) : null}
 
       <Card className="flex flex-col gap-5">
         <div className="flex flex-col gap-2">
@@ -140,28 +197,6 @@ export function MoodEntryForm({ tags, initial }: MoodEntryFormProps) {
           />
         </div>
       </Card>
-
-      {error ? (
-        <p
-          role="alert"
-          className="rounded-control bg-danger/10 text-small text-danger px-4 py-3"
-        >
-          {error}
-        </p>
-      ) : null}
-
-      {saved ? (
-        <p
-          role="status"
-          className="rounded-control bg-success/10 text-small text-success px-4 py-3 text-center font-bold"
-        >
-          Noté, prends soin de toi 🌱
-        </p>
-      ) : null}
-
-      <Button type="submit" size="lg" fullWidth loading={pending}>
-        {initial ? "Mettre à jour mon humeur" : "Enregistrer mon humeur"}
-      </Button>
     </form>
   );
 }

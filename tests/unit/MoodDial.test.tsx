@@ -48,4 +48,17 @@ describe("MoodDial — accessibilité & score caché", () => {
     // Toujours un libellé, jamais un nombre.
     expect(slider.getAttribute("aria-valuetext")).not.toMatch(DIGITS);
   });
+
+  it("cliquer une icône d'humeur place la poignée sur sa zone", async () => {
+    const user = userEvent.setup();
+    render(<Harness />);
+    const slider = screen.getByRole("slider");
+
+    await user.click(screen.getByRole("button", { name: "Très bien" }));
+    expect(slider).toHaveAttribute("aria-valuetext", "Très bien");
+
+    await user.click(screen.getByRole("button", { name: "Difficile" }));
+    expect(slider).toHaveAttribute("aria-valuetext", "Difficile");
+    expect(slider.getAttribute("aria-valuetext")).not.toMatch(DIGITS);
+  });
 });
