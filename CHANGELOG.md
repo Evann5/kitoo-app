@@ -4,6 +4,18 @@ Toutes les évolutions notables de l'application Kitoo.
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/) ;
 versionnage [SemVer](https://semver.org/lang/fr/).
 
+## [1.4.0] — 2026-06-17
+
+### Ajouté
+
+- **Tests standardisés** (`/tests`) : PHQ-9, GAD-7, PSS-10, WHO-5 (items FR
+  validés, sources citées), scoring officiel par fonctions pures (items inversés
+  PSS-10, WHO-5 ×4), résultats **orientés** (pas de diagnostic) + disclaimer.
+- **Gestion sûre de l'item sensible** (PHQ-9 item 9) : message de soutien
+  prioritaire avec ressources d'aide (3114), `flagged` stocké.
+- Table `assessment_results` (**RLS stricte**), enregistrement via server action
+  qui recalcule le score côté serveur. Historisation des passations.
+
 ## [1.3.0] — 2026-06-17
 
 ### Modifié / Ajouté

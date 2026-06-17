@@ -39,6 +39,8 @@ test("aucune violation a11y critique sur les pages privées", async ({
     "/humeur",
     "/ressources",
     "/exercices",
+    "/tests",
+    "/tests/who5",
     "/profil",
   ]) {
     await page.goto(path);

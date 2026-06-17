@@ -161,6 +161,7 @@ Le réglage se fait dans le dashboard Supabase (Authentication → Email →
 | `/humeur`          | privé  | saisie / modification de l'humeur du jour             |
 | `/ressources`      | privé  | contenus à lire (+ lecture `/ressources/[id]`)        |
 | `/exercices`       | privé  | exercices interactifs (+ lecteur `/exercices/[slug]`) |
+| `/tests`           | privé  | tests standardisés (+ passation `/tests/[scale]`)     |
 
 La protection est assurée par [`middleware.ts`](./middleware.ts) (rafraîchit la
 session et redirige : non connecté → `/connexion`, déjà connecté hors des écrans
@@ -408,6 +409,44 @@ RLS).
 Animation du guidage **neutralisée sous `prefers-reduced-motion`** (le libellé de
 phase + le compte à rebours suffisent) ; phases annoncées via `aria-live` ;
 contrôles au clavier, cibles ≥ 44px.
+
+## Tests standardisés
+
+Questionnaires validés accessibles via `/tests` et `/tests/[scale]`. Code dans
+[`src/features/assessments/`](./src/features/assessments). Principe : ces tests
+**orientent, ne diagnostiquent pas** (disclaimer sur l'intro et le résultat).
+
+### Échelles, sources & scoring
+
+| Échelle | Items    | Score                                       | Sources (versions FR, instruments libres)          |
+| ------- | -------- | ------------------------------------------- | -------------------------------------------------- |
+| PHQ-9   | 9 (0–3)  | 0–27                                        | Spitzer/Kroenke/Williams — Pfizer (domaine public) |
+| GAD-7   | 7 (0–3)  | 0–21                                        | Spitzer/Kroenke/Williams/Löwe — Pfizer             |
+| PSS-10  | 10 (0–4) | 0–40 (items **4,5,7,8 inversés**)           | Cohen, S. (1983)                                   |
+| WHO-5   | 5 (0–5)  | brut **×4** → 0–100 (présenté positivement) | OMS (1998)                                         |
+
+Le scoring est implémenté par des **fonctions pures testables**
+([`scales.ts`](./src/features/assessments/scales.ts), `computeResult`) ;
+le serveur **recalcule** score/sévérité/flag à l'enregistrement (jamais de
+confiance au client).
+
+### Item sensible (PHQ-9, item 9)
+
+Si l'item « idées noires » est positif (> 0), un message de soutien
+([`SupportMessage`](./src/features/assessments/SupportMessage.tsx)) s'affiche
+**en priorité** (jamais un score sec), avec des ressources d'aide à jour
+(**3114** — ligne nationale de prévention du suicide, 24h/24 ; 15/112 en
+urgence) ; `flagged=true` est stocké. Ton soutenant, jamais alarmant.
+
+> Ressources d'aide à vérifier/maintenir à jour (voir le commentaire dans
+> `SupportMessage.tsx`).
+
+### Données & accessibilité
+
+Résultats dans `assessment_results` (**RLS stricte** : chacun ne lit que les
+siens), écriture via server action authentifiée. Questionnaires en
+`fieldset`/`legend` + radios (clavier), progression annoncée (`aria-live`),
+possibilité de quitter sans enregistrer, corps ≥ 16px.
 
 ## RGPD & accessibilité
 

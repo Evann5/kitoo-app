@@ -14,6 +14,39 @@ export type Database = {
   };
   public: {
     Tables: {
+      assessment_results: {
+        Row: {
+          answers: Json;
+          flagged: boolean;
+          id: string;
+          scale: string;
+          score: number;
+          severity: string;
+          taken_at: string;
+          user_id: string;
+        };
+        Insert: {
+          answers?: Json;
+          flagged?: boolean;
+          id?: string;
+          scale: string;
+          score: number;
+          severity: string;
+          taken_at?: string;
+          user_id: string;
+        };
+        Update: {
+          answers?: Json;
+          flagged?: boolean;
+          id?: string;
+          scale?: string;
+          score?: number;
+          severity?: string;
+          taken_at?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       consents: {
         Row: {
           granted_at: string;

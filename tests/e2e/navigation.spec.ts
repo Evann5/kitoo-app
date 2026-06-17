@@ -20,10 +20,12 @@ test("le « + » ouvre le menu et mène à un écran d'action", async ({ page })
   const dialog = page.getByRole("dialog", { name: "Actions rapides" });
   await expect(dialog).toBeVisible();
 
-  // Action « Passer un test » → /tests (placeholder « Bientôt »).
+  // Action « Passer un test » → /tests (liste des questionnaires).
   await dialog.getByRole("link", { name: /passer un test/i }).click();
   await expect(page).toHaveURL(/\/tests$/);
-  await expect(page.getByRole("heading", { name: "Les tests" })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Tests", exact: true }),
+  ).toBeVisible();
 
   // Onglet Ressources → catalogue bien-être.
   await page.getByRole("link", { name: "Ressources" }).click();
