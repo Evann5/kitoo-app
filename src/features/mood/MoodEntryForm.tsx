@@ -3,9 +3,10 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, X } from "lucide-react";
+import { ArrowLeft, ChevronDown, X } from "lucide-react";
 import { Button, Card } from "@/components/ui";
 import { MoodSlider } from "./MoodSlider";
+import { WeekDateStrip } from "./WeekDateStrip";
 import { TagChips } from "./TagChips";
 import { saveMood } from "./actions";
 import { scoreToOption } from "./mood-config";
@@ -15,26 +16,29 @@ export type MoodEntryFormProps = {
   tags: MoodTag[];
   /** Entrée du jour préchargée (édition), ou `null` (création). */
   initial: { score: number; comment: string; tagIds: string[] } | null;
+  /** Jour courant "YYYY-MM-DD" pour l'aperçu de la semaine. */
+  today: string;
 };
 
-type Step = 1 | 2;
-
 /**
- * Saisie d'humeur du jour en **2 étapes** : (1) valence via un curseur
- * horizontal (`MoodSlider`) — visuel + libellé réactifs, score 0–100 caché ;
- * (2) ressentis (tags + commentaire) puis enregistrement. Tout en flux normal
- * (la page scrolle naturellement). Persistance inchangée (A10 : upsert
+ * Saisie d'humeur du jour, sur **un seul écran scrollable** : aperçu de la
+ * semaine, titre, curseur de valence (`MoodSlider`, score 0–100 caché), puis une
+ * **section détails facultative repliable** (tags + commentaire) pour « aller
+ * plus loin », et l'enregistrement. Persistance inchangée (A10 : upsert
  * score/level/tags/commentaire en une fois, 1/jour, RLS).
  */
-export function MoodEntryForm({ tags, initial }: MoodEntryFormProps) {
+export function MoodEntryForm({ tags, initial, today }: MoodEntryFormProps) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
 
-  const [step, setStep] = useState<Step>(1);
   const [score, setScore] = useState<number | null>(initial?.score ?? null);
   const [comment, setComment] = useState(initial?.comment ?? "");
   const [selectedTags, setSelectedTags] = useState<string[]>(
     initial?.tagIds ?? [],
+  );
+  // Détails ouverts d'emblée s'il y en a déjà (édition).
+  const [showDetails, setShowDetails] = useState(
+    Boolean(initial && (initial.comment || initial.tagIds.length > 0)),
   );
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
@@ -58,21 +62,11 @@ export function MoodEntryForm({ tags, initial }: MoodEntryFormProps) {
     );
   }
 
-  function goNext() {
-    if (score === null) {
-      setError("Déplace le curseur pour indiquer ton humeur.");
-      return;
-    }
-    setError(null);
-    setStep(2);
-  }
-
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     setError(null);
     setSaved(false);
     if (score === null) {
-      setStep(1);
       setError("Déplace le curseur pour indiquer ton humeur.");
       return;
     }
@@ -91,27 +85,14 @@ export function MoodEntryForm({ tags, initial }: MoodEntryFormProps) {
     <form onSubmit={handleSubmit} className="flex flex-col gap-6">
       {/* En-tête : Retour (gauche) · titre · Annuler (droite). */}
       <header className="flex items-center justify-between gap-2">
-        {step === 1 ? (
-          <Link
-            href="/tableau-de-bord"
-            aria-label="Retour"
-            className="text-ink-600 hover:text-ink-900 grid h-10 w-10 place-items-center rounded-full"
-          >
-            <ArrowLeft aria-hidden size={20} strokeWidth={2} />
-          </Link>
-        ) : (
-          <button
-            type="button"
-            aria-label="Étape précédente"
-            onClick={() => setStep(1)}
-            className="text-ink-600 hover:text-ink-900 grid h-10 w-10 place-items-center rounded-full"
-          >
-            <ArrowLeft aria-hidden size={20} strokeWidth={2} />
-          </button>
-        )}
-        <h1 className="font-display text-heading text-ink-900">
-          {step === 1 ? "Mon humeur" : "Tes ressentis"}
-        </h1>
+        <Link
+          href="/tableau-de-bord"
+          aria-label="Retour"
+          className="text-ink-600 hover:text-ink-900 grid h-10 w-10 place-items-center rounded-full"
+        >
+          <ArrowLeft aria-hidden size={20} strokeWidth={2} />
+        </Link>
+        <h1 className="font-display text-heading text-ink-900">Mon humeur</h1>
         <Link
           href="/tableau-de-bord"
           aria-label="Annuler"
@@ -121,39 +102,49 @@ export function MoodEntryForm({ tags, initial }: MoodEntryFormProps) {
         </Link>
       </header>
 
-      {step === 1 ? (
-        <div className="flex flex-col gap-6">
-          <h2 className="font-display text-title text-ink-900 text-center">
-            Comment tu te sens maintenant ?
-          </h2>
+      {/* Aperçu de la semaine. */}
+      <WeekDateStrip today={today} />
 
-          <MoodSlider
-            value={score}
-            onChange={updateScore}
-            ariaValueText={moodLabel}
-            disabled={pending}
+      <h2 className="font-display text-title text-ink-900 text-center">
+        Comment tu te sens maintenant ?
+      </h2>
+
+      <MoodSlider
+        value={score}
+        onChange={updateScore}
+        ariaValueText={moodLabel}
+        disabled={pending}
+      />
+
+      {/* Section détails facultative (repliable) : aller plus loin. */}
+      <div className="rounded-card border-ink-200 border">
+        <button
+          type="button"
+          aria-expanded={showDetails}
+          aria-controls="mood-details"
+          onClick={() => setShowDetails((v) => !v)}
+          className="text-small text-ink-800 flex w-full items-center justify-between px-4 py-3 font-bold"
+        >
+          Ajouter des détails{" "}
+          <span className="text-ink-500 font-normal">(facultatif)</span>
+          <ChevronDown
+            aria-hidden
+            size={18}
+            strokeWidth={2}
+            className={`duration-kitoo ease-kitoo ml-auto transition-transform motion-reduce:transition-none ${
+              showDetails ? "rotate-180" : ""
+            }`}
           />
+        </button>
 
-          {error ? (
-            <p
-              role="alert"
-              className="rounded-control bg-danger/10 text-small text-danger px-4 py-3"
-            >
-              {error}
-            </p>
-          ) : null}
-
-          <Button type="button" size="lg" fullWidth onClick={goNext}>
-            Suivant
-          </Button>
-        </div>
-      ) : (
-        <div className="flex flex-col gap-6">
-          <Card className="flex flex-col gap-5">
+        {showDetails ? (
+          <Card
+            id="mood-details"
+            className="flex flex-col gap-5 rounded-t-none"
+          >
             <div className="flex flex-col gap-2">
               <span className="text-small text-ink-800 font-bold">
-                Qu&apos;est-ce qui a marqué ta journée ?{" "}
-                <span className="text-ink-600 font-normal">(facultatif)</span>
+                Qu&apos;est-ce qui a marqué ta journée ?
               </span>
               <TagChips
                 tags={tags}
@@ -168,8 +159,7 @@ export function MoodEntryForm({ tags, initial }: MoodEntryFormProps) {
                 htmlFor="comment"
                 className="text-small text-ink-800 font-bold"
               >
-                Envie d&apos;en dire plus ?{" "}
-                <span className="text-ink-600 font-normal">(facultatif)</span>
+                Envie d&apos;en dire plus ?
               </label>
               <textarea
                 id="comment"
@@ -187,30 +177,30 @@ export function MoodEntryForm({ tags, initial }: MoodEntryFormProps) {
               />
             </div>
           </Card>
+        ) : null}
+      </div>
 
-          {error ? (
-            <p
-              role="alert"
-              className="rounded-control bg-danger/10 text-small text-danger px-4 py-3"
-            >
-              {error}
-            </p>
-          ) : null}
+      {error ? (
+        <p
+          role="alert"
+          className="rounded-control bg-danger/10 text-small text-danger px-4 py-3"
+        >
+          {error}
+        </p>
+      ) : null}
 
-          {saved ? (
-            <p
-              role="status"
-              className="rounded-control bg-success/10 text-small text-success px-4 py-3 text-center font-bold"
-            >
-              Noté, prends soin de toi 🌱
-            </p>
-          ) : null}
+      {saved ? (
+        <p
+          role="status"
+          className="rounded-control bg-success/10 text-small text-success px-4 py-3 text-center font-bold"
+        >
+          Noté, prends soin de toi 🌱
+        </p>
+      ) : null}
 
-          <Button type="submit" size="lg" fullWidth loading={pending}>
-            {confirmLabel}
-          </Button>
-        </div>
-      )}
+      <Button type="submit" size="lg" fullWidth loading={pending}>
+        {confirmLabel}
+      </Button>
     </form>
   );
 }

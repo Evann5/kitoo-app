@@ -12,13 +12,16 @@ vi.mock("@/features/mood/actions", () => ({
 
 import { MoodEntryForm } from "@/features/mood/MoodEntryForm";
 
+const TODAY = "2026-06-17";
 const DIGITS = /\d/;
 
 beforeEach(() => saveMock.mockClear());
 
-describe("MoodEntryForm — curseur de valence, 2 étapes", () => {
+describe("MoodEntryForm — curseur de valence (écran unique)", () => {
   it("réagit au curseur : libellé + koala changent, sans afficher de nombre", () => {
-    const { container } = render(<MoodEntryForm tags={[]} initial={null} />);
+    const { container } = render(
+      <MoodEntryForm tags={[]} initial={null} today={TODAY} />,
+    );
     const mascotSrc = () =>
       container.querySelector("img")?.getAttribute("src") ?? "";
 
@@ -36,29 +39,38 @@ describe("MoodEntryForm — curseur de valence, 2 étapes", () => {
   });
 
   it("neutralise la transition sous prefers-reduced-motion", () => {
-    const { container } = render(<MoodEntryForm tags={[]} initial={null} />);
+    const { container } = render(
+      <MoodEntryForm tags={[]} initial={null} today={TODAY} />,
+    );
     expect(
       container.querySelector('[class*="motion-reduce:transition-none"]'),
     ).not.toBeNull();
   });
 
-  it("exige une valence avant de passer à l'étape 2", async () => {
+  it("exige une valence avant d'enregistrer", async () => {
     const user = userEvent.setup();
-    render(<MoodEntryForm tags={[]} initial={null} />);
-    await user.click(screen.getByRole("button", { name: "Suivant" }));
+    render(<MoodEntryForm tags={[]} initial={null} today={TODAY} />);
+    await user.click(
+      screen.getByRole("button", { name: "Enregistrer mon humeur" }),
+    );
     expect(screen.getByRole("alert")).toHaveTextContent(/déplace le curseur/i);
+    expect(saveMock).not.toHaveBeenCalled();
   });
 
-  it("flux étape 1 → étape 2 → enregistrement (upsert score/tags/commentaire)", async () => {
+  it("détails facultatifs repliables : tags + commentaire → enregistrement", async () => {
     const user = userEvent.setup();
-    render(<MoodEntryForm tags={[]} initial={null} />);
+    render(<MoodEntryForm tags={[]} initial={null} today={TODAY} />);
 
     fireEvent.change(screen.getByRole("slider"), { target: { value: "80" } });
-    await user.click(screen.getByRole("button", { name: "Suivant" }));
 
-    // Étape 2 : ressentis + enregistrement.
-    const comment = screen.getByLabelText(/envie d'en dire plus/i);
-    await user.type(comment, "bonne journée");
+    // Section détails fermée par défaut, on l'ouvre.
+    await user.click(
+      screen.getByRole("button", { name: /ajouter des détails/i }),
+    );
+    await user.type(
+      screen.getByLabelText(/envie d'en dire plus/i),
+      "bonne journée",
+    );
     await user.click(
       screen.getByRole("button", { name: "Enregistrer mon humeur" }),
     );
@@ -71,12 +83,12 @@ describe("MoodEntryForm — curseur de valence, 2 étapes", () => {
     expect(await screen.findByRole("status")).toHaveTextContent(/noté/i);
   });
 
-  it("précharge l'entrée existante et propose la mise à jour", async () => {
-    const user = userEvent.setup();
+  it("précharge l'entrée existante (détails ouverts) et propose la mise à jour", () => {
     render(
       <MoodEntryForm
         tags={[]}
         initial={{ score: 73, comment: "ça va", tagIds: [] }}
+        today={TODAY}
       />,
     );
     // score 73 → niveau 4 → « Bien ».
@@ -84,7 +96,6 @@ describe("MoodEntryForm — curseur de valence, 2 étapes", () => {
       "aria-valuetext",
       "Bien",
     );
-    await user.click(screen.getByRole("button", { name: "Suivant" }));
     expect(screen.getByDisplayValue("ça va")).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "Mettre à jour mon humeur" }),

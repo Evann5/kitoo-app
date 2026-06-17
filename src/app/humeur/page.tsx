@@ -41,7 +41,7 @@ export default async function HumeurPage() {
   return (
     <AppShell>
       <div className="flex flex-col gap-10">
-        <MoodEntryForm tags={tags} initial={initial} />
+        <MoodEntryForm tags={tags} initial={initial} today={today} />
         <RecentMoods entries={recent} today={today} />
       </div>
     </AppShell>

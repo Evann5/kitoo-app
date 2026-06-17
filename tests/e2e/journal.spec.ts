@@ -24,7 +24,6 @@ test("humeur + exercice + test → apparaissent dans le journal", async ({
   // Humeur (curseur au maximum → "Très bien"), puis étape ressentis.
   await page.goto("/humeur");
   await page.getByRole("slider", { name: "Règle ton humeur" }).press("End");
-  await page.getByRole("button", { name: "Suivant" }).click();
   await page.getByRole("button", { name: /mon humeur$/ }).click();
 
   // Exercice : on lance puis on arrête (session enregistrée).

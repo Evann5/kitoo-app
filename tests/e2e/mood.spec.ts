@@ -43,8 +43,8 @@ test("inscription → saisie d'humeur → réouverture préchargée", async ({
     "aria-valuetext",
     "Très bien",
   );
-  // Étape 2 : ressentis puis enregistrement.
-  await page.getByRole("button", { name: "Suivant" }).click();
+  // Détails facultatifs (repliés) : on les ouvre pour ajouter un commentaire.
+  await page.getByRole("button", { name: /ajouter des détails/i }).click();
   await page
     .getByLabel(/envie d'en dire plus/i)
     .fill("Journée e2e tranquille.");
@@ -59,7 +59,7 @@ test("inscription → saisie d'humeur → réouverture préchargée", async ({
     "aria-valuetext",
     "Très bien",
   );
-  await page.getByRole("button", { name: "Suivant" }).click();
+  // Les détails s'ouvrent d'emblée car un commentaire existe déjà.
   await expect(
     page.getByRole("button", { name: "Mettre à jour mon humeur" }),
   ).toBeVisible();

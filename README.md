@@ -268,27 +268,30 @@ Saisie d'humeur quotidienne (route privée [`/humeur`](./src/app/humeur/page.tsx
 expérience « compagnon » douce. Code dans
 [`src/features/mood/`](./src/features/mood).
 
-### Curseur de valence en 2 étapes (score 0–100 caché)
+### Curseur de valence (score 0–100 caché)
 
-La saisie ([`MoodEntryForm`](./src/features/mood/MoodEntryForm.tsx)) se déroule
-en **2 étapes**, en flux normal (la page scrolle naturellement, aucun overlay
-ni scroll imbriqué) :
+La saisie ([`MoodEntryForm`](./src/features/mood/MoodEntryForm.tsx)) tient sur
+**un seul écran scrollable** (flux normal, aucun overlay ni scroll imbriqué) :
 
-1. **Valence** — un **curseur horizontal** ([`MoodSlider`](./src/features/mood/MoodSlider.tsx))
-   de « Très désagréable » (gauche) à « Très agréable » (droite). La position
+1. **Aperçu de la semaine** ([`WeekDateStrip`](./src/features/mood/WeekDateStrip.tsx)),
+   jour courant en évidence.
+2. **Curseur de valence** ([`MoodSlider`](./src/features/mood/MoodSlider.tsx)) de
+   « Très désagréable » (gauche) à « Très agréable » (droite) : la position
    encode le **score 0–100 caché** ; un **visuel réactif** (koala + halo lavande
    dont la teinte évolue avec la valeur) et un **libellé qualitatif** réagissent
-   en continu. Bouton « Suivant ».
-2. **Ressentis** — chips de tags émotionnels + commentaire facultatif, puis
-   « Enregistrer ». Retour possible à l'étape 1.
+   en continu.
+3. **Détails facultatifs** (section repliable « Ajouter des détails ») : chips de
+   tags émotionnels + commentaire, pour aller plus loin sans y être obligé.
+4. **Enregistrer**.
 
-Le curseur est un **`<input type="range">` natif** (robuste, en flux normal,
-clavier flèches/Home/End), stylé via la classe `.mood-range` (piste pleine
-largeur + remplissage, poignée ≥ 30px). Le **score n'est jamais affiché** (ni
-visuel, ni `aria-valuetext`, qui porte le libellé) ; seul le ressenti qualitatif
-est montré (libellé, couleur, pose du koala). Accessibilité : `role="slider"`
-natif, libellés d'extrémités liés (`aria-describedby`), focus pervenche, cibles
-≥ 44px ; transition du halo neutralisée sous `prefers-reduced-motion`.
+Le curseur est un **`<input type="range">` natif** (robuste, clavier
+flèches/Home/End), stylé via la classe `.mood-range` (piste pleine largeur +
+remplissage, poignée ≥ 30px). Le **score n'est jamais affiché** (ni visuel, ni
+`aria-valuetext`, qui porte le libellé) ; seul le ressenti qualitatif est montré
+(libellé, couleur, pose du koala). Accessibilité : `role="slider"` natif,
+libellés d'extrémités liés (`aria-describedby`), section détails avec
+`aria-expanded`, focus pervenche, cibles ≥ 44px ; transitions neutralisées sous
+`prefers-reduced-motion`.
 
 Le `score` est stocké dans `mood_entries.score` (`smallint` 0–100) ; le `level`
 (1–5) en est **dérivé** côté serveur (`scoreToLevel`) pour les stats/graphes :

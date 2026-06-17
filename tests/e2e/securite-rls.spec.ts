@@ -27,7 +27,7 @@ async function signupConsentAddMood(
   await page.getByRole("button", { name: /j'accepte/i }).click();
   await page.goto("/humeur");
   await page.getByRole("slider", { name: "Règle ton humeur" }).press("End");
-  await page.getByRole("button", { name: "Suivant" }).click();
+  await page.getByRole("button", { name: /ajouter des détails/i }).click();
   await page.getByLabel(/envie d'en dire plus/i).fill(comment);
   await page.getByRole("button", { name: /mon humeur$/ }).click();
   await expect(page.getByText(/noté, prends soin de toi/i)).toBeVisible();
