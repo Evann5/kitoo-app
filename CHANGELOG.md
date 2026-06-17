@@ -4,6 +4,18 @@ Toutes les évolutions notables de l'application Kitoo.
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/) ;
 versionnage [SemVer](https://semver.org/lang/fr/).
 
+## [1.7.0] — 2026-06-17
+
+### Modifié
+
+- **Saisie d'humeur en curseur horizontal de valence** (« très désagréable » →
+  « très agréable »), en **2 étapes** : (1) valence avec visuel réactif (koala +
+  halo lavande, libellé qualitatif) ; (2) ressentis (tags + commentaire) puis
+  enregistrement. Curseur natif `<input type="range">` (robuste, flux normal,
+  responsive 320px+), score 0–100 toujours caché (`aria-valuetext` = libellé),
+  accessibilité (clavier, focus, cibles ≥ 44px) et `prefers-reduced-motion`.
+  Retrait de l'ancien cadran SVG « bol ». Persistance A10 inchangée.
+
 ## [1.6.1] — 2026-06-17
 
 ### Corrigé

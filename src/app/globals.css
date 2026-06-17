@@ -120,3 +120,47 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+/*
+ * Curseur de valence (saisie d'humeur, A18). Piste pleine largeur avec
+ * remplissage (gradient pervenche posé en `background-image` inline selon la
+ * valeur) et poignée ronde ≥ 30px. Le score 0–100 reste caché : aucune valeur
+ * numérique n'est affichée (le libellé est porté par `aria-valuetext`).
+ */
+.mood-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 14px;
+  border-radius: 999px;
+  background-color: var(--ink-200);
+  cursor: pointer;
+}
+.mood-range:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+.mood-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 30px;
+  height: 30px;
+  margin-top: -8px;
+  border-radius: 999px;
+  background: #fff;
+  border: 5px solid var(--brand-600);
+  box-shadow: 0 2px 6px rgba(22, 22, 29, 0.18);
+}
+.mood-range::-moz-range-thumb {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  background: #fff;
+  border: 5px solid var(--brand-600);
+  box-shadow: 0 2px 6px rgba(22, 22, 29, 0.18);
+}
+.mood-range::-moz-range-track {
+  height: 14px;
+  border-radius: 999px;
+  background: transparent;
+}

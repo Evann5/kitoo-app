@@ -37,17 +37,18 @@ test("parcours complet : inscription → humeur → dashboard → bien-être →
     page.getByRole("link", { name: "Noter mon humeur" }),
   ).toBeVisible();
 
-  // Saisie d'humeur.
+  // Saisie d'humeur (2 étapes). Curseur : Home → humeur minimale. Score caché.
   await page.goto("/humeur");
-  // Molette : Home → humeur minimale au départ. Score caché.
   await page.getByRole("slider", { name: "Règle ton humeur" }).press("Home");
+  await page.getByRole("button", { name: "Suivant" }).click();
   await page.getByLabel(/envie d'en dire plus/i).fill("Première note e2e.");
-  await page.getByRole("button", { name: "Enregistrer mon humeur" }).click();
+  await page.getByRole("button", { name: /mon humeur$/ }).click();
   await expect(page.getByText(/noté, prends soin de toi/i)).toBeVisible();
 
   // Modification le même jour (1 entrée/jour, pas de doublon) : End → max.
   await page.reload();
   await page.getByRole("slider").press("End");
+  await page.getByRole("button", { name: "Suivant" }).click();
   await page.getByRole("button", { name: "Mettre à jour mon humeur" }).click();
   await expect(page.getByText(/noté, prends soin de toi/i)).toBeVisible();
 

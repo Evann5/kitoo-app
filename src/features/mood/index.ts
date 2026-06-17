@@ -1,11 +1,9 @@
-export { MoodDial } from "./MoodDial";
-export type { MoodDialProps } from "./MoodDial";
+export { MoodSlider } from "./MoodSlider";
+export type { MoodSliderProps } from "./MoodSlider";
 export { TagChips } from "./TagChips";
 export type { TagChipsProps } from "./TagChips";
 export { MoodEntryForm } from "./MoodEntryForm";
 export type { MoodEntryFormProps } from "./MoodEntryForm";
-export { WeekDateStrip } from "./WeekDateStrip";
-export type { WeekDateStripProps } from "./WeekDateStrip";
 export { RecentMoods } from "./RecentMoods";
 export type { RecentMoodsProps } from "./RecentMoods";
 export { saveMood } from "./actions";

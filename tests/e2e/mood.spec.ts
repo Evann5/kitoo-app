@@ -37,12 +37,20 @@ test("inscription → saisie d'humeur → réouverture préchargée", async ({
   await expect(
     page.getByRole("heading", { name: /comment tu te sens/i }),
   ).toBeVisible();
-  // Molette : End → humeur maximale (« Très bien »). Le score reste caché.
+  // Curseur de valence : End → humeur maximale (« Très bien »). Score caché.
   await page.getByRole("slider", { name: "Règle ton humeur" }).press("End");
+  await expect(page.getByRole("slider")).toHaveAttribute(
+    "aria-valuetext",
+    "Très bien",
+  );
+  // Étape 2 : ressentis puis enregistrement.
+  await page.getByRole("button", { name: "Suivant" }).click();
   await page
     .getByLabel(/envie d'en dire plus/i)
     .fill("Journée e2e tranquille.");
-  await page.getByRole("button", { name: "Enregistrer mon humeur" }).click();
+  // Le libellé du bouton bascule en « Mettre à jour » après enregistrement :
+  // on cible l'action par un nom qui couvre les deux états.
+  await page.getByRole("button", { name: /mon humeur$/ }).click();
   await expect(page.getByText(/noté, prends soin de toi/i)).toBeVisible();
 
   // Réouverture : l'entrée du jour est préchargée (libellé, pas de nombre).
@@ -51,6 +59,7 @@ test("inscription → saisie d'humeur → réouverture préchargée", async ({
     "aria-valuetext",
     "Très bien",
   );
+  await page.getByRole("button", { name: "Suivant" }).click();
   await expect(
     page.getByRole("button", { name: "Mettre à jour mon humeur" }),
   ).toBeVisible();

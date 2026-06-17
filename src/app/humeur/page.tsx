@@ -17,8 +17,7 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function HumeurPage() {
-  const user = await requireUser("/humeur");
-  const userInitial = user.email?.[0]?.toUpperCase();
+  await requireUser("/humeur");
 
   // Date du jour en UTC (cohérent avec `current_date` côté Postgres et avec
   // `getTodayEntry`), pour distinguer aujourd'hui des jours passés.
@@ -42,12 +41,7 @@ export default async function HumeurPage() {
   return (
     <AppShell>
       <div className="flex flex-col gap-10">
-        <MoodEntryForm
-          tags={tags}
-          initial={initial}
-          today={today}
-          userInitial={userInitial}
-        />
+        <MoodEntryForm tags={tags} initial={initial} />
         <RecentMoods entries={recent} today={today} />
       </div>
     </AppShell>

@@ -21,10 +21,11 @@ test("humeur + exercice + test → apparaissent dans le journal", async ({
   await expect(page).toHaveURL(/\/tableau-de-bord/, { timeout: 15000 });
   await page.getByRole("button", { name: /j'accepte/i }).click();
 
-  // Humeur (molette au maximum → "Très bien").
+  // Humeur (curseur au maximum → "Très bien"), puis étape ressentis.
   await page.goto("/humeur");
   await page.getByRole("slider", { name: "Règle ton humeur" }).press("End");
-  await page.getByRole("button", { name: "Enregistrer mon humeur" }).click();
+  await page.getByRole("button", { name: "Suivant" }).click();
+  await page.getByRole("button", { name: /mon humeur$/ }).click();
 
   // Exercice : on lance puis on arrête (session enregistrée).
   await page.goto("/exercices");

@@ -268,28 +268,27 @@ Saisie d'humeur quotidienne (route privée [`/humeur`](./src/app/humeur/page.tsx
 expérience « compagnon » douce. Code dans
 [`src/features/mood/`](./src/features/mood).
 
-### Saisie « bol » dans un SVG unique (score 0–100 caché)
+### Curseur de valence en 2 étapes (score 0–100 caché)
 
-La page `/humeur` est une **colonne en flux normal** (en-tête → bandeau de
-semaine → titre → cadran → bouton rond → tags → commentaire), sans overlay ni
-scroll imbriqué. Le cadran ([`MoodDial`](./src/features/mood/MoodDial.tsx)) est
-un **demi-cercle concave vers le haut (bol ∪)** dessiné **entièrement dans un
-seul `<svg>` responsive** (`viewBox` fixe + `width:100%`, `height:auto`,
-`preserveAspectRatio`). Arc track, graduations pointillées, remplissage
-pervenche, poignée, **5 icônes d'humeur** et **koala + libellé** partagent le
-même système de coordonnées — d'où un **alignement garanti à toutes les tailles**
-(320px → desktop). C'est le motif retenu pour corriger les décalages de la
-version précédente (icônes positionnées en `px` absolus au-dessus du SVG).
+La saisie ([`MoodEntryForm`](./src/features/mood/MoodEntryForm.tsx)) se déroule
+en **2 étapes**, en flux normal (la page scrolle naturellement, aucun overlay
+ni scroll imbriqué) :
 
-Géométrie : centre du cercle au-dessus, arc = moitié basse ; gauche = très
-négatif (score 0), bas = neutre (~50), droite = très positif (100). La poignée
-(pointeur, tactile ou clavier) produit un **score continu 0–100 caché** (jamais
-affiché, ni dans `aria-valuetext`) ; activer une icône pose la poignée sur le
-centre de sa zone. Seul le **ressenti qualitatif** est montré (libellé, couleur,
-pose du koala). Accessibilité : `role="slider"` clavier (flèches, Home/End),
-icônes `role="button"` activables, focus pervenche, cibles ≥ 44px ; transitions
-neutralisées sous `prefers-reduced-motion`. Le **bouton rond de validation** est
-un élément HTML en flux, sous le SVG.
+1. **Valence** — un **curseur horizontal** ([`MoodSlider`](./src/features/mood/MoodSlider.tsx))
+   de « Très désagréable » (gauche) à « Très agréable » (droite). La position
+   encode le **score 0–100 caché** ; un **visuel réactif** (koala + halo lavande
+   dont la teinte évolue avec la valeur) et un **libellé qualitatif** réagissent
+   en continu. Bouton « Suivant ».
+2. **Ressentis** — chips de tags émotionnels + commentaire facultatif, puis
+   « Enregistrer ». Retour possible à l'étape 1.
+
+Le curseur est un **`<input type="range">` natif** (robuste, en flux normal,
+clavier flèches/Home/End), stylé via la classe `.mood-range` (piste pleine
+largeur + remplissage, poignée ≥ 30px). Le **score n'est jamais affiché** (ni
+visuel, ni `aria-valuetext`, qui porte le libellé) ; seul le ressenti qualitatif
+est montré (libellé, couleur, pose du koala). Accessibilité : `role="slider"`
+natif, libellés d'extrémités liés (`aria-describedby`), focus pervenche, cibles
+≥ 44px ; transition du halo neutralisée sous `prefers-reduced-motion`.
 
 Le `score` est stocké dans `mood_entries.score` (`smallint` 0–100) ; le `level`
 (1–5) en est **dérivé** côté serveur (`scoreToLevel`) pour les stats/graphes :
