@@ -63,7 +63,7 @@ export function CompanionCard({
   }
 
   return (
-    <Card soft className="flex flex-col gap-4">
+    <Card soft className="flex flex-col gap-3">
       {/* Nom du compagnon + édition. */}
       <div className="flex items-center justify-center gap-2">
         {editing ? (
@@ -139,8 +139,8 @@ export function CompanionCard({
         />
       </div>
 
-      {/* Grand koala + étincelles décoratives. */}
-      <div className="relative mx-auto w-64 max-w-full max-[360px]:w-52">
+      {/* Koala + étincelles décoratives (plus compact sur mobile). */}
+      <div className="relative mx-auto w-36 max-w-full sm:w-56">
         <Mascot pose={pose} priority className="w-full" />
         <span
           aria-hidden

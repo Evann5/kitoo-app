@@ -141,7 +141,7 @@ export default async function DashboardPage() {
 
   return (
     <AppShell>
-      <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-6">
         {/* En-tête : salutation + date (gauche), pastille série (droite). */}
         <div className="flex items-start justify-between gap-3">
           <Greeting
