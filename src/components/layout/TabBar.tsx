@@ -56,6 +56,12 @@ export function TabBar({ userInitial }: TabBarProps) {
   const fabRef = useRef<HTMLButtonElement>(null);
   const profilActive = isActive("/profil");
 
+  // Position de la « lentille de verre » : index du créneau actif parmi les 5
+  // (Accueil · Suivi · [+] · Ressources · Profil). -1 = page hors onglets
+  // (humeur, chat…) → lentille masquée.
+  const SLOTS = ["/tableau-de-bord", "/suivi", null, "/ressources", "/profil"];
+  const activeIndex = SLOTS.findIndex((h) => h !== null && isActive(h));
+
   return (
     <>
       <nav
@@ -67,7 +73,19 @@ export function TabBar({ userInitial }: TabBarProps) {
           "shadow-[0_10px_30px_rgba(22,22,29,0.15)] [@supports(backdrop-filter:blur(0))]:bg-white/55",
         )}
       >
-        <ul className="flex items-stretch px-1">
+        {/* Lentille de verre : glisse vers l'onglet actif au changement de page. */}
+        <span
+          aria-hidden
+          className="ease-kitoo pointer-events-none absolute inset-y-1.5 left-0 z-0 w-1/5 transition-[transform,opacity] duration-500 motion-reduce:transition-none"
+          style={{
+            transform: `translateX(${activeIndex < 0 ? 0 : activeIndex * 100}%)`,
+            opacity: activeIndex < 0 ? 0 : 1,
+          }}
+        >
+          <span className="mx-1.5 block h-full rounded-[22px] border border-white/70 bg-white/45 shadow-[inset_0_1px_2px_rgba(255,255,255,0.7),0_2px_8px_rgba(22,22,29,0.12)] backdrop-blur-md" />
+        </span>
+
+        <ul className="relative z-10 flex items-stretch">
           {LEFT.map((tab) => (
             <li key={tab.href} className="flex flex-1">
               <TabLink tab={tab} active={isActive(tab.href)} />
