@@ -60,9 +60,14 @@ export function TabBar({ userInitial }: TabBarProps) {
     <>
       <nav
         aria-label="Navigation principale"
-        className="border-ink-200 fixed inset-x-0 bottom-0 z-40 border-t bg-white/95 backdrop-blur"
+        className={cn(
+          "fixed bottom-4 left-1/2 z-40 w-[calc(100%-1.5rem)] max-w-md -translate-x-1/2",
+          // Glassmorphism : surface translucide + flou d'arrière-plan + bord clair.
+          "rounded-[28px] border border-white/50 bg-white/70 backdrop-blur-xl",
+          "shadow-[0_10px_30px_rgba(22,22,29,0.15)] [@supports(backdrop-filter:blur(0))]:bg-white/55",
+        )}
       >
-        <ul className="max-w-content mx-auto flex items-stretch">
+        <ul className="flex items-stretch px-1">
           {LEFT.map((tab) => (
             <li key={tab.href} className="flex flex-1">
               <TabLink tab={tab} active={isActive(tab.href)} />
