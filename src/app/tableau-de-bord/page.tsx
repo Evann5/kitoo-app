@@ -35,7 +35,7 @@ import {
   type Suggestion,
 } from "@/features/dashboard";
 
-export const metadata: Metadata = { title: "Accueil — Kitoo" };
+export const metadata: Metadata = { title: "Accueil - Kitoo" };
 export const dynamic = "force-dynamic";
 
 const dateFmt = new Intl.DateTimeFormat("fr-FR", {
@@ -94,7 +94,7 @@ export default async function DashboardPage() {
   const showNudge = shouldShowSupportNudge(points, today);
   const hasToday = todayEntry !== null;
 
-  // Aperçu de la semaine (7 derniers jours) — couleur/libellé, jamais le score.
+  // Aperçu de la semaine (7 derniers jours) - couleur/libellé, jamais le score.
   const weekDays = buildDailySeries(points, today, 7);
 
   // Ressenti **qualitatif** de la semaine + récap doux.

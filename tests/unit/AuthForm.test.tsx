@@ -24,7 +24,7 @@ beforeEach(() => {
   signUp.mockReset();
 });
 
-describe("AuthForm — inscription : validation", () => {
+describe("AuthForm - inscription : validation", () => {
   it("affiche des erreurs reliées aux champs et n'appelle pas Supabase", async () => {
     const user = userEvent.setup();
     render(<AuthForm mode="signup" />);
@@ -54,7 +54,7 @@ describe("AuthForm — inscription : validation", () => {
   });
 });
 
-describe("AuthForm — connexion", () => {
+describe("AuthForm - connexion", () => {
   it("appelle le client Supabase et affiche une erreur générique d'identifiants", async () => {
     signInWithPassword.mockResolvedValue({
       data: {},

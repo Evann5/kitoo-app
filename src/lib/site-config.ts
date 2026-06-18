@@ -4,7 +4,7 @@
  */
 export const siteConfig = {
   name: "Kitoo",
-  description: "Application Kitoo — suivi d'humeur et espace bien-être.",
+  description: "Application Kitoo - suivi d'humeur et espace bien-être.",
   /**
    * Optional link back to the marketing site (vitrine).
    * Set via NEXT_PUBLIC_SITE_URL, otherwise null (no back-link rendered).

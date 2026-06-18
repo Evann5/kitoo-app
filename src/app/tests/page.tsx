@@ -5,7 +5,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import { requireUser } from "@/lib/auth";
 import { SCALES, SCALE_ORDER } from "@/features/assessments";
 
-export const metadata: Metadata = { title: "Tests — Kitoo" };
+export const metadata: Metadata = { title: "Tests - Kitoo" };
 export const dynamic = "force-dynamic";
 
 export default async function TestsPage() {

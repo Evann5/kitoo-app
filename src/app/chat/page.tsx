@@ -8,7 +8,7 @@ import {
   hasPendingCallback,
 } from "@/features/chat";
 
-export const metadata: Metadata = { title: "Soutien — Kitoo" };
+export const metadata: Metadata = { title: "Soutien - Kitoo" };
 export const dynamic = "force-dynamic";
 
 export default async function ChatPage() {

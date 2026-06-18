@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { LegalShell } from "@/components/layout/LegalShell";
 
-export const metadata: Metadata = { title: "Mentions légales — Kitoo" };
+export const metadata: Metadata = { title: "Mentions légales - Kitoo" };
 
 export default function MentionsLegalesPage() {
   return (

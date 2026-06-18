@@ -7,7 +7,7 @@ import { resolveVariants, neutralVariants } from "@/lib/motion";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import tailwindConfig from "../../tailwind.config";
 
-describe("Button — styles Kitoo", () => {
+describe("Button - styles Kitoo", () => {
   it("rend une action principale pervenche au rayon de contrôle (16px)", () => {
     render(<Button>Noter mon humeur</Button>);
     const btn = screen.getByRole("button", { name: "Noter mon humeur" });
@@ -17,7 +17,7 @@ describe("Button — styles Kitoo", () => {
   });
 });
 
-describe("Illustration / Mascot — résolution + fallback", () => {
+describe("Illustration / Mascot - résolution + fallback", () => {
   it("résout une pose réelle de la mascotte (asset présent)", () => {
     render(<Mascot pose="classic" />);
     const img = screen.getByRole("img", { name: /koala Kitoo/i });
@@ -33,7 +33,7 @@ describe("Illustration / Mascot — résolution + fallback", () => {
   });
 });
 
-describe("Accessibilité — tokens", () => {
+describe("Accessibilité - tokens", () => {
   // Le type Config rend `theme.extend.*` en `ResolvableTo<...>` ; on accède aux
   // valeurs littérales via un cast loose (ce sont des objets simples ici).
   const extend = tailwindConfig.theme?.extend as Record<

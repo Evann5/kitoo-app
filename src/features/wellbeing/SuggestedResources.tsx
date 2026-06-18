@@ -17,7 +17,7 @@ export function SuggestedResources({ resources }: SuggestedResourcesProps) {
         Suggéré pour toi
       </h2>
       <p className="text-small text-ink-600 -mt-2">
-        D&apos;après ton humeur récente — en douceur, à ton rythme.
+        D&apos;après ton humeur récente - en douceur, à ton rythme.
       </p>
       <ul className="grid gap-3 sm:grid-cols-2">
         {resources.map((resource) => (

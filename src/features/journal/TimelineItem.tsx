@@ -139,7 +139,7 @@ function AssessmentItem({ entry }: { entry: AssessmentJournalEntry }) {
           {entry.severityLabel}
         </Badge>
         <span className="text-small text-ink-600">
-          Score {entry.score}/{entry.maxScore} — un repère, pas un diagnostic.
+          Score {entry.score}/{entry.maxScore} - un repère, pas un diagnostic.
         </span>
       </div>
       {entry.flagged ? (

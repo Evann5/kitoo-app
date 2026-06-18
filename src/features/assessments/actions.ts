@@ -9,7 +9,7 @@ export type RecordResult =
 
 /**
  * Enregistre une passation de test. Le **score, la sévérité et le flag sont
- * recalculés côté serveur** (`computeResult`) — on ne fait pas confiance au
+ * recalculés côté serveur** (`computeResult`) - on ne fait pas confiance au
  * client. `user_id = auth.uid()` (policy RLS). Données de santé sensibles :
  * jamais de clé service_role, jamais exposées à un autre utilisateur.
  */

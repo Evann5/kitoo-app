@@ -1,5 +1,5 @@
 /**
- * Inspiration du jour — **phrases originales** dans la voix de Kitoo (douces,
+ * Inspiration du jour - **phrases originales** dans la voix de Kitoo (douces,
  * tutoyées, sans pression ni promesse de résultat médical) et un petit set de
  * **fonds dégradés générés** (œuvre propre, aucune licence tierce). La sélection
  * est **déterministe par date** : identique toute la journée, différente chaque

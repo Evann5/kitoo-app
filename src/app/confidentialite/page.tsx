@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { LegalShell } from "@/components/layout/LegalShell";
 
 export const metadata: Metadata = {
-  title: "Politique de confidentialité — Kitoo",
+  title: "Politique de confidentialité - Kitoo",
 };
 
 export default function ConfidentialitePage() {

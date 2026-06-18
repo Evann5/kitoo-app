@@ -17,7 +17,7 @@ const DIGITS = /\d/;
 
 beforeEach(() => saveMock.mockClear());
 
-describe("MoodEntryForm — curseur de valence (écran unique)", () => {
+describe("MoodEntryForm - curseur de valence (écran unique)", () => {
   it("réagit au curseur : libellé + koala changent, sans afficher de nombre", () => {
     const { container } = render(
       <MoodEntryForm tags={[]} initial={null} today={TODAY} />,

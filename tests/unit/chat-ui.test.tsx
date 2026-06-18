@@ -20,7 +20,7 @@ beforeEach(() => {
   callbackMock.mockReset();
 });
 
-describe("ChatScreen — étiquetage & envoi", () => {
+describe("ChatScreen - étiquetage & envoi", () => {
   it("affiche l'étiquetage simulé + disclaimer et un fil annoncé", () => {
     render(<ChatScreen initialMessages={[]} />);
     expect(screen.getAllByText(/simul/i).length).toBeGreaterThan(0);
@@ -64,7 +64,7 @@ describe("ChatScreen — étiquetage & envoi", () => {
   });
 });
 
-describe("ChatBubble — ressources de détresse", () => {
+describe("ChatBubble - ressources de détresse", () => {
   it("ajoute le 3114 sur une bulle flagged", () => {
     render(<ChatBubble sender="pro" content="Je suis là pour toi." flagged />);
     expect(screen.getByRole("link", { name: /3114/ })).toHaveAttribute(
@@ -79,7 +79,7 @@ describe("ChatBubble — ressources de détresse", () => {
   });
 });
 
-describe("CallbackRequest — rappel par un·e pro", () => {
+describe("CallbackRequest - rappel par un·e pro", () => {
   it("enregistre une demande et confirme (mention démo)", async () => {
     callbackMock.mockResolvedValue({ ok: true });
     const user = userEvent.setup();

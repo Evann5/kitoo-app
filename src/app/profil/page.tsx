@@ -16,7 +16,7 @@ import {
   revokeConsent,
 } from "@/features/gdpr";
 
-export const metadata: Metadata = { title: "Mon profil — Kitoo" };
+export const metadata: Metadata = { title: "Mon profil - Kitoo" };
 export const dynamic = "force-dynamic";
 
 const consentFmt = new Intl.DateTimeFormat("fr-FR", {

@@ -8,13 +8,13 @@ import {
 } from "./aggregate";
 
 /**
- * Lit les trois sources du journal (humeurs, exercices, tests) **sous RLS** —
+ * Lit les trois sources du journal (humeurs, exercices, tests) **sous RLS** -
  * chaque requête passe par la session de l'appelant, qui ne voit que ses
  * propres données. Les lignes sont projetées en `JournalEntry` (forme
  * sérialisable, sans le score d'humeur 0–100) puis fusionnées et triées.
  *
  * On lit une fenêtre généreuse par source (la pagination de la timeline est
- * progressive côté client) — suffisant pour un MVP, à raffiner si besoin.
+ * progressive côté client) - suffisant pour un MVP, à raffiner si besoin.
  */
 const SOURCE_LIMIT = 200;
 

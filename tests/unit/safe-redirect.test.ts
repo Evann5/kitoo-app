@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { safeRedirect } from "@/features/auth";
 
-describe("safeRedirect — anti open-redirect", () => {
+describe("safeRedirect - anti open-redirect", () => {
   it("accepte un chemin interne", () => {
     expect(safeRedirect("/humeur")).toBe("/humeur");
     expect(safeRedirect("/ressources/abc")).toBe("/ressources/abc");

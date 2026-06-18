@@ -1,7 +1,7 @@
 import type { Resource } from "./queries";
 
 /**
- * Filtrage et suggestion des ressources bien-être — fonctions **pures et
+ * Filtrage et suggestion des ressources bien-être - fonctions **pures et
  * testables**. Le catalogue est chargé une fois (sous RLS) puis filtré côté
  * client pour une expérience réactive.
  */
@@ -35,7 +35,7 @@ export function resourceTypes(resources: Resource[]): string[] {
 
 /**
  * Suggère des ressources adaptées à un niveau d'humeur (1–5) : celles dont
- * `mood_levels` contient ce niveau. Mapping bienveillant, jamais prescriptif —
+ * `mood_levels` contient ce niveau. Mapping bienveillant, jamais prescriptif -
  * ex. humeur basse → contenus d'apaisement (tagués pour les niveaux bas).
  */
 export function suggestByLevel(

@@ -1,12 +1,12 @@
 /**
- * Journal unifié — agrégation **pure et testable** des trois sources (humeurs,
+ * Journal unifié - agrégation **pure et testable** des trois sources (humeurs,
  * sessions d'exercices, résultats de tests) en une timeline chronologique.
  *
  * Aucune dépendance DB : la lecture (sous RLS) se fait dans `queries.ts`, puis
  * les lignes brutes sont projetées ici en `JournalEntry` (forme sérialisable,
- * primitives uniquement — passable à travers la frontière RSC).
+ * primitives uniquement - passable à travers la frontière RSC).
  *
- * ⚠️ Confidentialité : le **score d'humeur 0–100 n'est jamais exposé** — une
+ * ⚠️ Confidentialité : le **score d'humeur 0–100 n'est jamais exposé** - une
  * entrée d'humeur ne porte que son libellé qualitatif (via `moodOption`).
  */
 
@@ -83,7 +83,7 @@ export type MoodRow = {
   tags?: string[];
 };
 
-/** Projette une humeur — **sans jamais exposer le score 0–100**. */
+/** Projette une humeur - **sans jamais exposer le score 0–100**. */
 export function moodRowToEntry(row: MoodRow): MoodJournalEntry {
   const option = moodOption(row.level);
   return {
@@ -131,7 +131,7 @@ export type AssessmentRow = {
 
 /**
  * Projette un résultat de test. La sévérité (libellé + ton) est **recalculée**
- * depuis le score officiel via la définition de l'échelle — résultat assumé,
+ * depuis le score officiel via la définition de l'échelle - résultat assumé,
  * formulé en orientation (jamais « diagnostic »).
  */
 export function assessmentRowToEntry(
@@ -195,7 +195,7 @@ export function paginate(
 
 // ── Aperçu d'évolution ─────────────────────────────────────────────────────
 
-/** Points d'humeur (date + niveau) pour le graphe — sans score. */
+/** Points d'humeur (date + niveau) pour le graphe - sans score. */
 export function toMoodPoints(
   entries: JournalEntry[],
 ): { entry_date: string; level: number }[] {

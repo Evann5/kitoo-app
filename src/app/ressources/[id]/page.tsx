@@ -14,7 +14,7 @@ export async function generateMetadata({
   const { id } = await params;
   const resource = await getResource(id);
   return {
-    title: resource ? `${resource.title} — Kitoo` : "Ressource — Kitoo",
+    title: resource ? `${resource.title} - Kitoo` : "Ressource - Kitoo",
   };
 }
 

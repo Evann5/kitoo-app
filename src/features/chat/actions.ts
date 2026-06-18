@@ -16,7 +16,7 @@ export type SendMessageResult =
  *
  * Sécurité : exécutée côté serveur, `user_id = auth.uid()` (session), RLS
  * stricte, jamais de clé service_role. La réponse simulée est calculée
- * **côté serveur** (`autoReply`) — le `flagged` (détresse) n'est pas fourni par
+ * **côté serveur** (`autoReply`) - le `flagged` (détresse) n'est pas fourni par
  * le client. Le contenu est borné (1–2000 caractères).
  */
 export async function sendMessage(input: {

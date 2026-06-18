@@ -11,7 +11,7 @@ export type SaveMoodResult = { ok: true } | { ok: false; error: string };
  *
  * Sécurité : exécutée côté serveur (jamais la clé service_role côté client).
  * La **date est calculée côté serveur** (`upsertTodayEntry` → `current_date`)
- * et l'`user_id` vient de la session — on ne fait pas confiance au client. La
+ * et l'`user_id` vient de la session - on ne fait pas confiance au client. La
  * RLS et la contrainte `unique (user_id, entry_date)` garantissent 1 entrée/jour
  * et l'isolation. On valide le **score** (entier 0–100) avant toute écriture ;
  * le `level` (1–5) en est dérivé.

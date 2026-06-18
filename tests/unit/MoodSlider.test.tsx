@@ -13,7 +13,7 @@ function Harness({ initial = null }: { initial?: number | null }) {
 
 const DIGITS = /\d/;
 
-describe("MoodSlider — valence, score caché & réactivité", () => {
+describe("MoodSlider - valence, score caché & réactivité", () => {
   it("est un slider nommé, aria-valuetext = libellé sans chiffre", () => {
     render(<Harness />);
     const slider = screen.getByRole("slider", { name: "Règle ton humeur" });

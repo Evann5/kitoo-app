@@ -22,7 +22,7 @@ function request(path: string) {
   return new NextRequest(new URL(`http://localhost${path}`));
 }
 
-describe("middleware — protection des routes", () => {
+describe("middleware - protection des routes", () => {
   it("redirige un visiteur non connecté de /profil vers /connexion", async () => {
     const res = await updateSession(request("/profil"));
     expect(res.status).toBe(307);

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { AuthForm, AuthShell, safeRedirect } from "@/features/auth";
 
 export const metadata: Metadata = {
-  title: "Inscription — Kitoo",
+  title: "Inscription - Kitoo",
   description: "Crée ton compte Kitoo et commence à suivre ton humeur.",
 };
 

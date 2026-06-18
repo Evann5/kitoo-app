@@ -13,7 +13,7 @@ import {
 
 export type TrendOverviewProps = {
   entries: JournalEntry[];
-  /** "YYYY-MM-DD" — ancrage des séries (fourni par le serveur). */
+  /** "YYYY-MM-DD" - ancrage des séries (fourni par le serveur). */
   todayIso: string;
 };
 

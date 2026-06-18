@@ -7,7 +7,7 @@ export type MoodSliderProps = {
   /** Score courant 0–100, ou `null` si pas encore réglé. */
   value: number | null;
   onChange: (score: number) => void;
-  /** Libellé qualitatif annoncé (JAMAIS le nombre) — sert d'`aria-valuetext`. */
+  /** Libellé qualitatif annoncé (JAMAIS le nombre) - sert d'`aria-valuetext`. */
   ariaValueText: string;
   disabled?: boolean;
 };

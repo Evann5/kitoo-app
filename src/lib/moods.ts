@@ -1,5 +1,5 @@
 /**
- * Échelle d'humeur Kitoo — source unique pour le Mood Tracker et les visuels.
+ * Échelle d'humeur Kitoo - source unique pour le Mood Tracker et les visuels.
  *
  * Les couleurs pointent vers les variables CSS `--mood-*` définies dans
  * `globals.css` (valeurs par défaut + override daltonisme via
@@ -16,7 +16,7 @@ export type MoodLevel =
 
 export type Mood = {
   level: MoodLevel;
-  /** Libellé textuel (porte le sens — les visages d'humeur sont décoratifs). */
+  /** Libellé textuel (porte le sens - les visages d'humeur sont décoratifs). */
   label: string;
   /** Couleur de l'humeur (variable CSS du DS). */
   color: string;

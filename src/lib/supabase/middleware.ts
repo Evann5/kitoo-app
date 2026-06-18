@@ -22,7 +22,7 @@ const AUTH_ROUTES = ["/connexion", "/inscription"];
  *
  * Pattern `@supabase/ssr` : on lit/écrit les cookies sur la requête ET la
  * réponse, et l'on appelle `getUser()` (qui revalide le token côté Supabase)
- * immédiatement après la création du client — aucune logique entre les deux,
+ * immédiatement après la création du client - aucune logique entre les deux,
  * sous peine de déconnexions aléatoires.
  *
  * Sans variables d'env Supabase, on laisse simplement passer la requête

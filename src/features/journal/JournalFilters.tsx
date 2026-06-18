@@ -28,7 +28,7 @@ export type JournalFiltersProps = {
   onPeriod: (period: JournalPeriod) => void;
 };
 
-/** Filtres du journal — boutons au clavier avec état `aria-pressed`. */
+/** Filtres du journal - boutons au clavier avec état `aria-pressed`. */
 export function JournalFilters({
   kind,
   period,

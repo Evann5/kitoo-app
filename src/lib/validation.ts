@@ -1,5 +1,5 @@
 /**
- * Validation des entrées d'authentification — partagée client + serveur.
+ * Validation des entrées d'authentification - partagée client + serveur.
  * Messages en français, bienveillants. Les fonctions renvoient un message
  * d'erreur (string) ou `null` si la valeur est valide.
  */

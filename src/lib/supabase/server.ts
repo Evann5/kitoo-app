@@ -11,7 +11,7 @@ import type { Database } from "./types";
  *
  * Must be called within a request scope (it reads/writes cookies).
  */
-// Harmless placeholders used when no Supabase project is configured yet — the
+// Harmless placeholders used when no Supabase project is configured yet - the
 // client is constructed without throwing; real calls fail until env is set.
 const PLACEHOLDER_URL = "https://placeholder.supabase.co";
 const PLACEHOLDER_KEY = "placeholder-anon-key";

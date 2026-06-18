@@ -10,11 +10,7 @@ export default function Home() {
         <Blob className="pointer-events-none absolute -top-16 -right-24 -z-10 w-[460px] opacity-70" />
         <Blob className="pointer-events-none absolute -bottom-24 -left-24 -z-10 w-[420px] opacity-60" />
 
-        <Mascot
-          pose="sunglasses"
-          priority
-          className="mb-8 w-56 max-w-[62vw]"
-        />
+        <Mascot pose="sunglasses" priority className="mb-8 w-56 max-w-[62vw]" />
 
         <h1 className="font-display text-display text-ink-900">
           {siteConfig.name}

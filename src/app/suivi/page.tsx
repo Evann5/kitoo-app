@@ -3,7 +3,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import { requireUser } from "@/lib/auth";
 import { JournalView, getJournalEntries } from "@/features/journal";
 
-export const metadata: Metadata = { title: "Suivi — Kitoo" };
+export const metadata: Metadata = { title: "Suivi - Kitoo" };
 export const dynamic = "force-dynamic";
 
 export default async function SuiviPage() {

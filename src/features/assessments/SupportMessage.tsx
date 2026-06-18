@@ -6,7 +6,7 @@ import { Mascot } from "@/components/illustrations";
  * (idées noires) est positif. Ton chaleureux, **jamais alarmant ni
  * culpabilisant**, sans diagnostic. Propose des ressources d'aide à jour.
  *
- * ⚠️ Ressources d'aide (France) — à vérifier/maintenir à jour :
+ * ⚠️ Ressources d'aide (France) - à vérifier/maintenir à jour :
  * - 3114 : Ligne nationale de prévention du suicide (gratuit, 24h/24, 7j/7).
  * - 15 (SAMU) / 112 (urgences) en cas de danger immédiat.
  */
@@ -24,7 +24,7 @@ export function SupportMessage() {
       </p>
       <p className="text-body text-ink-700">
         Certaines de tes réponses montrent que c&apos;est une période difficile.
-        Tu n&apos;es pas seul·e, et en parler peut vraiment aider — à un·e
+        Tu n&apos;es pas seul·e, et en parler peut vraiment aider - à un·e
         proche, à ton médecin, ou à une ligne d&apos;écoute dédiée.
       </p>
       <div className="flex w-full flex-col gap-2">
@@ -35,7 +35,7 @@ export function SupportMessage() {
           Appeler le 3114 (24h/24, gratuit)
         </a>
         <p className="text-small text-ink-600">
-          3114 — Ligne nationale de prévention du suicide. En cas de danger
+          3114 - Ligne nationale de prévention du suicide. En cas de danger
           immédiat, appelle le 15 ou le 112.
         </p>
       </div>

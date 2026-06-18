@@ -1,7 +1,7 @@
 /**
  * Helpers **purs et testables** des modules d'accueil enrichis (A20) : récap
  * doux de la semaine et mot du jour. Aucune dépendance DB ; on opère sur des
- * données déjà lues (sous RLS) dans la page. **Jamais le score 0–100 caché** —
+ * données déjà lues (sous RLS) dans la page. **Jamais le score 0–100 caché** -
  * uniquement des niveaux qualitatifs (1–5) et des comptes.
  */
 
@@ -48,7 +48,7 @@ export const ENCOURAGEMENTS: readonly string[] = [
   "Tu fais de ton mieux, et c'est suffisant aujourd'hui.",
   "Chaque petit moment pour toi compte. Sois doux·ce avec toi-même.",
   "Respire. Tu as le droit d'avancer à ton rythme.",
-  "Il n'y a pas de bonne ou mauvaise humeur — juste la tienne, accueillie.",
+  "Il n'y a pas de bonne ou mauvaise humeur - juste la tienne, accueillie.",
   "Un jour difficile n'efface pas tes progrès. Tu es sur le chemin.",
   "Merci d'être là pour toi aujourd'hui. C'est précieux.",
 ];

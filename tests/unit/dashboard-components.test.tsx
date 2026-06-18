@@ -47,7 +47,7 @@ const points: MoodPoint[] = [
 const weekly = buildDailySeries(points, TODAY, 7);
 const monthly = buildDailySeries(points, TODAY, 30);
 
-describe("MoodTrendChart — accessibilité", () => {
+describe("MoodTrendChart - accessibilité", () => {
   it("expose une alternative textuelle (résumé + table de données)", () => {
     stubReducedMotion(false);
     render(<MoodTrendChart weekly={weekly} monthly={monthly} />);

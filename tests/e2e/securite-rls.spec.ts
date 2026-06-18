@@ -3,7 +3,7 @@ import { test, expect, type Page } from "@playwright/test";
 /**
  * Isolation RLS : un utilisateur ne peut pas accéder aux données d'un autre.
  * Deux comptes distincts (contextes navigateur séparés) ; on vérifie via
- * l'export que chacun ne récupère QUE ses propres données — humeurs, mais
+ * l'export que chacun ne récupère QUE ses propres données - humeurs, mais
  * aussi sessions d'exercices (`exercise_sessions`) et résultats de tests
  * (`assessment_results`), les tables introduites en A12/A13.
  */

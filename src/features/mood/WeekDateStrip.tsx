@@ -19,7 +19,7 @@ function isoOf(d: Date): string {
 }
 
 export type WeekDateStripProps = {
-  /** Jour courant "YYYY-MM-DD" — mis en évidence. */
+  /** Jour courant "YYYY-MM-DD" - mis en évidence. */
   today: string;
 };
 

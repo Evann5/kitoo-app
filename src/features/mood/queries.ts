@@ -8,7 +8,7 @@ export type MoodTag = Tables<"mood_tags">;
 export type MoodLevelValue = 1 | 2 | 3 | 4 | 5;
 
 /**
- * Helpers d'accès aux données du Mood Tracker (server-only — `createClient`
+ * Helpers d'accès aux données du Mood Tracker (server-only - `createClient`
  * lit les cookies de session). La RLS garantit qu'un utilisateur ne touche que
  * ses propres lignes ; on renseigne quand même `user_id = auth.uid()` côté
  * insert (exigé par la policy `with check`).

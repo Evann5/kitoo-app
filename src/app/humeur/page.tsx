@@ -10,7 +10,7 @@ import {
 } from "@/features/mood/queries";
 
 export const metadata: Metadata = {
-  title: "Mon humeur — Kitoo",
+  title: "Mon humeur - Kitoo",
 };
 
 // Route privée : pas de cache statique (données par utilisateur).

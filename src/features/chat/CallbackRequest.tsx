@@ -14,7 +14,7 @@ export type CallbackRequestProps = {
  * Demande d'**être rappelé·e par un·e professionnel·le de santé** (médecin),
  * présentée comme un **bouton flottant** (coin bas-gauche) qui ouvre un petit
  * panneau. Démo : la demande est enregistrée (RLS), aucun appel réel n'est
- * planifié — on le dit clairement et on rappelle les ressources d'urgence.
+ * planifié - on le dit clairement et on rappelle les ressources d'urgence.
  */
 export function CallbackRequest({ alreadyRequested }: CallbackRequestProps) {
   const [open, setOpen] = useState(false);

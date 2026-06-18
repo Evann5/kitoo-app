@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { LegalShell } from "@/components/layout/LegalShell";
 
 export const metadata: Metadata = {
-  title: "Conditions générales d'utilisation — Kitoo",
+  title: "Conditions générales d'utilisation - Kitoo",
 };
 
 export default function CguPage() {

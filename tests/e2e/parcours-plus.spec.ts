@@ -1,7 +1,7 @@
 import { test, expect, type Page } from "@playwright/test";
 
 /**
- * Menu « + » (FAB) : les trois actions rapides mènent au bon écran —
+ * Menu « + » (FAB) : les trois actions rapides mènent au bon écran -
  * noter une humeur, passer un test, faire un exercice.
  */
 

@@ -112,7 +112,7 @@ export function TabBar({ userInitial }: TabBarProps) {
   }, [userInitial]);
 
   // Lentille : retour optimiste au clic (la lentille glisse tout de suite),
-  // réconcilié pendant le rendu une fois la nouvelle route validée — `from`
+  // réconcilié pendant le rendu une fois la nouvelle route validée - `from`
   // mémorise la route au moment du clic.
   const computedIndex = SLOTS.findIndex((h) => h !== null && isActive(h));
   const [optimistic, setOptimistic] = useState<{

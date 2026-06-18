@@ -1,5 +1,5 @@
 /**
- * Réponse **simulée** du « pro » — logique PURE et testable (aucun appel
+ * Réponse **simulée** du « pro » - logique PURE et testable (aucun appel
  * externe). Ce ne sont **pas** les mots d'un clinicien réel : réponses
  * scénarisées, bienveillantes, sans diagnostic.
  *
@@ -67,7 +67,7 @@ const RULES: Rule[] = [
   {
     match: ["triste", "deprim", "pleur", "vide", "down", "cafard"],
     reply:
-      "Je suis là, et ce que tu ressens compte. Les jours sombres sont difficiles à traverser — sois doux·ce avec toi, un petit pas à la fois.",
+      "Je suis là, et ce que tu ressens compte. Les jours sombres sont difficiles à traverser - sois doux·ce avec toi, un petit pas à la fois.",
   },
   {
     match: ["fatigue", "epuise", "dormir", "sommeil", "creve"],
@@ -87,7 +87,7 @@ const RULES: Rule[] = [
 ];
 
 const DEFAULT_REPLY =
-  "Merci de partager ça avec moi. Je t'écoute — raconte-moi ce qui pèse, ou ce qui t'a fait du bien aujourd'hui. Tu peux aussi essayer un exercice si tu en ressens l'envie.";
+  "Merci de partager ça avec moi. Je t'écoute - raconte-moi ce qui pèse, ou ce qui t'a fait du bien aujourd'hui. Tu peux aussi essayer un exercice si tu en ressens l'envie.";
 
 /** Vrai si le message évoque une détresse (idées noires, etc.). */
 export function isDistress(message: string): boolean {

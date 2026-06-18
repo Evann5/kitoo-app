@@ -59,7 +59,7 @@ export function AssessmentRunner({ scaleKey }: { scaleKey: ScaleKey }) {
         <h1 className="font-display text-title text-ink-900">{def.title}</h1>
         <p className="text-body text-ink-700">{def.instruction}</p>
         <p className="text-small text-ink-600">
-          {def.summary} — Kitoo ne remplace pas un suivi médical professionnel.
+          {def.summary} - Kitoo ne remplace pas un suivi médical professionnel.
         </p>
         <p className="text-small text-ink-600" aria-live="polite">
           {answeredCount} / {def.items.length} réponses

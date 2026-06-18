@@ -15,7 +15,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const exercise = await getExerciseBySlug(slug);
-  return { title: exercise ? `${exercise.title} — Kitoo` : "Exercice — Kitoo" };
+  return { title: exercise ? `${exercise.title} - Kitoo` : "Exercice - Kitoo" };
 }
 
 export default async function ExercisePage({

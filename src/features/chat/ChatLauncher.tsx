@@ -22,7 +22,7 @@ export function ChatLauncher() {
             Échange de soutien
           </span>
           <span className="text-small text-ink-600">
-            Discute avec Kitoo — réponses simulées, sans jugement.
+            Discute avec Kitoo - réponses simulées, sans jugement.
           </span>
         </span>
       </Card>

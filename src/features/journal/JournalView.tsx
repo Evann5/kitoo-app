@@ -56,7 +56,7 @@ export function JournalView({ entries, nowIso }: JournalViewProps) {
           Ton journal se remplira au fil du temps.
         </p>
         <p className="text-body text-ink-700">
-          Note ton humeur, fais un exercice ou passe un test — commence quand tu
+          Note ton humeur, fais un exercice ou passe un test - commence quand tu
           veux, à ton rythme.
         </p>
         <div className="flex flex-col gap-2 sm:flex-row">

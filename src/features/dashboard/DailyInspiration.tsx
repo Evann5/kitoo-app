@@ -6,7 +6,7 @@ export type DailyInspirationProps = {
 
 /**
  * Bloc « inspiration du jour » : une phrase encourageante posée sur un fond
- * apaisant. Le fond est **décoratif** (`aria-hidden`) — le sens passe par le
+ * apaisant. Le fond est **décoratif** (`aria-hidden`) - le sens passe par le
  * texte ; un voile sombre garantit le contraste (WCAG AA). Aucune animation
  * (compatible `prefers-reduced-motion`). La phrase/le fond sont choisis de façon
  * déterministe par date (cf. `getDailyInspiration`).

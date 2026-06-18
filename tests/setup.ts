@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom/vitest";
 
 // jsdom n'implémente pas matchMedia ; stub pour les composants qui lisent les
-// préférences de mouvement (useReducedMotion) — par défaut : pas de réduction.
+// préférences de mouvement (useReducedMotion) - par défaut : pas de réduction.
 if (typeof window !== "undefined" && !window.matchMedia) {
   window.matchMedia = (query: string) =>
     ({

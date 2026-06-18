@@ -12,7 +12,7 @@ export { signOut } from "./actions";
  * Règles : doit commencer par "/" (chemin interne), jamais "//host"
  * (protocole-relatif), aucun backslash (les navigateurs normalisent "\" en "/",
  * ce qui transforme "/\evil.com" en URL externe) ni caractère de contrôle
- * (CR/LF — anti header-injection). Sinon on retombe sur `fallback`.
+ * (CR/LF - anti header-injection). Sinon on retombe sur `fallback`.
  */
 export function safeRedirect(
   value: string | undefined,

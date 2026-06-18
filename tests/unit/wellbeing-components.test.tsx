@@ -27,7 +27,7 @@ const catalog: Resource[] = [
   mk("3", "Lire le stress", "stress", "article"),
 ];
 
-describe("ResourceCatalog — filtres", () => {
+describe("ResourceCatalog - filtres", () => {
   it("filtre par thème au clic et reflète aria-pressed", async () => {
     const user = userEvent.setup();
     render(<ResourceCatalog resources={catalog} />);

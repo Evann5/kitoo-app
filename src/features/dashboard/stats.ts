@@ -1,5 +1,5 @@
 /**
- * Calculs du tableau de bord — fonctions **pures et testables**, opérant sur des
+ * Calculs du tableau de bord - fonctions **pures et testables**, opérant sur des
  * entrées d'humeur normalisées (`{ entry_date: "YYYY-MM-DD", level: 1..5 }`).
  * Aucune dépendance DB : la lecture (sous RLS) se fait dans la page via les
  * helpers A3, puis on passe les données ici.
@@ -42,7 +42,7 @@ export function computeStreak(entries: MoodPoint[], today: string): number {
 
 /**
  * Nombre de jours « très négatif » (niveau 1) consécutifs les plus récents,
- * ancrés sur aujourd'hui ou hier (sinon 0 — on ne déclenche pas sur des données
+ * ancrés sur aujourd'hui ou hier (sinon 0 - on ne déclenche pas sur des données
  * anciennes). Sert à l'alerte de soutien.
  */
 export function trailingVeryNegativeCount(

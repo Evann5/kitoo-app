@@ -23,7 +23,7 @@ function formatDay(isoDate: string): string {
 
 /**
  * Historique récent des humeurs (lecture seule). Les jours passés sont
- * consultables mais non modifiables — seule l'humeur du jour s'édite via le
+ * consultables mais non modifiables - seule l'humeur du jour s'édite via le
  * formulaire. Chaque ligne montre la couleur/visage de l'humeur et son libellé.
  */
 export function RecentMoods({ entries, today }: RecentMoodsProps) {
@@ -31,7 +31,7 @@ export function RecentMoods({ entries, today }: RecentMoodsProps) {
     return (
       <Card soft className="text-center">
         <p className="text-body text-ink-700">
-          Tu n&apos;as encore rien noté — c&apos;est quand tu veux.
+          Tu n&apos;as encore rien noté - c&apos;est quand tu veux.
         </p>
       </Card>
     );
@@ -56,7 +56,7 @@ export function RecentMoods({ entries, today }: RecentMoodsProps) {
                 />
                 <div className="flex min-w-0 flex-1 flex-col">
                   <span className="text-body text-ink-900 font-bold">
-                    {option?.label ?? "—"}
+                    {option?.label ?? "-"}
                     {isToday ? (
                       <span className="text-small text-brand-700 ml-2 font-normal">
                         aujourd&apos;hui

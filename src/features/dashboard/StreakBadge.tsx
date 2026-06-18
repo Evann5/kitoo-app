@@ -2,12 +2,12 @@ import { Card } from "@/components/ui";
 
 /**
  * Message d'encouragement selon la série. **Gamification positive uniquement** :
- * jamais de culpabilisation quand la série est à 0 — simple invitation douce.
+ * jamais de culpabilisation quand la série est à 0 - simple invitation douce.
  */
 export function streakMessage(streak: number): string {
   if (streak <= 0) return "Note ton humeur quand tu veux pour lancer ta série.";
   if (streak === 1) return "1er jour, c'est un beau début.";
-  if (streak >= 30) return `${streak} jours — quelle belle régularité !`;
+  if (streak >= 30) return `${streak} jours - quelle belle régularité !`;
   if (streak >= 7) return `${streak} jours d'affilée, continue comme ça !`;
   return `${streak} jours d'affilée.`;
 }

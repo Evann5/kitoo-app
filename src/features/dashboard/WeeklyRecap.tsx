@@ -18,7 +18,7 @@ function Stat({ value, label }: { value: string; label: string }) {
 
 /**
  * Récap **doux et qualitatif** de la semaine : jours notés, exercices faits,
- * ressenti global — sans jauge punitive ni score caché. Encouragement final.
+ * ressenti global - sans jauge punitive ni score caché. Encouragement final.
  */
 export function WeeklyRecap({ recap, feelingLabel }: WeeklyRecapProps) {
   return (
@@ -29,7 +29,7 @@ export function WeeklyRecap({ recap, feelingLabel }: WeeklyRecapProps) {
       <Card soft className="flex flex-col gap-4">
         {isRecapEmpty(recap) ? (
           <p className="text-body text-ink-700 text-center">
-            Ta semaine se remplira au fil des jours — commence quand tu veux.
+            Ta semaine se remplira au fil des jours - commence quand tu veux.
           </p>
         ) : (
           <>

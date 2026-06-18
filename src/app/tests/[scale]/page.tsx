@@ -13,7 +13,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { scale } = await params;
   const title = isScaleKey(scale) ? SCALES[scale].title : "Test";
-  return { title: `${title} — Kitoo` };
+  return { title: `${title} - Kitoo` };
 }
 
 export default async function ScalePage({

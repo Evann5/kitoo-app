@@ -1,11 +1,11 @@
 /**
- * Tests standardisés — définitions et **scoring officiel** de chaque échelle.
+ * Tests standardisés - définitions et **scoring officiel** de chaque échelle.
  * Module PUR (aucun accès DB) : importable côté client comme serveur.
  *
  * Principe : ces tests **orientent**, ils ne **diagnostiquent pas**.
  *
  * Sources des versions françaises (instruments libres d'usage) :
- * - PHQ-9 & GAD-7 : Spitzer, Kroenke, Williams — Pfizer (phqscreeners.com),
+ * - PHQ-9 & GAD-7 : Spitzer, Kroenke, Williams - Pfizer (phqscreeners.com),
  *   domaine public. Réponses sur 2 semaines, 0–3.
  * - PSS-10 : Cohen S. (1983), Perceived Stress Scale ; items inversés 4,5,7,8.
  * - WHO-5 : Index de bien-être de l'OMS (WHO-5, 1998), score brut 0–25 ×4 = 0–100.
@@ -57,7 +57,7 @@ const phq9: ScaleDefinition = {
   summary: "Un point sur ton moral ces deux dernières semaines.",
   instruction:
     "Au cours des 2 dernières semaines, à quelle fréquence as-tu été gêné·e par :",
-  source: "PHQ-9 — Spitzer/Kroenke/Williams, Pfizer (domaine public)",
+  source: "PHQ-9 - Spitzer/Kroenke/Williams, Pfizer (domaine public)",
   options: FREQ_0_3,
   items: [
     "Peu d'intérêt ou de plaisir à faire les choses",
@@ -65,9 +65,9 @@ const phq9: ScaleDefinition = {
     "Difficultés à t'endormir, à rester endormi·e, ou trop dormir",
     "Te sentir fatigué·e ou avoir peu d'énergie",
     "Avoir peu d'appétit ou manger trop",
-    "Avoir une mauvaise opinion de toi-même — sentiment d'être nul·le ou d'avoir déçu tes proches",
+    "Avoir une mauvaise opinion de toi-même - sentiment d'être nul·le ou d'avoir déçu tes proches",
     "Avoir du mal à te concentrer (lecture, télévision…)",
-    "Bouger ou parler si lentement que les autres l'ont remarqué — ou au contraire être agité·e au point de bouger beaucoup plus que d'habitude",
+    "Bouger ou parler si lentement que les autres l'ont remarqué - ou au contraire être agité·e au point de bouger beaucoup plus que d'habitude",
     "Penser qu'il vaudrait mieux être mort·e, ou penser à te faire du mal d'une manière ou d'une autre",
   ],
   flaggedIndex: 8,
@@ -92,7 +92,7 @@ const gad7: ScaleDefinition = {
   summary: "Un point sur ton anxiété ces deux dernières semaines.",
   instruction:
     "Au cours des 2 dernières semaines, à quelle fréquence as-tu été gêné·e par :",
-  source: "GAD-7 — Spitzer/Kroenke/Williams/Löwe, Pfizer (domaine public)",
+  source: "GAD-7 - Spitzer/Kroenke/Williams/Löwe, Pfizer (domaine public)",
   options: FREQ_0_3,
   items: [
     "Te sentir nerveux·se, anxieux·se ou tendu·e",
@@ -131,7 +131,7 @@ const pss10: ScaleDefinition = {
   summary: "Comment tu as vécu le stress au cours du dernier mois.",
   instruction:
     "Au cours du dernier mois, à quelle fréquence t'es-tu senti·e ou as-tu :",
-  source: "PSS-10 — Cohen, S. (1983), Perceived Stress Scale",
+  source: "PSS-10 - Cohen, S. (1983), Perceived Stress Scale",
   options: FREQ_0_4,
   items: [
     "été bouleversé·e par un événement inattendu",
@@ -177,7 +177,7 @@ const who5: ScaleDefinition = {
   summary:
     "Un regard positif sur ton bien-être de ces deux dernières semaines.",
   instruction: "Au cours des 2 dernières semaines :",
-  source: "WHO-5 — Index de bien-être de l'OMS (1998)",
+  source: "WHO-5 - Index de bien-être de l'OMS (1998)",
   options: WELLBEING_0_5,
   items: [
     "Je me suis senti·e bien et de bonne humeur",

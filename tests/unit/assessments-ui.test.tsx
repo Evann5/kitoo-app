@@ -13,7 +13,7 @@ import { SCALES } from "@/features/assessments/scales";
 
 beforeEach(() => recordMock.mockReset());
 
-describe("AssessmentRunner — accessibilité & soumission", () => {
+describe("AssessmentRunner - accessibilité & soumission", () => {
   it("rend un fieldset/legend + radios par question", () => {
     render(<AssessmentRunner scaleKey="who5" />);
     expect(screen.getAllByRole("group")).toHaveLength(SCALES.who5.items.length);
@@ -58,7 +58,7 @@ describe("AssessmentRunner — accessibilité & soumission", () => {
   });
 });
 
-describe("AssessmentResult — orientation & soutien", () => {
+describe("AssessmentResult - orientation & soutien", () => {
   it("formule en orientation avec disclaimer, sans diagnostic", () => {
     render(
       <AssessmentResult

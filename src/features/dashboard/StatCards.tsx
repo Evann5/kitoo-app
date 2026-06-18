@@ -21,7 +21,7 @@ export function StatCards({ stats, periodLabel }: StatCardsProps) {
   return (
     <div className="grid grid-cols-2 gap-3">
       <Stat
-        value={stats.average !== null ? `${stats.average}/5` : "—"}
+        value={stats.average !== null ? `${stats.average}/5` : "-"}
         label={`Humeur moyenne (${periodLabel})`}
       />
       <Stat value={String(stats.count)} label={`Entrées (${periodLabel})`} />

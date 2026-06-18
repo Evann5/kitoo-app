@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { AuthForm, AuthShell, safeRedirect } from "@/features/auth";
 
 export const metadata: Metadata = {
-  title: "Connexion — Kitoo",
+  title: "Connexion - Kitoo",
   description: "Connecte-toi à ton espace Kitoo.",
 };
 

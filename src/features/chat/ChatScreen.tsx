@@ -62,7 +62,7 @@ export function ChatScreen({ initialMessages }: ChatScreenProps) {
           className="mt-0.5 shrink-0"
         />
         <span>
-          <strong className="text-ink-900">Échange de soutien — démo.</strong>{" "}
+          <strong className="text-ink-900">Échange de soutien - démo.</strong>{" "}
           Les réponses sont <strong>simulées</strong> : ce n&apos;est pas un·e
           clinicien·ne réel·le ni un service d&apos;urgence. Kitoo ne remplace
           pas un suivi médical professionnel. En cas de danger immédiat, appelle
