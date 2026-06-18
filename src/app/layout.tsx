@@ -4,6 +4,7 @@ import { Nunito, Atkinson_Hyperlegible } from "next/font/google";
 import "./globals.css";
 import { siteConfig } from "@/lib/site-config";
 import { ANTI_FLASH_SCRIPT } from "@/features/accessibility";
+import { TabBar } from "@/components/layout/TabBar";
 
 /**
  * Police d'affichage Kitoo : Goodly Medium (locale, .otf).
@@ -52,7 +53,11 @@ export default function RootLayout({
         {/* Anti-flash : applique les préférences d'accessibilité avant le rendu. */}
         <script dangerouslySetInnerHTML={{ __html: ANTI_FLASH_SCRIPT }} />
       </head>
-      <body className="font-body flex min-h-full flex-col">{children}</body>
+      <body className="font-body flex min-h-full flex-col">
+        {children}
+        {/* Barre persistante : se masque hors des routes de l'app connectée. */}
+        <TabBar />
+      </body>
     </html>
   );
 }

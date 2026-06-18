@@ -3,8 +3,6 @@ import {
   AccessibilitySync,
   getAccessibilityPrefs,
 } from "@/features/accessibility";
-import { getUser } from "@/lib/auth";
-import { TabBar } from "./TabBar";
 
 export type AppShellProps = {
   children: React.ReactNode;
@@ -14,19 +12,18 @@ export type AppShellProps = {
 
 /**
  * Coquille des pages privées : synchronise les préférences d'accessibilité
- * (profil → document, inter-appareils), centre le contenu et affiche la barre
- * d'onglets fixe en bas.
+ * (profil → document, inter-appareils) et centre le contenu. La barre d'onglets
+ * est rendue **une seule fois** dans le layout racine (persistante entre les
+ * navigations) ; on réserve l'espace bas (`pb-28`) pour ne pas être masqué.
  */
 export async function AppShell({ children, width = "prose" }: AppShellProps) {
-  const [prefs, user] = await Promise.all([getAccessibilityPrefs(), getUser()]);
-  const initial = user?.email?.[0]?.toUpperCase();
+  const prefs = await getAccessibilityPrefs();
   return (
     <>
       <AccessibilitySync prefs={prefs} />
       <Container width={width} className="pt-6 pb-28">
         {children}
       </Container>
-      <TabBar userInitial={initial} />
     </>
   );
 }
