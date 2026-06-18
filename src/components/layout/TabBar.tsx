@@ -71,7 +71,7 @@ function TabLink({
       )}
     >
       <Icon aria-hidden size={24} strokeWidth={active ? 2.2 : 1.8} />
-      <span>{tab.label}</span>
+      <span className="text-[11px] leading-tight">{tab.label}</span>
     </Link>
   );
 }
@@ -138,7 +138,7 @@ export function TabBar({ userInitial }: TabBarProps) {
       <nav
         aria-label="Navigation principale"
         className={cn(
-          "fixed bottom-4 left-1/2 z-40 w-[calc(100%-1.5rem)] max-w-md -translate-x-1/2",
+          "fixed bottom-4 left-1/2 z-40 w-[calc(100%-1rem)] max-w-md -translate-x-1/2",
           // Glassmorphism : surface translucide + flou d'arrière-plan + bord clair.
           "rounded-[28px] border border-white/50 bg-white/70 backdrop-blur-xl",
           "shadow-[0_10px_30px_rgba(22,22,29,0.15)] [@supports(backdrop-filter:blur(0))]:bg-white/55",
@@ -219,7 +219,7 @@ export function TabBar({ userInitial }: TabBarProps) {
               >
                 {initial ?? "?"}
               </span>
-              <span>Profil</span>
+              <span className="text-[11px] leading-tight">Profil</span>
             </Link>
           </li>
         </ul>
