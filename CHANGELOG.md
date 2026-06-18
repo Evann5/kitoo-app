@@ -4,6 +4,16 @@ Toutes les évolutions notables de l'application Kitoo.
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/) ;
 versionnage [SemVer](https://semver.org/lang/fr/).
 
+## [1.11.2] — 2026-06-17
+
+### Modifié
+
+- **Page `/chat` en pleine hauteur d'écran** : seul le fil de messages défile
+  (input épinglé en bas), plus de scroll de page parasite.
+- **Demande de rappel** transformée en **bouton flottant** (coin bas-gauche)
+  ouvrant un petit panneau, au lieu d'une carte dans le flux ; confirmation
+  affichée en chip flottant. Comportement et garde-fous inchangés.
+
 ## [1.11.1] — 2026-06-17
 
 ### Ajouté

@@ -20,18 +20,22 @@ export default async function ChatPage() {
 
   return (
     <AppShell width="prose">
-      <div className="flex flex-col gap-4">
-        <header className="flex flex-col gap-1">
+      {/* Pleine hauteur d'écran : seul le fil défile (input épinglé en bas). */}
+      <div className="flex h-[calc(100dvh-8.5rem)] min-h-0 flex-col gap-3">
+        <header className="flex shrink-0 flex-col gap-0.5">
           <h1 className="font-display text-title text-ink-900">
             Échange de soutien
           </h1>
-          <p className="text-body text-ink-700">
+          <p className="text-small text-ink-600">
             Un espace doux pour déposer ce que tu ressens.
           </p>
         </header>
-        <CallbackRequest alreadyRequested={pendingCallback} />
-        <ChatScreen initialMessages={conversation?.messages ?? []} />
+        <div className="min-h-0 flex-1">
+          <ChatScreen initialMessages={conversation?.messages ?? []} />
+        </div>
       </div>
+      {/* Bouton flottant : demander à être rappelé·e par un·e pro. */}
+      <CallbackRequest alreadyRequested={pendingCallback} />
     </AppShell>
   );
 }

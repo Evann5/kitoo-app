@@ -48,12 +48,12 @@ export function ChatScreen({ initialMessages }: ChatScreenProps) {
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex h-full min-h-0 flex-col gap-3">
       {/* Étiquetage permanent : nature simulée + disclaimer. */}
       <Card
         soft
         role="note"
-        className="text-small text-ink-700 flex items-start gap-2"
+        className="text-small text-ink-700 flex shrink-0 items-start gap-2"
       >
         <Info
           aria-hidden
@@ -74,7 +74,7 @@ export function ChatScreen({ initialMessages }: ChatScreenProps) {
       <div
         aria-live="polite"
         aria-label="Conversation"
-        className="flex flex-col gap-3"
+        className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto pr-1"
       >
         {messages.length === 0 ? (
           <ChatBubble
@@ -106,8 +106,8 @@ export function ChatScreen({ initialMessages }: ChatScreenProps) {
         </p>
       ) : null}
 
-      {/* Saisie. */}
-      <form onSubmit={submit} className="flex items-end gap-2">
+      {/* Saisie (épinglée en bas). */}
+      <form onSubmit={submit} className="flex shrink-0 items-end gap-2">
         <label htmlFor="chat-input" className="sr-only">
           Écris ton message
         </label>
