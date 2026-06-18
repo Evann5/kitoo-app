@@ -147,13 +147,13 @@ export function TabBar({ userInitial }: TabBarProps) {
         {/* Lentille de verre : glisse vers l'onglet actif au changement de page. */}
         <span
           aria-hidden
-          className="ease-kitoo pointer-events-none absolute inset-y-1.5 left-0 z-0 w-1/5 transition-[transform,opacity] duration-500 motion-reduce:transition-none"
+          className="ease-kitoo pointer-events-none absolute inset-y-1 left-0 z-0 w-1/5 transition-[transform,opacity] duration-500 motion-reduce:transition-none"
           style={{
             transform: `translateX(${activeIndex < 0 ? 0 : activeIndex * 100}%)`,
             opacity: activeIndex < 0 ? 0 : 1,
           }}
         >
-          <span className="mx-1.5 block h-full rounded-[22px] border border-white/70 bg-white/45 shadow-[inset_0_1px_2px_rgba(255,255,255,0.7),0_2px_8px_rgba(22,22,29,0.12)] backdrop-blur-md" />
+          <span className="mx-0.5 block h-full rounded-[20px] border border-white/70 bg-white/45 shadow-[inset_0_1px_2px_rgba(255,255,255,0.7),0_2px_8px_rgba(22,22,29,0.12)] backdrop-blur-md" />
         </span>
 
         <ul className="relative z-10 flex items-stretch">
