@@ -1,6 +1,5 @@
-import Image from "next/image";
 import { Button, Container } from "@/components/ui";
-import { Blob } from "@/components/illustrations";
+import { Mascot, Blob } from "@/components/illustrations";
 import { Footer } from "@/components/layout/Footer";
 import { siteConfig } from "@/lib/site-config";
 
@@ -11,15 +10,10 @@ export default function Home() {
         <Blob className="pointer-events-none absolute -top-16 -right-24 -z-10 w-[460px] opacity-70" />
         <Blob className="pointer-events-none absolute -bottom-24 -left-24 -z-10 w-[420px] opacity-60" />
 
-        {/* Logo seul, agrandi, avec un arrondi « squircle » façon icône iOS. */}
-        <Image
-          src="/kitoo-logo.png"
-          alt=""
-          aria-hidden
-          width={160}
-          height={160}
+        <Mascot
+          pose="sunglasses"
           priority
-          className="mb-8 h-36 w-36 rounded-[32px] shadow-[0_12px_30px_rgba(22,22,29,0.18)] sm:h-40 sm:w-40"
+          className="mb-8 w-56 max-w-[62vw]"
         />
 
         <h1 className="font-display text-display text-ink-900">
