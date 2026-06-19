@@ -137,6 +137,7 @@ export function TabBar({ userInitial }: TabBarProps) {
     <>
       <nav
         aria-label="Navigation principale"
+        data-app-nav
         className={cn(
           "fixed bottom-4 left-1/2 z-40 w-[calc(100%-1rem)] max-w-md -translate-x-1/2",
           // Glassmorphism : surface translucide + flou d'arrière-plan + bord clair.

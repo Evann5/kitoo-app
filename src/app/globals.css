@@ -127,6 +127,15 @@ body {
  * valeur) et poignée ronde ≥ 30px. Le score 0–100 reste caché : aucune valeur
  * numérique n'est affichée (le libellé est porté par `aria-valuetext`).
  */
+/*
+ * Onboarding (consentement RGPD) : la barre de navigation flottante est rendue
+ * de façon persistante dans le layout racine ; on la masque tant que l'écran
+ * d'onboarding est affiché, pour qu'elle n'apparaisse qu'une fois dans l'app.
+ */
+html[data-onboarding] [data-app-nav] {
+  display: none;
+}
+
 .mood-range {
   -webkit-appearance: none;
   appearance: none;

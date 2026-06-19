@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { AppShell } from "@/components/layout/AppShell";
+import { HideTabBar } from "@/components/layout/HideTabBar";
 import { requireUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { listEntries, getTodayEntry } from "@/features/mood/queries";
@@ -59,9 +60,12 @@ export default async function DashboardPage() {
   const user = await requireUser("/tableau-de-bord");
 
   // Consentement RGPD requis avant tout usage : sinon, écran de consentement.
+  // `HideTabBar` masque la barre tant que l'onboarding est à l'écran - elle
+  // n'apparaît qu'une fois dans l'app.
   if (!(await hasActiveConsent())) {
     return (
       <AppShell>
+        <HideTabBar />
         <ConsentGate />
       </AppShell>
     );

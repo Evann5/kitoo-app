@@ -11,7 +11,13 @@ test("le « + » ouvre le menu et mène à un écran d'action", async ({ page })
   await page.getByLabel("Confirme ton mot de passe").fill(password);
   await page.getByRole("button", { name: "Créer mon compte" }).click();
   await expect(page).toHaveURL(/\/tableau-de-bord/, { timeout: 15000 });
+
+  // Onboarding (consentement) : la barre de navigation est masquée…
+  const nav = page.getByRole("navigation", { name: "Navigation principale" });
+  await expect(nav).toBeHidden();
   await page.getByRole("button", { name: /j'accepte/i }).click();
+  // …puis elle apparaît une fois dans l'app.
+  await expect(nav).toBeVisible();
 
   // Ouvre la feuille d'actions.
   const fab = page.getByRole("button", { name: "Actions rapides" });
