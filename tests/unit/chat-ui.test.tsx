@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 const { sendMock, callbackMock, clearMock } = vi.hoisted(() => ({
@@ -66,6 +66,42 @@ describe("ChatScreen - étiquetage & envoi", () => {
     expect(sendMock).toHaveBeenCalledWith({ content: "bonjour" });
     expect(await screen.findByText("bonjour")).toBeInTheDocument();
     expect(screen.getByText("Je t'écoute, raconte-moi.")).toBeInTheDocument();
+  });
+
+  it("propose des réponses rapides opérables au clavier", async () => {
+    sendMock.mockResolvedValue({
+      ok: true,
+      userMessage: {
+        id: "u1",
+        sender: "user",
+        content: "Je me sens stressé·e",
+        flagged: false,
+      },
+      proMessage: {
+        id: "p1",
+        sender: "pro",
+        content: "On respire ensemble ?",
+        flagged: false,
+      },
+      quickReplies: [],
+      suggestion: null,
+    });
+    const user = userEvent.setup();
+    render(<ChatScreen initialMessages={[]} />);
+
+    const group = screen.getByRole("group", { name: /réponses rapides/i });
+    const chip = within(group).getByRole("button", {
+      name: "Je me sens stressé·e",
+    });
+    // Opérable au clavier : focus puis Entrée.
+    chip.focus();
+    expect(chip).toHaveFocus();
+    await user.keyboard("{Enter}");
+
+    expect(sendMock).toHaveBeenCalledWith({ content: "Je me sens stressé·e" });
+    expect(
+      await screen.findByText("On respire ensemble ?"),
+    ).toBeInTheDocument();
   });
 
   it("« Nouvelle conversation » efface le fil", async () => {

@@ -1,10 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState, useTransition } from "react";
-import { Info, RotateCcw, Send } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, Info, RotateCcw, Send } from "lucide-react";
 import { Card } from "@/components/ui";
 import { ChatBubble } from "./ChatBubble";
 import { sendMessage, clearConversation } from "./actions";
+import { DEFAULT_QUICK_REPLIES } from "./intents";
+import type { Suggestion } from "./engine";
 import type { Message } from "./queries";
 
 export type ChatScreenProps = {
@@ -12,15 +15,20 @@ export type ChatScreenProps = {
 };
 
 /**
- * Écran de chat de soutien **simulé**. Étiquetage clair et permanent (réponses
- * de démonstration, pas un clinicien réel ni un service d'urgence) + disclaimer.
- * Fil annoncé via `aria-live`, champ de saisie labelisé, opérable au clavier.
+ * Écran de chat de soutien **simulé** (moteur à règles, sans IA). Étiquetage
+ * clair et permanent (réponses automatiques, pas un clinicien réel ni un service
+ * d'urgence) + disclaimer. Fil annoncé via `aria-live`, champ labelisé, et
+ * **réponses rapides** cliquables (opérables au clavier) pour guider l'échange.
  */
 export function ChatScreen({ initialMessages }: ChatScreenProps) {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [draft, setDraft] = useState("");
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [quickReplies, setQuickReplies] = useState<string[]>(
+    DEFAULT_QUICK_REPLIES,
+  );
+  const [suggestion, setSuggestion] = useState<Suggestion | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
 
@@ -29,9 +37,8 @@ export function ChatScreen({ initialMessages }: ChatScreenProps) {
     endRef.current?.scrollIntoView?.({ block: "end" });
   }, [messages.length, pending]);
 
-  function submit(e: React.FormEvent) {
-    e.preventDefault();
-    const content = draft.trim();
+  /** Envoie un message (saisie libre ou réponse rapide). */
+  function send(content: string) {
     if (!content || pending) return;
     setError(null);
     setDraft("");
@@ -39,6 +46,8 @@ export function ChatScreen({ initialMessages }: ChatScreenProps) {
       const res = await sendMessage({ content });
       if (res.ok) {
         setMessages((prev) => [...prev, res.userMessage, res.proMessage]);
+        setQuickReplies(res.quickReplies ?? []);
+        setSuggestion(res.suggestion ?? null);
       } else {
         setError(res.error);
         setDraft(content);
@@ -47,13 +56,23 @@ export function ChatScreen({ initialMessages }: ChatScreenProps) {
     });
   }
 
+  function submit(e: React.FormEvent) {
+    e.preventDefault();
+    send(draft.trim());
+  }
+
   function reset() {
     if (pending) return;
     setError(null);
     startTransition(async () => {
       const res = await clearConversation();
-      if (res.ok) setMessages([]);
-      else setError(res.error);
+      if (res.ok) {
+        setMessages([]);
+        setQuickReplies(DEFAULT_QUICK_REPLIES);
+        setSuggestion(null);
+      } else {
+        setError(res.error);
+      }
     });
   }
 
@@ -88,10 +107,10 @@ export function ChatScreen({ initialMessages }: ChatScreenProps) {
         />
         <span>
           <strong className="text-ink-900">Échange de soutien - démo.</strong>{" "}
-          Les réponses sont <strong>simulées</strong> : ce n&apos;est pas un·e
-          clinicien·ne réel·le ni un service d&apos;urgence. Kitoo ne remplace
-          pas un suivi médical professionnel. En cas de danger immédiat, appelle
-          le 15 ou le 112.
+          Les réponses sont <strong>automatiques et simulées</strong> : ce
+          n&apos;est pas un·e clinicien·ne réel·le ni un service d&apos;urgence.
+          Kitoo ne remplace pas un suivi médical professionnel. En cas de danger
+          immédiat, appelle le 15 ou le 112.
         </span>
       </Card>
 
@@ -104,7 +123,7 @@ export function ChatScreen({ initialMessages }: ChatScreenProps) {
         {messages.length === 0 ? (
           <ChatBubble
             sender="pro"
-            content="Bonjour, je suis là pour t'écouter. Souviens-toi : mes réponses sont simulées (démo). Comment te sens-tu aujourd'hui ?"
+            content="Bonjour, je suis là pour t'écouter. Mes réponses sont automatiques (démo), mais je ferai de mon mieux pour t'accompagner. Comment te sens-tu aujourd'hui ?"
           />
         ) : (
           messages.map((m) => (
@@ -129,6 +148,37 @@ export function ChatScreen({ initialMessages }: ChatScreenProps) {
         >
           {error}
         </p>
+      ) : null}
+
+      {/* Orientation douce (exercice / ressources / urgence). */}
+      {suggestion && !pending ? (
+        <Link
+          href={suggestion.href}
+          className="rounded-control border-brand-200 bg-brand-50 text-small text-brand-800 hover:bg-brand-100 inline-flex shrink-0 items-center justify-between gap-2 border px-4 py-2.5 font-bold"
+        >
+          {suggestion.label}
+          <ArrowRight aria-hidden size={16} strokeWidth={2} />
+        </Link>
+      ) : null}
+
+      {/* Réponses rapides (cliquables, opérables au clavier). */}
+      {quickReplies.length > 0 && !pending ? (
+        <div
+          role="group"
+          aria-label="Réponses rapides"
+          className="flex shrink-0 flex-wrap gap-2"
+        >
+          {quickReplies.map((label) => (
+            <button
+              key={label}
+              type="button"
+              onClick={() => send(label)}
+              className="rounded-pill border-ink-300 text-small text-ink-700 hover:bg-brand-100 hover:border-brand-300 min-h-[40px] border bg-white px-3.5 py-1.5 font-bold transition-colors"
+            >
+              {label}
+            </button>
+          ))}
+        </div>
       ) : null}
 
       {/* Saisie (épinglée en bas). */}

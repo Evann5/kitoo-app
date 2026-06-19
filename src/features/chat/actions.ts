@@ -3,13 +3,19 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import type { Tables } from "@/lib/supabase/types";
-import { autoReply } from "./auto-reply";
+import { getReply, type Suggestion } from "./engine";
 import { getOrCreateConversationId } from "./queries";
 
 type Message = Tables<"messages">;
 
 export type SendMessageResult =
-  | { ok: true; userMessage: Message; proMessage: Message }
+  | {
+      ok: true;
+      userMessage: Message;
+      proMessage: Message;
+      quickReplies: string[];
+      suggestion: Suggestion | null;
+    }
   | { ok: false; error: string };
 
 export type ClearResult = { ok: true } | { ok: false; error: string };
@@ -40,9 +46,9 @@ export async function clearConversation(): Promise<ClearResult> {
  * Envoie un message utilisateur et génère la réponse **simulée** du « pro ».
  *
  * Sécurité : exécutée côté serveur, `user_id = auth.uid()` (session), RLS
- * stricte, jamais de clé service_role. La réponse simulée est calculée
- * **côté serveur** (`autoReply`) - le `flagged` (détresse) n'est pas fourni par
- * le client. Le contenu est borné (1–2000 caractères).
+ * stricte, jamais de clé service_role. La réponse est calculée **côté serveur**
+ * par le moteur à règles (`getReply`) - le `flagged` (détresse) n'est jamais
+ * fourni par le client. Le contenu est borné (1–2000 caractères).
  */
 export async function sendMessage(input: {
   content: string;
@@ -62,6 +68,16 @@ export async function sendMessage(input: {
     return { ok: false, error: "Conversation indisponible." };
   }
 
+  // Anti-répétition : les dernières réponses du bot (pour ne pas se répéter).
+  const { data: recent } = await supabase
+    .from("messages")
+    .select("content")
+    .eq("conversation_id", conversationId)
+    .eq("sender", "pro")
+    .order("created_at", { ascending: false })
+    .limit(5);
+  const recentReplies = (recent ?? []).map((m) => m.content);
+
   // Message utilisateur.
   const { data: userMessage, error: userErr } = await supabase
     .from("messages")
@@ -77,15 +93,15 @@ export async function sendMessage(input: {
     return { ok: false, error: "Envoi impossible." };
   }
 
-  // Réponse simulée du « pro » (calculée côté serveur).
-  const reply = autoReply(content);
+  // Réponse du moteur à règles (calculée côté serveur).
+  const reply = getReply(content, { recentReplies });
   const { data: proMessage, error: proErr } = await supabase
     .from("messages")
     .insert({
       conversation_id: conversationId,
       user_id: user.id,
       sender: "pro",
-      content: reply.content,
+      content: reply.reply,
       flagged: reply.flagged,
     })
     .select("*")
@@ -102,5 +118,11 @@ export async function sendMessage(input: {
   // Rafraîchit le cache de route pour que l'historique soit à jour au retour.
   revalidatePath("/chat");
 
-  return { ok: true, userMessage, proMessage };
+  return {
+    ok: true,
+    userMessage,
+    proMessage,
+    quickReplies: reply.quickReplies,
+    suggestion: reply.suggestion,
+  };
 }

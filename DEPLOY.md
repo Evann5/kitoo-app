@@ -108,9 +108,9 @@ urgence. À **vérifier périodiquement** (numéros, disponibilité) dans
 commentaire dans le fichier le rappelle. Aucune variable d'environnement n'est
 nécessaire pour cette fonctionnalité.
 
-Le **chat de soutien simulé** ([`auto-reply.ts`](./src/features/chat/auto-reply.ts))
-affiche les mêmes ressources en cas de détresse — à maintenir à jour au même
-endroit.
+Le **chatbot de soutien à règles** ([`crisis.ts`](./src/features/chat/crisis.ts))
+affiche les mêmes ressources en cas de détresse détectée — à maintenir à jour au
+même endroit.
 
 Le **hub Ressources** (`/ressources`) contient des **podcasts/vidéos et liens
 utiles externes** dont les URLs sont définies dans le seed

@@ -4,6 +4,32 @@ Toutes les évolutions notables de l'application Kitoo.
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/) ;
 versionnage [SemVer](https://semver.org/lang/fr/).
 
+## [1.14.0] — 2026-06-19
+
+### Ajouté
+
+- **Chatbot de soutien à règles (sans IA)** : le chat devient réellement réactif
+  via un moteur **local et déterministe**. `intents.ts` (table d'intentions :
+  salutation, stress, anxiété, tristesse, sommeil, solitude, colère, fatigue,
+  motivation, ressources, « parler à un·e humain·e »…) + `engine.ts`
+  (`getReply` : normalisation, score d'intention, **anti-répétition**, amorce
+  réflexive, **fallback varié**).
+- **Détection de crise prioritaire** (`crisis.ts`) : mots de détresse → message
+  de soutien + ressources d'urgence (`/urgence`, 3114, 15/112), avant toute
+  autre intention.
+- **Réponses rapides** cliquables (opérables au clavier) sous le fil et
+  **mini-parcours** d'orientation (exercice / ressources / urgence).
+
+### Modifié
+
+- La réponse du bot (contenu, quick replies, suggestion, `flagged`) est calculée
+  **côté serveur** ; persistance et RLS inchangées (A21). Étiquetage « réponses
+  automatiques et simulées » + disclaimer conservés.
+
+### Retiré
+
+- `auto-reply.ts` (réponse unique) remplacé par le moteur à règles.
+
 ## [1.13.0] — 2026-06-19
 
 ### Ajouté
