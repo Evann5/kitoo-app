@@ -2,34 +2,44 @@ import { describe, it, expect } from "vitest";
 import {
   filterResources,
   resourceThemes,
-  resourceTypes,
+  resourceFormats,
   suggestByLevel,
   themeLabel,
-  typeLabel,
+  formatLabel,
 } from "@/features/wellbeing/filters";
 import type { Resource } from "@/features/wellbeing/queries";
 
 const mk = (
   id: string,
   theme: string,
-  type: string,
+  format: string,
   mood_levels: number[],
 ): Resource => ({
   id,
   title: `R-${id}`,
   theme,
-  type,
+  type: format,
+  format,
   summary: "s",
   content: "c",
+  url: null,
+  media_embed: null,
+  source: null,
+  author_or_validation: null,
+  read_time: null,
+  duration: null,
+  cover_image: null,
+  slug: `r-${id}`,
   mood_levels,
   created_at: "2026-06-01T00:00:00Z",
 });
 
 const catalog: Resource[] = [
-  mk("1", "stress", "exercice", [1, 2, 3]),
-  mk("2", "stress", "article", [3, 4]),
-  mk("3", "sommeil", "conseil", [1, 2]),
-  mk("4", "confiance", "exercice", [4, 5]),
+  mk("1", "stress", "article", [1, 2, 3]),
+  mk("2", "stress", "video", [3, 4]),
+  mk("3", "sommeil", "article", [1, 2]),
+  mk("4", "confiance", "podcast", [4, 5]),
+  mk("5", "ecoute", "lien", [1, 2, 3, 4, 5]),
 ];
 
 describe("filterResources", () => {
@@ -38,22 +48,37 @@ describe("filterResources", () => {
     expect(r.map((x) => x.id)).toEqual(["1", "2"]);
   });
 
-  it("cumule thème + type", () => {
-    const r = filterResources(catalog, { theme: "stress", type: "exercice" });
-    expect(r.map((x) => x.id)).toEqual(["1"]);
+  it("filtre par format", () => {
+    const r = filterResources(catalog, { format: "article" });
+    expect(r.map((x) => x.id)).toEqual(["1", "3"]);
+  });
+
+  it("cumule thème + format", () => {
+    const r = filterResources(catalog, { theme: "stress", format: "video" });
+    expect(r.map((x) => x.id)).toEqual(["2"]);
   });
 
   it("sans critère renvoie tout", () => {
-    expect(filterResources(catalog, {})).toHaveLength(4);
+    expect(filterResources(catalog, {})).toHaveLength(5);
   });
 });
 
-describe("themes / types distincts", () => {
+describe("themes / formats distincts", () => {
   it("liste triée des thèmes", () => {
-    expect(resourceThemes(catalog)).toEqual(["confiance", "sommeil", "stress"]);
+    expect(resourceThemes(catalog)).toEqual([
+      "confiance",
+      "ecoute",
+      "sommeil",
+      "stress",
+    ]);
   });
-  it("liste triée des types", () => {
-    expect(resourceTypes(catalog)).toEqual(["article", "conseil", "exercice"]);
+  it("liste triée des formats", () => {
+    expect(resourceFormats(catalog)).toEqual([
+      "article",
+      "lien",
+      "podcast",
+      "video",
+    ]);
   });
 });
 
@@ -61,8 +86,11 @@ describe("suggestByLevel", () => {
   it("sélectionne les ressources dont mood_levels contient le niveau", () => {
     const low = suggestByLevel(catalog, 1);
     expect(low.map((x) => x.id).sort()).toEqual(["1", "3"]);
-    const high = suggestByLevel(catalog, 5);
-    expect(high.map((x) => x.id)).toEqual(["4"]);
+  });
+  it("exclut les liens utiles des suggestions", () => {
+    const all = suggestByLevel(catalog, 5, 10);
+    expect(all.every((r) => r.format !== "lien")).toBe(true);
+    expect(all.map((x) => x.id)).toEqual(["4"]);
   });
   it("respecte la limite", () => {
     expect(suggestByLevel(catalog, 3, 1)).toHaveLength(1);
@@ -70,9 +98,11 @@ describe("suggestByLevel", () => {
 });
 
 describe("labels FR", () => {
-  it("traduit thèmes et types connus, capitalise le reste", () => {
+  it("traduit thèmes et formats connus, capitalise le reste", () => {
     expect(themeLabel("stress")).toBe("Stress");
     expect(themeLabel("inconnu")).toBe("Inconnu");
-    expect(typeLabel("exercice")).toBe("Exercices");
+    expect(formatLabel("article")).toBe("À lire");
+    expect(formatLabel("podcast")).toBe("À écouter");
+    expect(formatLabel("video")).toBe("À regarder");
   });
 });

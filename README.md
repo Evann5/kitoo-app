@@ -9,7 +9,8 @@ bien-être, avec authentification email / mot de passe.
 
 Le périmètre actuel (**v1.1**) couvre : authentification (email/mot de passe),
 saisie quotidienne d'humeur « compagnon », tableau de bord avec tendances et
-badges, navigation par tab bar + menu « + », **ressources** à lire et
+badges, navigation par tab bar + menu « + », **hub de ressources** (articles à
+lire, podcasts/vidéos à écouter ou regarder, liens utiles officiels) et
 **exercices** interactifs (minuteur guidé), **tests standardisés** (PHQ-9,
 GAD-7, PSS-10, WHO-5) en orientation, **journal unifié** (`/suivi`), et
 conformité RGPD + accessibilité (modes dyslexie / daltonisme). **À venir** : le
@@ -154,18 +155,18 @@ Le réglage se fait dans le dashboard Supabase (Authentication → Email →
 
 ### Routes
 
-| Route              | Accès  | Rôle                                                  |
-| ------------------ | ------ | ----------------------------------------------------- |
-| `/inscription`     | public | création de compte (email, mot de passe + confirm)    |
-| `/connexion`       | public | connexion                                             |
-| `/auth/callback`   | public | échange du code de confirmation (si activée)          |
-| `/profil`          | privé  | compte, confidentialité (RGPD), accessibilité         |
-| `/tableau-de-bord` | privé  | accueil : humeur du jour, série, tendances            |
-| `/humeur`          | privé  | saisie / modification de l'humeur du jour             |
-| `/ressources`      | privé  | contenus à lire (+ lecture `/ressources/[id]`)        |
-| `/exercices`       | privé  | exercices interactifs (+ lecteur `/exercices/[slug]`) |
-| `/tests`           | privé  | tests standardisés (+ passation `/tests/[scale]`)     |
-| `/suivi`           | privé  | journal unifié : timeline + filtres + évolution       |
+| Route              | Accès  | Rôle                                                                                   |
+| ------------------ | ------ | -------------------------------------------------------------------------------------- |
+| `/inscription`     | public | création de compte (email, mot de passe + confirm)                                     |
+| `/connexion`       | public | connexion                                                                              |
+| `/auth/callback`   | public | échange du code de confirmation (si activée)                                           |
+| `/profil`          | privé  | compte, confidentialité (RGPD), accessibilité                                          |
+| `/tableau-de-bord` | privé  | accueil : humeur du jour, série, tendances                                             |
+| `/humeur`          | privé  | saisie / modification de l'humeur du jour                                              |
+| `/ressources`      | privé  | hub multi-format : à lire/écouter/regarder + liens utiles (lecture `/ressources/[id]`) |
+| `/exercices`       | privé  | exercices interactifs (+ lecteur `/exercices/[slug]`)                                  |
+| `/tests`           | privé  | tests standardisés (+ passation `/tests/[scale]`)                                      |
+| `/suivi`           | privé  | journal unifié : timeline + filtres + évolution                                        |
 
 La protection est assurée par [`middleware.ts`](./middleware.ts) (rafraîchit la
 session et redirige : non connecté → `/connexion`, déjà connecté hors des écrans
@@ -190,14 +191,14 @@ stricte, default-deny**.
 
 ### Tables
 
-| Table             | Contenu                                                                                                                                                                              |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `profiles`        | 1/utilisateur : `prenom`, `notif_prefs`, `accessibility_prefs` (jsonb). Pas de donnée sensible superflue. Créée automatiquement à l'inscription (trigger `auth.users` → `profiles`). |
-| `mood_entries`    | humeurs : `level` (1–5, `check`), `comment` (optionnel), `entry_date`. **1 entrée/jour/utilisateur** (`unique (user_id, entry_date)`).                                               |
-| `mood_tags`       | tags prédéfinis (`slug`, `label`), seedés. Référence en lecture seule.                                                                                                               |
-| `mood_entry_tags` | liaison N-N entre une entrée et ses tags.                                                                                                                                            |
-| `resources`       | contenus bien-être (`theme`, `type`, `summary`, `content`, `mood_levels int[]`). 8 ressources seedées. Lecture seule.                                                                |
-| `consents`        | consentements RGPD (`type`, `granted_at`, `revoked_at`).                                                                                                                             |
+| Table             | Contenu                                                                                                                                                                                                                                                                                                                                                    |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `profiles`        | 1/utilisateur : `prenom`, `notif_prefs`, `accessibility_prefs` (jsonb). Pas de donnée sensible superflue. Créée automatiquement à l'inscription (trigger `auth.users` → `profiles`).                                                                                                                                                                       |
+| `mood_entries`    | humeurs : `level` (1–5, `check`), `comment` (optionnel), `entry_date`. **1 entrée/jour/utilisateur** (`unique (user_id, entry_date)`).                                                                                                                                                                                                                     |
+| `mood_tags`       | tags prédéfinis (`slug`, `label`), seedés. Référence en lecture seule.                                                                                                                                                                                                                                                                                     |
+| `mood_entry_tags` | liaison N-N entre une entrée et ses tags.                                                                                                                                                                                                                                                                                                                  |
+| `resources`       | hub de ressources multi-format (`format` article/podcast/video/lien, `theme`, `summary`, `content` long, `url`/`media_embed`, `source`, `author_or_validation`, `read_time`/`duration`, `slug`, `mood_levels int[]`). Articles **originaux** (voix Kitoo) ; médias & liens = **références externes** (URLs à vérifier/maintenir, cf. seed). Lecture seule. |
+| `consents`        | consentements RGPD (`type`, `granted_at`, `revoked_at`).                                                                                                                                                                                                                                                                                                   |
 
 ### Choix « tags » : table de liaison (pas `text[]`)
 
@@ -416,35 +417,54 @@ données** (`sr-only`) ; l'humeur est portée par le libellé, pas seulement la
 couleur. Animations neutralisées sous `prefers-reduced-motion`. État vide
 chaleureux pour un compte sans donnée.
 
-## Ressources
+## Espace Ressources
 
-Contenus **à lire** (article / avis / conseil), séparés des exercices. Routes
-privées [`/ressources`](./src/app/ressources/page.tsx) et
+Hub **multi-format** : articles longs **à lire**, podcasts/vidéos **à écouter ou
+regarder**, et **liens utiles** officiels regroupés. Routes privées
+[`/ressources`](./src/app/ressources/page.tsx) et
 [`/ressources/[id]`](./src/app/ressources/[id]/page.tsx). Code dans
 [`src/features/wellbeing/`](./src/features/wellbeing).
 
 ### Filtrage
 
 Catalogue chargé une fois (RLS : `resources` en lecture pour authentifiés), puis
-filtré côté client par **thème ET type** (cumulables) via des helpers purs
+filtré côté client par **format ET thème** (cumulables) via des helpers purs
 [`filters.ts`](./src/features/wellbeing/filters.ts) (`filterResources`,
-`resourceThemes`, `resourceTypes`). Chips accessibles (`aria-pressed`, clavier) ;
-état « aucun résultat » doux.
+`resourceThemes`, `resourceFormats`). Chips accessibles (`aria-pressed`,
+clavier) ; état « aucun résultat » doux. Les liens utiles (`format = lien`) sont
+exclus du catalogue et présentés à part (`UsefulLinks`, regroupés par thème).
 
 ### Suggestion selon l'humeur
 
-`suggestByLevel(resources, level)` propose les ressources dont `mood_levels`
-contient le niveau de la **dernière humeur saisie** (rangée « Suggéré pour toi »).
-Mapping bienveillant, jamais prescriptif (humeur basse → contenus d'apaisement
-tagués pour les niveaux bas). Masquée si aucune humeur récente.
+`suggestByLevel(resources, level)` propose les contenus (hors liens) dont
+`mood_levels` contient le niveau de la **dernière humeur saisie** (rangée
+« Suggéré pour toi »). Mapping bienveillant, jamais prescriptif. Masquée si
+aucune humeur récente.
 
-### Lecture intégrée
+### Lecture intégrée & médias
 
-[`ResourceReader`](./src/features/wellbeing/ResourceReader.tsx) : contenu lu
-**dans l'app, sans lien sortant**, en largeur de prose (~680px), hiérarchie de
-titres correcte (h1), mention « rédigé et validé par des professionnels de
-santé » et disclaimer. Icônes Lucide cohérentes (outline). `getResource` valide
-le format UUID (404 propre sur id invalide).
+- [`ArticleReader`](./src/features/wellbeing/ArticleReader.tsx) : article lu
+  **dans l'app, sans lien sortant**, rendu long-forme (markdown-lite via
+  `parseArticle` : `## ` → sous-titre, `- ` → liste, paragraphes), largeur de
+  prose, hiérarchie h1 → h2, mention de validation (`author_or_validation`) +
+  disclaimer.
+- [`MediaResource`](./src/features/wellbeing/MediaResource.tsx) : podcast/vidéo.
+  Lecteur intégré si `media_embed`, sinon **lien externe sécurisé**
+  (`target="_blank"` + `rel="noopener noreferrer"`), avec source et durée.
+- [`UsefulLinks`](./src/features/wellbeing/UsefulLinks.tsx) : ressources
+  officielles externes, mêmes garde-fous de sécurité.
+
+`getResource` valide le format UUID (404 propre sur id invalide) ; les `lien`
+n'ont pas de page de lecture (404).
+
+### Contenus & maintenance
+
+Les **articles sont originaux** (voix Kitoo, validés par des pros de santé,
+aucune reproduction). Les **médias et liens utiles sont des références
+externes** : leurs URLs vivent dans le seed
+[`20260619100100_seed_resources_hub.sql`](./supabase/migrations/20260619100100_seed_resources_hub.sql)
+et doivent être **vérifiées et maintenues à jour** (sites tiers susceptibles de
+changer). Ne pas inventer de numéros ni d'URLs.
 
 ## Exercices
 

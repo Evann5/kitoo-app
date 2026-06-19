@@ -1,15 +1,15 @@
 "use client";
 
 import { cn } from "@/lib/cn";
-import { themeLabel, typeLabel } from "./filters";
+import { themeLabel, formatLabel } from "./filters";
 
 export type ThemeFilterProps = {
   themes: string[];
-  types: string[];
+  formats: string[];
   theme: string | null;
-  type: string | null;
+  format: string | null;
   onThemeChange: (theme: string | null) => void;
-  onTypeChange: (type: string | null) => void;
+  onFormatChange: (format: string | null) => void;
 };
 
 function Chip({
@@ -40,19 +40,39 @@ function Chip({
 }
 
 /**
- * Filtres du catalogue : thème et type (cumulables). Chips accessibles
- * (`aria-pressed`), opérables au clavier. « Tous » réinitialise le critère.
+ * Filtres du catalogue : **format** (à lire / écouter / regarder) et **thème**,
+ * cumulables. Chips accessibles (`aria-pressed`), opérables au clavier. « Tout »
+ * / « Tous les thèmes » réinitialisent le critère.
  */
 export function ThemeFilter({
   themes,
-  types,
+  formats,
   theme,
-  type,
+  format,
   onThemeChange,
-  onTypeChange,
+  onFormatChange,
 }: ThemeFilterProps) {
   return (
     <div className="flex flex-col gap-3">
+      <div
+        role="group"
+        aria-label="Filtrer par format"
+        className="flex flex-wrap gap-2"
+      >
+        <Chip
+          label="Tout"
+          pressed={format === null}
+          onClick={() => onFormatChange(null)}
+        />
+        {formats.map((f) => (
+          <Chip
+            key={f}
+            label={formatLabel(f)}
+            pressed={format === f}
+            onClick={() => onFormatChange(format === f ? null : f)}
+          />
+        ))}
+      </div>
       <div
         role="group"
         aria-label="Filtrer par thème"
@@ -69,25 +89,6 @@ export function ThemeFilter({
             label={themeLabel(t)}
             pressed={theme === t}
             onClick={() => onThemeChange(theme === t ? null : t)}
-          />
-        ))}
-      </div>
-      <div
-        role="group"
-        aria-label="Filtrer par type"
-        className="flex flex-wrap gap-2"
-      >
-        <Chip
-          label="Tous les types"
-          pressed={type === null}
-          onClick={() => onTypeChange(null)}
-        />
-        {types.map((t) => (
-          <Chip
-            key={t}
-            label={typeLabel(t)}
-            pressed={type === t}
-            onClick={() => onTypeChange(type === t ? null : t)}
           />
         ))}
       </div>

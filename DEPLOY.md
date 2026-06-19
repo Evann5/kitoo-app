@@ -112,6 +112,14 @@ Le **chat de soutien simulé** ([`auto-reply.ts`](./src/features/chat/auto-reply
 affiche les mêmes ressources en cas de détresse — à maintenir à jour au même
 endroit.
 
+Le **hub Ressources** (`/ressources`) contient des **podcasts/vidéos et liens
+utiles externes** dont les URLs sont définies dans le seed
+[`20260619100100_seed_resources_hub.sql`](./supabase/migrations/20260619100100_seed_resources_hub.sql).
+Ces liens pointent vers des sites tiers (3114, Fil Santé Jeunes, Nightline,
+Psycom, Santé publique France…) : **vérifier périodiquement** qu'ils sont
+toujours valides avant et après mise en production. Les articles, eux, sont
+**originaux** et hébergés en base (aucune dépendance externe).
+
 ## Région & conformité
 
 Projet Supabase `kitoo-app` en région **`eu-west-3`** (Union européenne, RGPD).

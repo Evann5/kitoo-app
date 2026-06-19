@@ -33,10 +33,10 @@ test("le « + » ouvre le menu et mène à un écran d'action", async ({ page })
     page.getByRole("heading", { name: "Tests", exact: true }),
   ).toBeVisible();
 
-  // Onglet Ressources → catalogue bien-être.
+  // Onglet Ressources → hub de ressources.
   await page.getByRole("link", { name: "Ressources" }).click();
   await expect(page).toHaveURL(/\/ressources$/);
   await expect(
-    page.getByRole("heading", { name: "Espace bien-être" }),
+    page.getByRole("heading", { name: "Espace ressources" }),
   ).toBeVisible();
 });

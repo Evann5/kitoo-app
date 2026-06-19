@@ -69,12 +69,17 @@ test("parcours complet : inscription → humeur → dashboard → bien-être →
     page.getByRole("heading", { name: /ton bien-être cette semaine/i }),
   ).toBeVisible();
 
-  // Espace bien-être : filtre + lecture interne.
+  // Espace ressources : filtre + lecture interne d'un article.
   await page.goto("/ressources");
   await page.getByRole("button", { name: "Stress" }).click();
-  await page.getByRole("link", { name: /Respirer en carré/ }).click();
+  await page
+    .getByRole("link", { name: /Apprivoiser le stress au quotidien/ })
+    .click();
   await expect(
-    page.getByRole("heading", { level: 1, name: "Respirer en carré" }),
+    page.getByRole("heading", {
+      level: 1,
+      name: "Apprivoiser le stress au quotidien",
+    }),
   ).toBeVisible();
 
   // Export authentifié de ses données.

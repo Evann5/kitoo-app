@@ -4,6 +4,27 @@ Toutes les évolutions notables de l'application Kitoo.
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/) ;
 versionnage [SemVer](https://semver.org/lang/fr/).
 
+## [1.13.0] — 2026-06-19
+
+### Ajouté
+
+- **Espace Ressources enrichi** : `resources` devient un hub **multi-format**
+  (`format` article / podcast / video / lien) — colonnes `url`, `media_embed`,
+  `source`, `author_or_validation`, `read_time`, `duration`, `slug` (migration +
+  seed). 6 **articles longs originaux** (voix Kitoo, validés pros), une sélection
+  de **podcasts/vidéos référencés** et des **liens utiles officiels** regroupés.
+- **Filtrage par format ET thème** (chips cumulables, accessibles) + rangée
+  « Suggéré pour toi » selon la dernière humeur (liens exclus des suggestions).
+- **Lecture intégrée** des articles (`ArticleReader`, long-forme markdown-lite,
+  sans redirection) ; `MediaResource` (lecteur intégré ou lien externe sécurisé
+  `rel="noopener noreferrer"`) ; `UsefulLinks` (liens officiels regroupés par
+  thème, mêmes garde-fous). Mentions de validation et disclaimer.
+
+### Notes
+
+- Articles **originaux** (aucune reproduction). Médias & liens = **références
+  externes** dont les URLs sont à **vérifier/maintenir** (cf. seed).
+
 ## [1.12.0] — 2026-06-19
 
 ### Ajouté

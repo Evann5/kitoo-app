@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { ResourceCard } from "./ResourceCard";
 import { ThemeFilter } from "./ThemeFilter";
-import { filterResources, resourceThemes, resourceTypes } from "./filters";
+import { filterResources, resourceThemes, resourceFormats } from "./filters";
 import type { Resource } from "./queries";
 
 export type ResourceCatalogProps = {
@@ -11,18 +11,19 @@ export type ResourceCatalogProps = {
 };
 
 /**
- * Catalogue filtrable (thème + type cumulables). Liste sémantique de
- * `ResourceCard` ; état « aucun résultat » doux.
+ * Catalogue filtrable (**format + thème** cumulables). Liste sémantique de
+ * `ResourceCard` ; état « aucun résultat » doux. Reçoit les contenus à
+ * lire/écouter/regarder (les liens utiles sont affichés à part).
  */
 export function ResourceCatalog({ resources }: ResourceCatalogProps) {
   const [theme, setTheme] = useState<string | null>(null);
-  const [type, setType] = useState<string | null>(null);
+  const [format, setFormat] = useState<string | null>(null);
 
   const themes = useMemo(() => resourceThemes(resources), [resources]);
-  const types = useMemo(() => resourceTypes(resources), [resources]);
+  const formats = useMemo(() => resourceFormats(resources), [resources]);
   const filtered = useMemo(
-    () => filterResources(resources, { theme, type }),
-    [resources, theme, type],
+    () => filterResources(resources, { theme, format }),
+    [resources, theme, format],
   );
 
   return (
@@ -33,11 +34,11 @@ export function ResourceCatalog({ resources }: ResourceCatalogProps) {
 
       <ThemeFilter
         themes={themes}
-        types={types}
+        formats={formats}
         theme={theme}
-        type={type}
+        format={format}
         onThemeChange={setTheme}
-        onTypeChange={setType}
+        onFormatChange={setFormat}
       />
 
       {filtered.length === 0 ? (
