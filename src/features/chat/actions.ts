@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import type { Tables } from "@/lib/supabase/types";
 import { autoReply } from "./auto-reply";
@@ -10,6 +11,30 @@ type Message = Tables<"messages">;
 export type SendMessageResult =
   | { ok: true; userMessage: Message; proMessage: Message }
   | { ok: false; error: string };
+
+export type ClearResult = { ok: true } | { ok: false; error: string };
+
+/**
+ * Repart d'une conversation vierge : supprime **tous les messages** de
+ * l'utilisateur connecté (RLS stricte, `user_id = auth.uid()`). La ligne de
+ * conversation est conservée. `revalidatePath` rafraîchit `/chat`.
+ */
+export async function clearConversation(): Promise<ClearResult> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, error: "Tu dois être connecté." };
+
+  const { error } = await supabase
+    .from("messages")
+    .delete()
+    .eq("user_id", user.id);
+  if (error) return { ok: false, error: "Suppression impossible." };
+
+  revalidatePath("/chat");
+  return { ok: true };
+}
 
 /**
  * Envoie un message utilisateur et génère la réponse **simulée** du « pro ».
@@ -73,6 +98,9 @@ export async function sendMessage(input: {
     .from("conversations")
     .update({ updated_at: new Date().toISOString() })
     .eq("id", conversationId);
+
+  // Rafraîchit le cache de route pour que l'historique soit à jour au retour.
+  revalidatePath("/chat");
 
   return { ok: true, userMessage, proMessage };
 }

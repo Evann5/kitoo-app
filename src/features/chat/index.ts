@@ -2,7 +2,7 @@ export { ChatScreen } from "./ChatScreen";
 export { ChatBubble } from "./ChatBubble";
 export { ChatLauncher } from "./ChatLauncher";
 export { getConversation, hasPendingCallback, type Message } from "./queries";
-export { sendMessage } from "./actions";
+export { sendMessage, clearConversation } from "./actions";
 export { CallbackRequest } from "./CallbackRequest";
 export { requestCallback } from "./callback-actions";
 export {

@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState, useTransition } from "react";
-import { Info, Send } from "lucide-react";
+import { Info, RotateCcw, Send } from "lucide-react";
 import { Card } from "@/components/ui";
 import { ChatBubble } from "./ChatBubble";
-import { sendMessage } from "./actions";
+import { sendMessage, clearConversation } from "./actions";
 import type { Message } from "./queries";
 
 export type ChatScreenProps = {
@@ -47,8 +47,33 @@ export function ChatScreen({ initialMessages }: ChatScreenProps) {
     });
   }
 
+  function reset() {
+    if (pending) return;
+    setError(null);
+    startTransition(async () => {
+      const res = await clearConversation();
+      if (res.ok) setMessages([]);
+      else setError(res.error);
+    });
+  }
+
   return (
     <div className="flex h-full min-h-0 flex-col gap-3">
+      {/* Action : repartir d'une conversation vierge. */}
+      {messages.length > 0 ? (
+        <div className="flex shrink-0 justify-end">
+          <button
+            type="button"
+            onClick={reset}
+            disabled={pending}
+            className="text-small text-ink-600 hover:text-ink-900 inline-flex items-center gap-1.5 font-bold disabled:opacity-50"
+          >
+            <RotateCcw aria-hidden size={15} strokeWidth={2} />
+            Nouvelle conversation
+          </button>
+        </div>
+      ) : null}
+
       {/* Étiquetage permanent : nature simulée + disclaimer. */}
       <Card
         soft

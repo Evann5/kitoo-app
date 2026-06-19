@@ -2,11 +2,15 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-const { sendMock, callbackMock } = vi.hoisted(() => ({
+const { sendMock, callbackMock, clearMock } = vi.hoisted(() => ({
   sendMock: vi.fn(),
   callbackMock: vi.fn(),
+  clearMock: vi.fn(),
 }));
-vi.mock("@/features/chat/actions", () => ({ sendMessage: sendMock }));
+vi.mock("@/features/chat/actions", () => ({
+  sendMessage: sendMock,
+  clearConversation: clearMock,
+}));
 vi.mock("@/features/chat/callback-actions", () => ({
   requestCallback: callbackMock,
 }));
@@ -18,6 +22,7 @@ import { CallbackRequest } from "@/features/chat/CallbackRequest";
 beforeEach(() => {
   sendMock.mockReset();
   callbackMock.mockReset();
+  clearMock.mockReset();
 });
 
 describe("ChatScreen - étiquetage & envoi", () => {
@@ -61,6 +66,29 @@ describe("ChatScreen - étiquetage & envoi", () => {
     expect(sendMock).toHaveBeenCalledWith({ content: "bonjour" });
     expect(await screen.findByText("bonjour")).toBeInTheDocument();
     expect(screen.getByText("Je t'écoute, raconte-moi.")).toBeInTheDocument();
+  });
+
+  it("« Nouvelle conversation » efface le fil", async () => {
+    clearMock.mockResolvedValue({ ok: true });
+    const user = userEvent.setup();
+    render(
+      <ChatScreen
+        initialMessages={[
+          {
+            id: "m1",
+            sender: "user",
+            content: "vieux message",
+            flagged: false,
+          } as never,
+        ]}
+      />,
+    );
+    expect(screen.getByText("vieux message")).toBeInTheDocument();
+    await user.click(
+      screen.getByRole("button", { name: /nouvelle conversation/i }),
+    );
+    expect(clearMock).toHaveBeenCalled();
+    expect(screen.queryByText("vieux message")).toBeNull();
   });
 });
 
