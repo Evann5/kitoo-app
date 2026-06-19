@@ -7,7 +7,8 @@ import { listEntries, getTodayEntry } from "@/features/mood/queries";
 import { poseForMood, moodOption } from "@/features/mood";
 import { suggestResourcesForLevel } from "@/features/wellbeing/queries";
 import { getDailyInspiration } from "@/lib/daily-inspiration";
-import { ChatLauncher } from "@/features/chat";
+import Link from "next/link";
+import { LifeBuoy } from "lucide-react";
 import {
   listExercises,
   listMySessions,
@@ -173,7 +174,24 @@ export default async function DashboardPage() {
 
         {showNudge ? <SupportNudge /> : null}
 
-        <ChatLauncher />
+        {/* Accès rapide à l'aide d'urgence (soutenant, non anxiogène). */}
+        <Link
+          href="/urgence"
+          className="rounded-card border-brand-200 bg-brand-50 hover:bg-brand-100 flex items-center gap-3 border px-4 py-3 focus-visible:outline-none"
+        >
+          <span className="bg-brand-100 text-brand-700 rounded-pill flex h-10 w-10 shrink-0 items-center justify-center">
+            <LifeBuoy aria-hidden size={20} strokeWidth={1.8} />
+          </span>
+          <span className="flex flex-col">
+            <span className="text-body text-ink-900 font-bold">
+              Besoin d&apos;aide maintenant ?
+            </span>
+            <span className="text-small text-ink-600">
+              Numéros d&apos;écoute et d&apos;urgence, à portée de main.
+            </span>
+          </span>
+        </Link>
+
         <WeekOverview days={weekDays} />
         <QuickActions breathingHref={breathingHref} />
         <SuggestionsList suggestions={suggestions} />

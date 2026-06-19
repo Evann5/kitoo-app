@@ -5,6 +5,7 @@ import "./globals.css";
 import { siteConfig } from "@/lib/site-config";
 import { ANTI_FLASH_SCRIPT } from "@/features/accessibility";
 import { TabBar } from "@/components/layout/TabBar";
+import { ChatFab } from "@/components/chat/ChatFab";
 
 /**
  * Police d'affichage Kitoo : Goodly Medium (locale, .otf).
@@ -55,8 +56,9 @@ export default function RootLayout({
       </head>
       <body className="font-body flex min-h-full flex-col">
         {children}
-        {/* Barre persistante : se masque hors des routes de l'app connectée. */}
+        {/* Barre + FAB persistants : se masquent hors des routes concernées. */}
         <TabBar />
+        <ChatFab />
       </body>
     </html>
   );

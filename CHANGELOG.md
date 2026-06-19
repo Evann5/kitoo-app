@@ -4,6 +4,18 @@ Toutes les évolutions notables de l'application Kitoo.
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/) ;
 versionnage [SemVer](https://semver.org/lang/fr/).
 
+## [1.12.0] — 2026-06-19
+
+### Ajouté
+
+- **Aide d'urgence** : page `/urgence` (numéros officiels FR typés dans
+  `emergency.ts` - 112, 15, 18, 17, 114 par SMS, 3114, Fil Santé Jeunes ;
+  appel/SMS en un geste via `tel:`/`sms:` ; ton soutenant + disclaimer danger
+  immédiat). Bouton SOS sur l'accueil et lien depuis l'alerte douce.
+- **FAB de chat collant** (`ChatFab`) en bas à droite, présent partout sauf
+  Profil / Exercices / Tests / Humeur ; remplace l'ancien `ChatLauncher`.
+  Accessible (`aria-label`, ≥ 44px), `prefers-reduced-motion`.
+
 ## [1.11.2] — 2026-06-17
 
 ### Modifié

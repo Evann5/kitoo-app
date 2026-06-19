@@ -575,6 +575,37 @@ dans [`src/features/chat/`](./src/features/chat).
 > Ressources d'aide (3114 / 15 / 112) à **vérifier/maintenir à jour** — cf. le
 > commentaire dans `auto-reply.ts` et `DEPLOY.md`.
 
+## Aide d'urgence
+
+Répertoire de numéros d'aide accessible à `/urgence`
+([page](./src/app/urgence/page.tsx)), aussi atteint via le **bouton SOS**
+« Besoin d'aide maintenant ? » sur l'accueil et via l'alerte douce
+([`SupportNudge`](./src/features/dashboard/SupportNudge.tsx)).
+
+- **Données statiques typées** dans [`emergency.ts`](./src/lib/emergency.ts) :
+  numéros **officiels FR** (112, 15, 18, 17, 114 par SMS, **3114** prévention
+  suicide, **Fil Santé Jeunes**). Appel/SMS **en un geste** via `tel:`/`sms:`.
+- Ton soutenant (« Tu n'es pas seul·e ») + disclaimer « En cas de danger
+  immédiat, appelle le 112 ou le 15 ». Cibles larges, lisible en situation de
+  stress, sans dépendre du réseau.
+
+> ⚠️ **Maintenance** : ces numéros doivent être **vérifiés régulièrement**
+> (validité, disponibilité, libellés) — cf. le commentaire en tête de
+> `emergency.ts`. Ne jamais inventer de numéro.
+
+## Bouton de chat (FAB)
+
+L'accès au chat de soutien (A21) est un **bouton flottant collant**
+([`ChatFab`](./src/components/chat/ChatFab.tsx)), en bas à droite au-dessus de la
+tab bar (respecte les safe-areas), monté une fois dans le layout racine.
+
+- **Affiché** sur : accueil, Suivi, Ressources, Urgence.
+- **Masqué** sur : Profil, Exercices (`/exercices` + `[slug]`), Tests (`/tests`
+  - `[scale]`), Humeur (`/humeur`), et les pages publiques.
+- Accessible (`aria-label` « Ouvrir l'échange de soutien », cible ≥ 44px),
+  apparition douce neutralisée sous `prefers-reduced-motion`. L'ancien
+  `ChatLauncher` (carte d'accueil) a été retiré au profit du FAB.
+
 ## RGPD & accessibilité
 
 Les humeurs sont des **données de santé sensibles** : l'app intègre consentement,
