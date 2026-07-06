@@ -94,6 +94,27 @@ Best Practices 100 · SEO 100.
 `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` en _GitHub Actions
 secrets_.
 
+## Déploiement
+
+Hébergement **Vercel** (front) + **Supabase** (base, auth, RLS, région UE), en
+déploiement continu (un `git push` sur `main` redéploie la production).
+
+Un **script reproductible** met l'app en production de bout en bout depuis un
+clone neuf — schéma + seed Supabase, puis mise en ligne Vercel — en une commande
+**idempotente** :
+
+```bash
+cp .env.example .env.local   # puis renseigner les clés (git-ignoré)
+./scripts/deploy.sh          # ou : pnpm deploy
+```
+
+Le script ([`scripts/deploy.sh`](./scripts/deploy.sh)) vérifie les CLIs, applique
+les migrations versionnées (`supabase db push`) et le seed de démo
+([`supabase/seed.sql`](./supabase/seed.sql)), puis déploie sur Vercel et affiche
+l'URL de production. Variables d'environnement complètes et documentées dans
+[`.env.example`](./.env.example) (aucun secret commité). Procédure pas à pas,
+prérequis et vérifications : **[`DEPLOY.md`](./DEPLOY.md)**.
+
 ## Arborescence
 
 ```

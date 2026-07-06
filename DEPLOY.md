@@ -8,6 +8,75 @@ Déploiement continu sur **Vercel**, connecté au dépôt GitHub
 - **Déploiement continu** : chaque `git push` sur `main` redéploie la production ;
   chaque branche / PR génère un déploiement _Preview_ automatique.
 
+## Déploiement reproductible en une commande (C4.8)
+
+Depuis un **clone neuf** du dépôt, avec seulement Node + les comptes
+Vercel/Supabase et leurs clés, une seule commande met l'app en production de
+bout en bout (schéma + seed Supabase, puis mise en ligne Vercel) :
+
+```bash
+./scripts/deploy.sh          # ou : pnpm deploy
+```
+
+### Prérequis
+
+- **Node 18+** et **pnpm** (`corepack enable` ou `npm i -g pnpm`).
+- Un **projet Supabase** en région UE (Postgres + Auth + RLS) et un **projet
+  Vercel** lié au dépôt GitHub. Les CLIs `supabase` et `vercel` sont utilisés
+  automatiquement via `npx` s'ils ne sont pas installés globalement.
+- Les clés, copiées depuis [`.env.example`](./.env.example) vers `.env.local`
+  (git-ignoré) — voir le tableau plus bas. Le script lit `.env.local`, ou les
+  variables déjà présentes dans l'environnement.
+
+### Ce que fait le script (toutes les étapes sont idempotentes)
+
+1. **CLIs** : détecte `supabase` / `vercel`, sinon bascule sur `npx --yes`.
+2. **Supabase** : `supabase link` au projet (`SUPABASE_PROJECT_REF`), puis
+   `supabase db push` applique les **migrations versionnées**
+   (`supabase/migrations/` : tables, RLS, triggers, données de référence).
+   Migrations déjà appliquées = no-op (table `supabase_migrations`).
+3. **Seed** : si `SUPABASE_DB_URL` + `psql` sont disponibles, applique
+   [`supabase/seed.sql`](./supabase/seed.sql) (données de démo, **idempotent** :
+   `ON CONFLICT` / garde « si vide »). Sinon, rien à faire : le contenu de
+   référence est déjà embarqué dans les migrations.
+4. **Vercel** : rappelle les variables runtime requises, `vercel pull` (lie le
+   projet + récupère la config production), puis `vercel --prod` (build côté
+   Vercel).
+5. **URL** : affiche l'URL de production finale.
+
+Options : `--skip-db` (front seul), `--skip-vercel` (base seule), `--help`.
+
+### Vérifier que le déploiement a réussi
+
+```bash
+curl -I https://kitoo-app.vercel.app                 # 200 sur l'accueil
+curl -I https://kitoo-app.vercel.app/ressources      # 307 → /connexion (route protégée = middleware OK)
+```
+
+Puis, dans le navigateur : la page d'accueil s'ouvre, `/connexion` et
+l'inscription fonctionnent (preuve de la connexion Supabase), et une fois
+connecté les **données de démo** (ressources, exercices) s'affichent.
+
+> **Procédure testée depuis un clone neuf.** Le schéma est intégralement décrit
+> par les migrations versionnées (aucune modification manuelle de la base) ; le
+> seed et le `db push` sont rejouables sans effet de bord (idempotents) ; le
+> déploiement continu GitHub→Vercel reste actif (un `git push` sur `main`
+> redéploie la production). Le script sert à provisionner un **nouvel**
+> environnement Supabase/Vercel ou à déployer à la demande.
+
+> **Note sur le projet de production existant.** Il a été provisionné
+> initialement via l'API de gestion Supabase : les horodatages enregistrés dans
+> son historique de migrations diffèrent des préfixes des fichiers locaux. Sur un
+> **projet Supabase neuf**, `supabase db push` applique donc les 15 migrations
+> proprement, dans l'ordre. Pour re-cibler le script sur le projet **existant**
+> (déjà à jour), réconcilier l'historique une fois avec
+> `supabase migration list` puis `supabase migration repair --status applied <version>`,
+> ou simplement utiliser `--skip-db` (le schéma y est déjà présent). Le seed
+> (`supabase/seed.sql`) reste, lui, idempotent sur tout environnement.
+
+Le reste de ce document détaille chaque brique (mise en place initiale,
+variables, réglages Auth, sécurité).
+
 ## Mise en place (one-shot)
 
 ```bash
