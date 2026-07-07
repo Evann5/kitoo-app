@@ -1,11 +1,17 @@
 # Kitoo — application (MVP)
 
-Application **Kitoo** : suivi d'humeur (Mood Tracker), statistiques et espace
-bien-être, avec authentification email / mot de passe.
+Application **Kitoo** : une application de **prévention en santé mentale** pour
+les jeunes — suivi d'humeur (Mood Tracker), statistiques, tests d'auto-évaluation
+en orientation, exercices, ressources et chat de soutien, avec authentification
+email / mot de passe. Ton bienveillant, non clinique ; Kitoo **oriente** mais ne
+pose **aucun diagnostic** et ne remplace pas un suivi médical.
 
-**Production** : https://kitoo-app.vercel.app — déployée en continu sur Vercel
-(chaque `git push` sur `main` redéploie automatiquement). Détails et procédure :
-[`DEPLOY.md`](./DEPLOY.md).
+- **Démo (production)** : https://kitoo-app.vercel.app
+- **Dépôt** : https://github.com/Evann5/kitoo-app
+
+Déployée en continu sur Vercel (chaque `git push` sur `main` redéploie
+automatiquement). Procédure reproductible : [`DEPLOY.md`](./DEPLOY.md) +
+[`scripts/deploy.sh`](./scripts/deploy.sh).
 
 Le périmètre actuel (**v1.1**) couvre : authentification (email/mot de passe),
 saisie quotidienne d'humeur « compagnon », tableau de bord avec tendances et
@@ -21,24 +27,38 @@ câblé (cf. [`IMPORT.md`](./IMPORT.md)).
 
 ## Stack
 
-- **Next.js** (App Router) + **TypeScript** (strict)
-- **Tailwind CSS** (v4)
-- **Supabase** (`@supabase/supabase-js` + `@supabase/ssr`) — auth + données
-- **Tests** : Vitest + Testing Library (jsdom) · Playwright (e2e)
-- **Tooling** : ESLint · Prettier (+ `prettier-plugin-tailwindcss`)
-- Gestionnaire de paquets : **pnpm**
+Chaque choix, en une ligne :
+
+- **Next.js 16 (App Router) + TypeScript strict** — rendu serveur, server
+  actions et routes protégées dans un seul framework typé de bout en bout.
+- **Supabase** (Postgres + Auth + RLS, `@supabase/ssr`) — base, authentification
+  et **sécurité par ligne** managées, hébergées en région UE (RGPD).
+- **Tailwind CSS v4** — design system Kitoo (tokens, thèmes) rapide et cohérent,
+  sans CSS custom dispersé.
+- **Vercel** — hébergement du front et **déploiement continu** (push = déploiement),
+  edge/CDN et variables d'environnement par environnement.
+- **Tests** : **Vitest** + Testing Library (unitaires/composants, jsdom) et
+  **Playwright** + **axe-core** (parcours e2e et accessibilité).
+- **Tooling** : ESLint · Prettier (+ `prettier-plugin-tailwindcss`) · **pnpm**.
+- **Roadmap** (non encore intégrés au MVP) : **Resend** pour les emails
+  transactionnels (rappels), **Capacitor** pour l'empaquetage mobile
+  iOS/Android à partir du même code.
 
 ## Démarrage
 
+**Prérequis** : Node 18+ et **pnpm** (`corepack enable`). Un projet Supabase
+(région UE) pour l'auth et les données.
+
 ```bash
 pnpm install
-cp .env.local.example .env.local   # renseigner les clés Supabase (cf. ci-dessous)
+cp .env.example .env.local         # puis renseigner les clés (cf. variables ci-dessous)
 pnpm dev                           # http://localhost:3000
 ```
 
-Les clients Supabase sont **tolérants à l'absence de variables d'env** : le build
-fonctionne sans `.env.local` (les vraies clés sont nécessaires pour l'auth et les
-données).
+Toutes les variables sont décrites dans [`.env.example`](./.env.example)
+(référence complète, commentée, **sans aucun secret**). Les clients Supabase sont
+**tolérants à l'absence de variables d'env** : le build fonctionne sans
+`.env.local` (les vraies clés sont nécessaires pour l'auth et les données).
 
 ## Scripts
 
@@ -86,6 +106,10 @@ pnpm build
 **Audit Lighthouse** (prod, page d'accueil) : Performance 99 · Accessibilité 95 ·
 Best Practices 100 · SEO 100.
 
+Le **procès-verbal de recettage** (stratégie de tests, tableau des cas
+d'utilisation et rapport d'exécution réel) est consigné dans
+[`docs/PV_RECETTAGE.md`](./docs/PV_RECETTAGE.md).
+
 ## Intégration continue
 
 [GitHub Actions](./.github/workflows/ci.yml) sur chaque push / PR vers `main` :
@@ -114,6 +138,25 @@ les migrations versionnées (`supabase db push`) et le seed de démo
 l'URL de production. Variables d'environnement complètes et documentées dans
 [`.env.example`](./.env.example) (aucun secret commité). Procédure pas à pas,
 prérequis et vérifications : **[`DEPLOY.md`](./DEPLOY.md)**.
+
+## Versioning & conventions
+
+- **Convention de commits** : [Conventional Commits](https://www.conventionalcommits.org/)
+  (`feat:`, `fix:`, `chore:`, `docs:`, `refactor:`, `test:`…). Chaque commit
+  porte un **titre court** et un **corps explicatif** (le « quoi » et le
+  « pourquoi »), en français.
+- **Stratégie de branches** : `main` est la branche de production (protégée par
+  la CI et déployée en continu). Le travail se fait par petits incréments
+  fonctionnels ; les évolutions notables sont consignées dans
+  [`CHANGELOG.md`](./CHANGELOG.md) (SemVer).
+- **Historique consultable et commenté** : `git log` retrace la construction
+  pas à pas (migrations, fonctionnalités, tests, docs), chaque message
+  détaillant la portée et les garde-fous (sécurité, RGPD, accessibilité).
+
+```bash
+git log --oneline           # survol de l'historique
+git log                     # messages complets et commentés
+```
 
 ## Arborescence
 
@@ -207,8 +250,10 @@ pas un suivi médical professionnel » sur les écrans d'auth.
 
 Schéma défini par migrations versionnées dans
 [`supabase/migrations/`](./supabase/migrations) (appliquées sur le projet
-Supabase `kitoo-app`). Données de santé = sensibles RGPD → **Row-Level Security
-stricte, default-deny**.
+Supabase `kitoo-app`). Ces migrations font foi comme **modèle conceptuel de
+données (MCD)** : tables, relations, contraintes et policies y sont décrites de
+façon exécutable. La table ci-dessous en donne la vue d'ensemble. Données de
+santé = sensibles RGPD → **Row-Level Security stricte, default-deny**.
 
 ### Tables
 

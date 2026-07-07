@@ -31,6 +31,10 @@ test("consentement, persistance a11y, export et suppression de compte", async ({
   await page.goto("/profil");
   await page.getByRole("switch", { name: "Mode dyslexie" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-font", "dyslexia");
+  // La préférence est enregistrée dans le profil via une server action ; on
+  // attend qu'elle soit committée avant de recharger (sinon le SSR relit
+  // l'ancienne valeur — course propre au test, pas à l'usage réel).
+  await page.waitForLoadState("networkidle");
   await page.reload();
   await expect(page.locator("html")).toHaveAttribute("data-font", "dyslexia");
 
