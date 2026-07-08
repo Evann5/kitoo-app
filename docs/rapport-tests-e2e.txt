@@ -1,0 +1,147 @@
+$ playwright test
+
+[WebServer] $ next dev
+
+[WebServer] (node:65412) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/evan/Documents/Claude/Code/Kitoo-app/tailwind.config.ts?id=1783535099504 is not specified and it doesn't parse as CommonJS.
+[WebServer] Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+[WebServer] To eliminate this warning, add "type": "module" to /Users/evan/Documents/Claude/Code/Kitoo-app/package.json.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 19 tests using 3 workers
+
+[1/19] [chromium] › tests/e2e/assessments.spec.ts:4:5 › passer un test (WHO-5) → résultat orienté
+[2/19] [chromium] › tests/e2e/a11y.spec.ts:11:5 › aucune violation a11y critique sur les pages publiques
+[3/19] [chromium] › tests/e2e/a11y.spec.ts:24:5 › aucune violation a11y critique sur les pages privées
+[4/19] [chromium] › tests/e2e/auth.spec.ts:4:7 › Authentification › une route privée redirige un visiteur non connecté vers /connexion
+[5/19] [chromium] › tests/e2e/auth.spec.ts:14:7 › Authentification › l'écran de connexion présente un formulaire accessible
+[6/19] [chromium] › tests/e2e/auth.spec.ts:29:7 › Authentification › l'inscription valide les entrées côté client
+[7/19] [chromium] › tests/e2e/auth.spec.ts:42:7 › Authentification › navigation connexion ⇄ inscription
+[8/19] [chromium] › tests/e2e/chat.spec.ts:9:5 › accueil → chat de soutien → envoi → réponse simulée + ressource détresse
+[9/19] [chromium] › tests/e2e/emergency.spec.ts:7:5 › bouton SOS → /urgence, et FAB de chat affiché selon la route
+
+[WebServer] [browser] Image with src "/illustrations/kitoo-sunglasses.png" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+[WebServer] Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+
+[WebServer] [browser] Image with src "/illustrations/kitoo-sunglasses.png" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+[WebServer] Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+[10/19] [chromium] › tests/e2e/exercices.spec.ts:4:5 › lancer un exercice : minuteur et contrôles
+[11/19] [chromium] › tests/e2e/gdpr.spec.ts:14:5 › consentement, persistance a11y, export et suppression de compte
+[12/19] [chromium] › tests/e2e/home.spec.ts:3:5 › la page d'accueil affiche l'identité Kitoo et mène à l'inscription
+[13/19] [chromium] › tests/e2e/journal.spec.ts:9:5 › humeur + exercice + test → apparaissent dans le journal
+[14/19] [chromium] › tests/e2e/mood.spec.ts:8:5 › inscription → saisie d'humeur → réouverture préchargée
+
+[WebServer] [browser] Image with src "/illustrations/kitoo-sunglasses.png" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+[WebServer] Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+
+[WebServer] [browser] Image with src "/illustrations/kitoo-sunglasses.png" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+[WebServer] Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+
+[WebServer] [browser] A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+[WebServer] 
+[WebServer] - A server/client branch `if (typeof window !== 'undefined')`.
+[WebServer] - Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+[WebServer] - Date formatting in a user's locale which doesn't match the server.
+[WebServer] - External changing data without sending a snapshot of it along with the HTML.
+[WebServer] - Invalid HTML tag nesting.
+[WebServer] 
+[WebServer] It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+[WebServer] 
+[WebServer] https://react.dev/link/hydration-mismatch
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+[WebServer]       <AppDevOverlayErrorBoundary globalError={[...]}>
+[WebServer]         <ReplaySsrOnlyErrors>
+[WebServer]         <DevRootHTTPAccessFallbackBoundary>
+[WebServer]           <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+[WebServer]             <HTTPAccessFallbackErrorBoundary pathname="/profil" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+[WebServer]               <RedirectBoundary>
+[WebServer]                 <RedirectErrorBoundary router={{...}}>
+[WebServer]                   <Head>
+[WebServer]                   <__next_root_layout_boundary__>
+[WebServer]                     <SegmentViewNode type="layout" pagePath="layout.tsx">
+[WebServer]                       <SegmentTrieNode>
+[WebServer]                       <link>
+[WebServer]                       <script>
+[WebServer]                       <script>
+[WebServer]                       <script>
+[WebServer]                       <script>
+[WebServer]                       <script>
+[WebServer]                       <script>
+[WebServer]                       <script>
+[WebServer]                       <RootLayout>
+[WebServer]                         <html
+[WebServer]                           lang="fr"
+[WebServer]                           data-scroll-behavior="smooth"
+[WebServer]                           className="goodly_269806d4-module__aMBzdq__variable nunito_688fab87-module__l53Ijq__variable..."
+[WebServer] -                         data-font="dyslexia"
+[WebServer]                         >
+[WebServer]                   ...
+[WebServer]  
+
+[WebServer] [browser] A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+[WebServer] 
+[WebServer] - A server/client branch `if (typeof window !== 'undefined')`.
+[WebServer] - Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+[WebServer] - Date formatting in a user's locale which doesn't match the server.
+[WebServer] - External changing data without sending a snapshot of it along with the HTML.
+[WebServer] - Invalid HTML tag nesting.
+[WebServer] 
+[WebServer] It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+[WebServer] 
+[WebServer] https://react.dev/link/hydration-mismatch
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+[WebServer]       <AppDevOverlayErrorBoundary globalError={[...]}>
+[WebServer]         <ReplaySsrOnlyErrors>
+[WebServer]         <DevRootHTTPAccessFallbackBoundary>
+[WebServer]           <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+[WebServer]             <HTTPAccessFallbackErrorBoundary pathname="/connexion" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+[WebServer]               <RedirectBoundary>
+[WebServer]                 <RedirectErrorBoundary router={{...}}>
+[WebServer]                   <Head>
+[WebServer]                   <__next_root_layout_boundary__>
+[WebServer]                     <SegmentViewNode type="layout" pagePath="layout.tsx">
+[WebServer]                       <SegmentTrieNode>
+[WebServer]                       <link>
+[WebServer]                       <script>
+[WebServer]                       <script>
+[WebServer]                       <script>
+[WebServer]                       <script>
+[WebServer]                       <script>
+[WebServer]                       <script>
+[WebServer]                       <script>
+[WebServer]                       <RootLayout>
+[WebServer]                         <html
+[WebServer]                           lang="fr"
+[WebServer]                           data-scroll-behavior="smooth"
+[WebServer]                           className="goodly_269806d4-module__aMBzdq__variable nunito_688fab87-module__l53Ijq__variable..."
+[WebServer] -                         data-font="dyslexia"
+[WebServer]                         >
+[WebServer]                   ...
+[WebServer]  
+[15/19] [chromium] › tests/e2e/navigation.spec.ts:4:5 › le « + » ouvre le menu et mène à un écran d'action
+[16/19] [chromium] › tests/e2e/parcours-plus.spec.ts:14:5 › le menu « + » mène aux 3 actions (humeur, test, exercice)
+
+[WebServer] The width(-1) and height(-1) of chart should be greater than 0,
+[WebServer]        please check the style of container, or the props width(100%) and height(100%),
+[WebServer]        or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+[WebServer]        height and width.
+[17/19] [chromium] › tests/e2e/parcours.spec.ts:24:5 › parcours complet : inscription → humeur → dashboard → bien-être → export → déconnexion
+
+[WebServer] [browser] The width(-1) and height(-1) of chart should be greater than 0,
+[WebServer]        please check the style of container, or the props width(100%) and height(100%),
+[WebServer]        or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+[WebServer]        height and width.
+
+[WebServer] [browser] The width(-1) and height(-1) of chart should be greater than 0,
+[WebServer]        please check the style of container, or the props width(100%) and height(100%),
+[WebServer]        or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+[WebServer]        height and width.
+[18/19] [chromium] › tests/e2e/securite-rls.spec.ts:62:5 › isolation RLS : aucun accès croisé entre deux comptes
+[19/19] [chromium] › tests/e2e/wellbeing.spec.ts:4:5 › ressources → filtre format + thème → lecture d'un article
+
+[WebServer] [browser] Image with src "/illustrations/kitoo-sunglasses.png" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+[WebServer] Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+  19 passed (25.3s)

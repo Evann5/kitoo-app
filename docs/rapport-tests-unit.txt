@@ -1,0 +1,126 @@
+$ vitest run --coverage
+[33mThe CJS build of Vite's Node API is deprecated. See https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.[39m
+
+ RUN  v2.1.9 /Users/evan/Documents/Claude/Code/Kitoo-app
+      Coverage enabled with v8
+
+ ✓ tests/unit/chat-engine.test.ts (11 tests) 4ms
+ ✓ tests/unit/journal-aggregate.test.ts (13 tests) 3ms
+ ✓ tests/unit/exercises.test.tsx (6 tests) 60ms
+ ✓ tests/unit/design-system.test.tsx (7 tests) 50ms
+ ✓ tests/unit/home-components.test.tsx (4 tests) 163ms
+ ✓ tests/unit/wellbeing-components.test.tsx (7 tests) 216ms
+ ✓ tests/unit/assessments-ui.test.tsx (5 tests) 297ms
+ ✓ tests/unit/AuthForm.test.tsx (3 tests) 398ms
+ ✓ tests/unit/chat-ui.test.tsx (8 tests) 289ms
+ ✓ tests/unit/MoodEntryForm.test.tsx (5 tests) 286ms
+ ✓ tests/unit/wellbeing-filters.test.ts (10 tests) 3ms
+ ✓ tests/unit/dashboard-stats.test.ts (12 tests) 3ms
+ ✓ tests/unit/home-modules.test.tsx (10 tests) 95ms
+stderr | tests/unit/journal-view.test.tsx > JournalView > n'expose jamais le score d'humeur 0–100 (libellé seul)
+The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+
+stderr | tests/unit/journal-view.test.tsx > JournalView > filtre par type : ne garde que les exercices
+The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+
+ ✓ tests/unit/data-queries.test.ts (4 tests) 2ms
+stderr | tests/unit/journal-view.test.tsx > JournalView > filtre par type : ne garde que les exercices
+The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+
+stderr | tests/unit/journal-view.test.tsx > JournalView > affiche un état vide chaleureux pour un filtre sans résultat
+The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+
+stderr | tests/unit/journal-view.test.tsx > JournalView > affiche un état vide chaleureux pour un filtre sans résultat
+The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+
+stderr | tests/unit/journal-view.test.tsx > JournalView > affiche un état vide chaleureux pour un filtre sans résultat
+The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+
+stderr | tests/unit/journal-view.test.tsx > JournalView > ouvre le détail orienté d'un test (réutilise la vue A13)
+The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+
+ ✓ tests/unit/TabBar.test.tsx (4 tests) 182ms
+ ✓ tests/unit/journal-view.test.tsx (5 tests) 222ms
+ ✓ tests/unit/assessments-scoring.test.ts (7 tests) 2ms
+ ✓ tests/unit/validation.test.ts (5 tests) 2ms
+ ✓ tests/unit/accessibility.test.tsx (4 tests) 64ms
+ ✓ tests/unit/daily-inspiration.test.tsx (4 tests) 35ms
+ ✓ tests/unit/middleware.test.ts (3 tests) 5ms
+ ✓ tests/unit/mood-config.test.ts (6 tests) 2ms
+stderr | tests/unit/dashboard-components.test.tsx > MoodTrendChart - accessibilité > expose une alternative textuelle (résumé + table de données)
+The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+
+stderr | tests/unit/dashboard-components.test.tsx > MoodTrendChart - accessibilité > rend une alternative même sous prefers-reduced-motion
+The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+
+ ✓ tests/unit/MoodSlider.test.tsx (3 tests) 57ms
+ ✓ tests/unit/dashboard-components.test.tsx (4 tests) 58ms
+ ✓ tests/unit/gdpr-components.test.tsx (2 tests) 130ms
+ ✓ tests/unit/supabase-client.test.ts (3 tests) 11ms
+ ✓ tests/unit/cn.test.ts (3 tests) 5ms
+ ✓ tests/unit/emergency.test.tsx (2 tests) 63ms
+ ✓ tests/unit/chat-fab.test.tsx (3 tests) 55ms
+ ✓ tests/unit/safe-redirect.test.ts (4 tests) 1ms
+
+ Test Files  30 passed (30)
+      Tests  167 passed (167)
+   Start at  20:24:47
+   Duration  3.78s (transform 1.14s, setup 3.38s, collect 10.29s, tests 2.76s, environment 21.07s, prepare 2.38s)
+
+ % Coverage report from v8
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |    97.8 |     90.3 |   95.55 |    97.8 |                   
+ .../accessibility |     100 |     90.9 |     100 |     100 |                   
+  prefs.ts         |     100 |     90.9 |     100 |     100 | 37                
+ features/auth     |     100 |      100 |     100 |     100 |                   
+  index.ts         |     100 |      100 |     100 |     100 |                   
+ ...ures/dashboard |   97.29 |    92.68 |     100 |   97.29 |                   
+  home.ts          |     100 |      100 |     100 |     100 |                   
+  stats.ts         |   96.05 |    90.32 |     100 |   96.05 | 55-57             
+ features/journal  |     100 |    85.36 |     100 |     100 |                   
+  aggregate.ts     |     100 |    85.36 |     100 |     100 | 68-69,95-97,214   
+ features/mood     |   89.28 |    95.45 |   85.71 |   89.28 |                   
+  mood-config.ts   |   89.28 |    95.45 |   85.71 |   89.28 | 59-65             
+ ...ures/wellbeing |     100 |    93.75 |     100 |     100 |                   
+  filters.ts       |     100 |    93.75 |     100 |     100 | 78                
+ lib               |   98.44 |    83.33 |   85.71 |   98.44 |                   
+  ...nspiration.ts |     100 |      100 |     100 |     100 |                   
+  moods.ts         |   94.44 |      100 |       0 |   94.44 | 66-67             
+  validation.ts    |     100 |    81.81 |     100 |     100 | 22,33,67,71       
+-------------------|---------|----------|---------|---------|-------------------
+
+=============================== Coverage summary ===============================
+Statements   : 97.8% ( 490/501 )
+Branches     : 90.3% ( 149/165 )
+Functions    : 95.55% ( 43/45 )
+Lines        : 97.8% ( 490/501 )
+================================================================================

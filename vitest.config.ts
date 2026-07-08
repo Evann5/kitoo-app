@@ -16,7 +16,7 @@ export default defineConfig({
     exclude: ["tests/e2e/**", "node_modules/**", ".next/**"],
     coverage: {
       provider: "v8",
-      reporter: ["text", "html"],
+      reporter: ["text", "text-summary", "html"],
       // Couverture mesurée sur la LOGIQUE MÉTIER pure (calculs, règles,
       // validation) — c'est là que la couverture est significative. Les
       // composants UI sont couverts par les tests RTL + e2e.
