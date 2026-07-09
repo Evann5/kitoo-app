@@ -29,6 +29,8 @@ export {
   shouldShowSupportNudge,
   buildDailySeries,
   getGreeting,
+  displayNameFromEmail,
+  resolveDisplayName,
   moodCtaLabel,
   SUPPORT_NUDGE_THRESHOLD,
   type MoodPoint,

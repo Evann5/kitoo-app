@@ -124,3 +124,32 @@ export function getGreeting(hour: number): string {
   if (hour < 18) return "Bon après-midi";
   return "Bonsoir";
 }
+
+/**
+ * Déduit un prénom présentable depuis une adresse email (repli quand aucun
+ * prénom n'est renseigné). On garde la partie locale jusqu'au premier séparateur
+ * ou chiffre, puis on capitalise. Ex. `evan9105.e@…` → « Evan ».
+ */
+export function displayNameFromEmail(
+  email: string | null | undefined,
+): string | null {
+  if (!email) return null;
+  const local = email.split("@")[0] ?? "";
+  const raw = local.split(/[.+_\-0-9]/)[0];
+  if (!raw) return null;
+  return raw.charAt(0).toUpperCase() + raw.slice(1).toLowerCase();
+}
+
+/**
+ * Nom à afficher dans la salutation : le prénom renseigné en priorité, sinon un
+ * repli déduit de l'email. Renvoie `null` si rien d'exploitable (salutation
+ * seule).
+ */
+export function resolveDisplayName(
+  prenom: string | null | undefined,
+  email: string | null | undefined,
+): string | null {
+  const trimmed = prenom?.trim();
+  if (trimmed) return trimmed;
+  return displayNameFromEmail(email);
+}

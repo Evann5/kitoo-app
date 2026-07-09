@@ -33,6 +33,7 @@ import {
   buildDailySeries,
   buildWeeklyRecap,
   encouragementOfDay,
+  resolveDisplayName,
   type MoodPoint,
   type Suggestion,
 } from "@/features/dashboard";
@@ -154,7 +155,7 @@ export default async function DashboardPage() {
         <div className="flex items-start justify-between gap-3">
           <Greeting
             greeting={getGreeting(now.getHours())}
-            name={profile?.prenom ?? null}
+            name={resolveDisplayName(profile?.prenom ?? null, user.email)}
             dateLabel={dateFmt.format(now)}
           />
           <StreakPill streak={streak} />

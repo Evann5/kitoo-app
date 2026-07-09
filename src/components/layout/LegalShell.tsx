@@ -15,7 +15,10 @@ export type LegalShellProps = {
  */
 export function LegalShell({ title, updatedAt, children }: LegalShellProps) {
   return (
-    <Container width="prose" className="py-10">
+    <Container
+      width="prose"
+      className="pt-[calc(env(safe-area-inset-top)+2.5rem)] pb-10"
+    >
       <Link
         href="/"
         className="text-small text-brand-700 mb-6 inline-flex w-fit items-center gap-1 font-bold"

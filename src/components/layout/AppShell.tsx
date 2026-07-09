@@ -21,7 +21,10 @@ export async function AppShell({ children, width = "prose" }: AppShellProps) {
   return (
     <>
       <AccessibilitySync prefs={prefs} />
-      <Container width={width} className="pt-6 pb-28">
+      <Container
+        width={width}
+        className="pt-[calc(env(safe-area-inset-top)+1.5rem)] pb-28"
+      >
         {children}
       </Container>
     </>

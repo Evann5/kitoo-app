@@ -8,6 +8,8 @@ import {
   buildDailySeries,
   getGreeting,
   moodCtaLabel,
+  displayNameFromEmail,
+  resolveDisplayName,
   type MoodPoint,
 } from "@/features/dashboard";
 import { streakMessage } from "@/features/dashboard/StreakBadge";
@@ -115,5 +117,22 @@ describe("greeting & cta", () => {
   it("le message de série n'est jamais culpabilisant à 0", () => {
     expect(streakMessage(0)).toMatch(/quand tu veux/i);
     expect(streakMessage(7)).toMatch(/continue comme ça/i);
+  });
+});
+
+describe("nom d'affichage dans la salutation", () => {
+  it("déduit un prénom présentable depuis l'email", () => {
+    expect(displayNameFromEmail("evan9105.e@gmail.com")).toBe("Evan");
+    expect(displayNameFromEmail("leandre@gmail.com")).toBe("Leandre");
+    expect(displayNameFromEmail("marie+kitoo@x.fr")).toBe("Marie");
+    expect(displayNameFromEmail(null)).toBeNull();
+    expect(displayNameFromEmail("")).toBeNull();
+  });
+
+  it("privilégie le prénom renseigné, sinon l'email", () => {
+    expect(resolveDisplayName("Léa", "autre@x.fr")).toBe("Léa");
+    expect(resolveDisplayName("  ", "sofia.b@x.fr")).toBe("Sofia");
+    expect(resolveDisplayName(null, "sofia.b@x.fr")).toBe("Sofia");
+    expect(resolveDisplayName(null, null)).toBeNull();
   });
 });

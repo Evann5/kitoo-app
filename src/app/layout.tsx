@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { Nunito, Atkinson_Hyperlegible } from "next/font/google";
 import "./globals.css";
@@ -37,6 +37,17 @@ const atkinson = Atkinson_Hyperlegible({
 export const metadata: Metadata = {
   title: siteConfig.name,
   description: siteConfig.description,
+};
+
+/**
+ * `viewport-fit=cover` : l'app s'étend sous la barre d'état / Dynamic Island des
+ * iPhone. On récupère alors l'espace réservé via `env(safe-area-inset-*)` dans
+ * la coquille et la barre d'onglets (évite tout chevauchement avec l'heure).
+ */
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
